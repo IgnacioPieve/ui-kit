@@ -84,6 +84,21 @@ bump the tag and update both, or don't do it.
 - App-specific copy belongs in the app's `lib/strings.ts`, never in `labels.ts`.
 - Releases are tags: bump `package.json`, rebuild, commit, tag `vX.Y.Z`, push.
 
+## Commits
+
+Gitmoji, a short subject in **English**, and a body whenever the change needs
+explaining:
+
+```
+✨ Add dark mode toggle
+
+Persists the choice in localStorage and falls back to the system preference,
+so the app opens in the right theme on first load instead of flashing light.
+```
+
+Subject in the imperative, ~50 chars, no trailing period. The body is where the
+*why* goes — the diff already shows the *what*. Body in English too.
+
 ## Traps
 
 Things that fail **silently** or in a confusing way:
