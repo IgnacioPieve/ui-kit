@@ -50,10 +50,8 @@ declare function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivE
 
 interface SpinnerProps {
     className?: string;
-    /** Centra el spinner en un bloque con padding vertical. */
-    center?: boolean;
 }
-declare function Spinner({ className, center }: SpinnerProps): React.JSX.Element;
+declare function Spinner({ className }: SpinnerProps): React.JSX.Element;
 
 declare const Dialog: React.FC<DialogPrimitive.DialogProps>;
 declare const DialogTrigger: React.ForwardRefExoticComponent<DialogPrimitive.DialogTriggerProps & React.RefAttributes<HTMLButtonElement>>;
@@ -369,11 +367,23 @@ declare function formatShortDate(iso: string): string;
 declare function formatDayMonth(iso: string): string;
 /** `Marzo de 2025` — acepta un ISO o un `Date`. */
 declare function formatMonthYear(value: string | Date): string;
-/** `YYYY-MM`, para agrupar por mes. */
-declare function monthKey(iso: string): string;
 /** Fecha de hoy en `YYYY-MM-DD` (local, no UTC). */
 declare function todayISO(): string;
 declare function capitalize(value: string): string;
+interface MonthGroup<T> {
+    /** `YYYY-MM`. Estable, sirve como key de React. */
+    key: string;
+    /** `Marzo de 2026`, ya capitalizado. */
+    label: string;
+    items: T[];
+}
+/**
+ * Agrupa por mes y devuelve los grupos del más reciente al más viejo.
+ *
+ * Los items **sin fecha caen en el mes actual**: son los que se están
+ * completando, y es donde el usuario los va a buscar.
+ */
+declare function groupByMonth<T>(items: T[], getDate: (item: T) => string | null | undefined): MonthGroup<T>[];
 
 /**
  * Formatea un monto guardado en centavos.
@@ -456,8 +466,6 @@ declare const labels: {
     readonly download: "Descargar";
     readonly dropzone: "Arrastrá archivos acá, hacé clic o pegá con Ctrl+V";
     readonly dropzoneActive: "Soltá los archivos…";
-    readonly loading: "Cargando…";
-    readonly remove: "Quitar";
     readonly saveError: "No se pudo guardar";
     readonly saved: "Guardado";
     readonly saving: "Guardando…";
@@ -468,4 +476,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, LOCALE, Label, type Labels, Markdown, type MarkdownProps, MonthHeading, type MonthHeadingProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, labels, monthKey, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, LOCALE, Label, type Labels, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };

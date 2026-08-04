@@ -222,10 +222,8 @@ function Badge({ className, variant, ...props }) {
 function Skeleton({ className, ...props }) {
   return /* @__PURE__ */ jsxRuntime.jsx("div", { className: cn("animate-pulse rounded-md bg-muted", className), ...props });
 }
-function Spinner({ className, center }) {
-  const icon = /* @__PURE__ */ jsxRuntime.jsx(lucideReact.Loader2, { className: cn("h-5 w-5 animate-spin text-primary", className) });
-  if (!center) return icon;
-  return /* @__PURE__ */ jsxRuntime.jsx("div", { className: "flex items-center justify-center py-12", children: icon });
+function Spinner({ className }) {
+  return /* @__PURE__ */ jsxRuntime.jsx(lucideReact.Loader2, { className: cn("h-5 w-5 animate-spin text-primary", className) });
 }
 
 // src/labels.ts
@@ -240,8 +238,6 @@ var labels = {
   download: "Descargar",
   dropzone: "Arrastr\xE1 archivos ac\xE1, hac\xE9 clic o peg\xE1 con Ctrl+V",
   dropzoneActive: "Solt\xE1 los archivos\u2026",
-  loading: "Cargando\u2026",
-  remove: "Quitar",
   saveError: "No se pudo guardar",
   saved: "Guardado",
   saving: "Guardando\u2026",
@@ -841,9 +837,6 @@ function formatMonthYear(value) {
   });
   return capitalize(label);
 }
-function monthKey(iso) {
-  return iso.slice(0, 7);
-}
 function todayISO() {
   const now = /* @__PURE__ */ new Date();
   const m = String(now.getMonth() + 1).padStart(2, "0");
@@ -853,6 +846,18 @@ function todayISO() {
 function capitalize(value) {
   if (!value) return "";
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+function groupByMonth(items, getDate) {
+  const groups = /* @__PURE__ */ new Map();
+  for (const item of items) {
+    const iso = getDate(item);
+    const date = iso ? parseLocalDate(iso) : /* @__PURE__ */ new Date();
+    const first = new Date(date.getFullYear(), date.getMonth(), 1);
+    const key = `${first.getFullYear()}-${String(first.getMonth() + 1).padStart(2, "0")}`;
+    if (!groups.has(key)) groups.set(key, { date: first, items: [] });
+    groups.get(key).items.push(item);
+  }
+  return [...groups.entries()].sort((a, b) => b[1].date.getTime() - a[1].date.getTime()).map(([key, group]) => ({ key, label: formatMonthYear(group.date), items: group.items }));
 }
 
 // src/lib/format.ts
@@ -1211,8 +1216,8 @@ exports.formatFileSize = formatFileSize;
 exports.formatMonthYear = formatMonthYear;
 exports.formatShortDate = formatShortDate;
 exports.genId = genId;
+exports.groupByMonth = groupByMonth;
 exports.labels = labels;
-exports.monthKey = monthKey;
 exports.parseLocalDate = parseLocalDate;
 exports.todayISO = todayISO;
 exports.useAutosave = useAutosave;

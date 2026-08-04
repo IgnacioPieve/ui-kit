@@ -25,7 +25,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `Card` | — | Con `CardHeader` `CardTitle` `CardContent` `CardFooter`. |
 | `Badge` | `variant` | `default` `primary` `success` `warning` `destructive` `outline`. |
 | `Skeleton` | — | Placeholder de carga. |
-| `Spinner` | `center` | Con `center`, se centra en un bloque con padding. |
+| `Spinner` | `className?` | Indicador de carga. Centrarlo es responsabilidad de quien lo usa. |
 | `Dialog` | Radix `Dialog` | `DialogContent` acepta `hideClose`. Incluye `DialogHeader` `DialogTitle` `DialogDescription` `DialogFooter` `DialogTrigger` `DialogClose`. |
 | `DropdownMenu` | Radix | Con `DropdownMenuTrigger` `DropdownMenuContent` `DropdownMenuItem` `DropdownMenuLabel` `DropdownMenuSeparator`. |
 | `Toaster` / `toast` | — | Sonner. `<Toaster />` se monta una vez en el root; `toast.success(…)` / `toast.error(…)` desde cualquier lado. |
@@ -70,7 +70,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `formatShortDate(iso)` | `10 mar 2026` |
 | `formatDayMonth(iso)` | `10 de marzo` |
 | `formatMonthYear(iso \| Date)` | `Marzo de 2026` |
-| `monthKey(iso)` | `"2026-03"`, para agrupar. |
+| `groupByMonth(items, getDate)` | Agrupa por mes, del más reciente al más viejo. Devuelve `{ key, label, items }[]`. Los items sin fecha caen en el mes actual. |
 | `todayISO()` | Hoy en `YYYY-MM-DD`, **local** (no UTC). |
 | `capitalize(s)` | |
 | `formatCurrency(cents, currency)` | Formatea un monto guardado en centavos. |

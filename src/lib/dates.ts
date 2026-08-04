@@ -48,11 +48,6 @@ export function formatMonthYear(value: string | Date): string {
   return capitalize(label);
 }
 
-/** `YYYY-MM`, para agrupar por mes. */
-export function monthKey(iso: string): string {
-  return iso.slice(0, 7);
-}
-
 /** Fecha de hoy en `YYYY-MM-DD` (local, no UTC). */
 export function todayISO(): string {
   const now = new Date();
@@ -64,4 +59,38 @@ export function todayISO(): string {
 export function capitalize(value: string): string {
   if (!value) return "";
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+export interface MonthGroup<T> {
+  /** `YYYY-MM`. Estable, sirve como key de React. */
+  key: string;
+  /** `Marzo de 2026`, ya capitalizado. */
+  label: string;
+  items: T[];
+}
+
+/**
+ * Agrupa por mes y devuelve los grupos del más reciente al más viejo.
+ *
+ * Los items **sin fecha caen en el mes actual**: son los que se están
+ * completando, y es donde el usuario los va a buscar.
+ */
+export function groupByMonth<T>(
+  items: T[],
+  getDate: (item: T) => string | null | undefined
+): MonthGroup<T>[] {
+  const groups = new Map<string, { date: Date; items: T[] }>();
+
+  for (const item of items) {
+    const iso = getDate(item);
+    const date = iso ? parseLocalDate(iso) : new Date();
+    const first = new Date(date.getFullYear(), date.getMonth(), 1);
+    const key = `${first.getFullYear()}-${String(first.getMonth() + 1).padStart(2, "0")}`;
+    if (!groups.has(key)) groups.set(key, { date: first, items: [] });
+    groups.get(key)!.items.push(item);
+  }
+
+  return [...groups.entries()]
+    .sort((a, b) => b[1].date.getTime() - a[1].date.getTime())
+    .map(([key, group]) => ({ key, label: formatMonthYear(group.date), items: group.items }));
 }

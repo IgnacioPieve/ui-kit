@@ -195,10 +195,8 @@ function Badge({ className, variant, ...props }) {
 function Skeleton({ className, ...props }) {
   return /* @__PURE__ */ jsx("div", { className: cn("animate-pulse rounded-md bg-muted", className), ...props });
 }
-function Spinner({ className, center }) {
-  const icon = /* @__PURE__ */ jsx(Loader2, { className: cn("h-5 w-5 animate-spin text-primary", className) });
-  if (!center) return icon;
-  return /* @__PURE__ */ jsx("div", { className: "flex items-center justify-center py-12", children: icon });
+function Spinner({ className }) {
+  return /* @__PURE__ */ jsx(Loader2, { className: cn("h-5 w-5 animate-spin text-primary", className) });
 }
 
 // src/labels.ts
@@ -213,8 +211,6 @@ var labels = {
   download: "Descargar",
   dropzone: "Arrastr\xE1 archivos ac\xE1, hac\xE9 clic o peg\xE1 con Ctrl+V",
   dropzoneActive: "Solt\xE1 los archivos\u2026",
-  loading: "Cargando\u2026",
-  remove: "Quitar",
   saveError: "No se pudo guardar",
   saved: "Guardado",
   saving: "Guardando\u2026",
@@ -814,9 +810,6 @@ function formatMonthYear(value) {
   });
   return capitalize(label);
 }
-function monthKey(iso) {
-  return iso.slice(0, 7);
-}
 function todayISO() {
   const now = /* @__PURE__ */ new Date();
   const m = String(now.getMonth() + 1).padStart(2, "0");
@@ -826,6 +819,18 @@ function todayISO() {
 function capitalize(value) {
   if (!value) return "";
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+function groupByMonth(items, getDate) {
+  const groups = /* @__PURE__ */ new Map();
+  for (const item of items) {
+    const iso = getDate(item);
+    const date = iso ? parseLocalDate(iso) : /* @__PURE__ */ new Date();
+    const first = new Date(date.getFullYear(), date.getMonth(), 1);
+    const key = `${first.getFullYear()}-${String(first.getMonth() + 1).padStart(2, "0")}`;
+    if (!groups.has(key)) groups.set(key, { date: first, items: [] });
+    groups.get(key).items.push(item);
+  }
+  return [...groups.entries()].sort((a, b) => b[1].date.getTime() - a[1].date.getTime()).map(([key, group]) => ({ key, label: formatMonthYear(group.date), items: group.items }));
 }
 
 // src/lib/format.ts
@@ -1112,6 +1117,6 @@ function createHttpClient(baseUrl = "") {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, Markdown, MonthHeading, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, labels, monthKey, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, Markdown, MonthHeading, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

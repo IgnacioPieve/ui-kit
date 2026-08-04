@@ -16,8 +16,6 @@ export const labels = {
   download: "Descargar",
   dropzone: "Arrastrá archivos acá, hacé clic o pegá con Ctrl+V",
   dropzoneActive: "Soltá los archivos…",
-  loading: "Cargando…",
-  remove: "Quitar",
   saveError: "No se pudo guardar",
   saved: "Guardado",
   saving: "Guardando…",
