@@ -23,6 +23,9 @@ export interface AutocompleteProps<T> {
   className?: string;
   /** Enter cuando no hay ninguna opción resaltada. */
   onEnter?: () => void;
+  /** Se fue el foco del campo. Elegir una opción del dropdown no lo dispara
+   * (el mousedown hace preventDefault y el input conserva el foco). */
+  onBlur?: () => void;
 }
 
 /**
@@ -45,6 +48,7 @@ export function Autocomplete<T = string>({
   id,
   className,
   onEnter,
+  onBlur,
 }: AutocompleteProps<T>) {
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(-1);
@@ -84,6 +88,7 @@ export function Autocomplete<T = string>({
           setHighlight(-1);
         }}
         onFocus={() => setOpen(true)}
+        onBlur={onBlur}
         onKeyDown={(e) => {
           if (e.key === "ArrowDown") {
             e.preventDefault();

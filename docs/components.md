@@ -44,7 +44,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `Collapsible` | `children`, `collapsedHeight?`, `showMoreLabel?`, `showLessLabel?` | Recorta contenido largo con degradé y toggle. |
 | `CopyButton` | `value`, `label?`, `successMessage?`, `errorMessage?` | Copia al portapapeles con feedback y fallback para HTTP plano. |
 | `Markdown` | `children`, `className?` | Markdown GFM. Los estilos viven en la clase `.markdown` de `styles.css`. |
-| `Autocomplete<T>` | `value`, `onChange`, `options`, `getKey?`, `getLabel?`, `renderOption?`, `onSelect?`, `serverFiltered?`, `maxOptions?`, `onEnter?` | Input con sugerencias navegable por teclado (↑ ↓ Enter Esc). Sirve para listas de strings y para objetos con render propio. Con `serverFiltered` no filtra localmente. |
+| `Autocomplete<T>` | `value`, `onChange`, `options`, `getKey?`, `getLabel?`, `renderOption?`, `onSelect?`, `serverFiltered?`, `maxOptions?`, `onEnter?`, `onBlur?` | Input con sugerencias navegable por teclado (↑ ↓ Enter Esc). Sirve para listas de strings y para objetos con render propio. Con `serverFiltered` no filtra localmente. |
 | `FileDropzone` | `onFiles`, `multiple?`, `disabled?`, `size?`, `active?`, `label?`, `activeLabel?`, `hint?` | Drag & drop + clic. `size="sm"` es una fila compacta en línea; `"lg"` una caja grande. `active` la resalta (p. ej. como destino de un pegado con Ctrl+V). |
 | `FilePreview` | `url`, `filename`, `contentType?`, `size?`, `compact?`, `downloadLabel?` | Previsualiza según el tipo: imagen con lightbox, PDF embebido, audio, video, o tarjeta de descarga. Con `compact`, miniatura o chip. |
 | `SectionHeading` | `icon?`, `children`, `actions?` | Título de sección dentro de una página. |

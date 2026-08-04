@@ -674,7 +674,8 @@ function Autocomplete({
   placeholder,
   id,
   className,
-  onEnter
+  onEnter,
+  onBlur
 }) {
   const [open, setOpen] = React7.useState(false);
   const [highlight, setHighlight] = React7.useState(-1);
@@ -708,6 +709,7 @@ function Autocomplete({
           setHighlight(-1);
         },
         onFocus: () => setOpen(true),
+        onBlur,
         onKeyDown: (e) => {
           if (e.key === "ArrowDown") {
             e.preventDefault();

@@ -252,6 +252,9 @@ interface AutocompleteProps<T> {
     className?: string;
     /** Enter cuando no hay ninguna opción resaltada. */
     onEnter?: () => void;
+    /** Se fue el foco del campo. Elegir una opción del dropdown no lo dispara
+     * (el mousedown hace preventDefault y el input conserva el foco). */
+    onBlur?: () => void;
 }
 /**
  * Input con sugerencias, navegable por teclado (↑ ↓ Enter Esc).
@@ -259,7 +262,7 @@ interface AutocompleteProps<T> {
  * Sirve tanto para listas de strings (médicos, instituciones, tipos) como para
  * objetos con render propio, pasando `renderOption` + `onSelect`.
  */
-declare function Autocomplete<T = string>({ value, onChange, options, getKey, getLabel, renderOption, onSelect, serverFiltered, maxOptions, placeholder, id, className, onEnter, }: AutocompleteProps<T>): React.JSX.Element;
+declare function Autocomplete<T = string>({ value, onChange, options, getKey, getLabel, renderOption, onSelect, serverFiltered, maxOptions, placeholder, id, className, onEnter, onBlur, }: AutocompleteProps<T>): React.JSX.Element;
 
 interface FileDropzoneProps {
     onFiles: (files: File[]) => void;
