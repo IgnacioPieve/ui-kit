@@ -4,7 +4,7 @@ Guidance for AI agents working in this repo. Keep it short; update it when the
 truth changes. Code is in **English**, UI strings in **Spanish**.
 
 This is the design system consumed by the sibling repos, which follow a shared
-layout and conventions: [MedLog](https://github.com/IgnacioPieve/MedLog) and
+layout and conventions: [MedLog](https://github.com/IgnacioPieve/medlog) and
 [expenses](https://github.com/IgnacioPieve/expenses).
 
 ## What this is

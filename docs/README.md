@@ -21,5 +21,5 @@ Otros archivos relevantes en la raíz del repo:
 Comparten estructura, convenciones y este design system; lo que se aprende acá
 aplica igual allá.
 
-- [MedLog](https://github.com/IgnacioPieve/MedLog) — registros médicos.
+- [MedLog](https://github.com/IgnacioPieve/medlog) — registros médicos.
 - [expenses](https://github.com/IgnacioPieve/expenses) — seguimiento de gastos.

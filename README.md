@@ -98,5 +98,5 @@ trabajen en el repo, ver [`CLAUDE.md`](CLAUDE.md).
 
 ## Proyectos hermanos
 
-- [MedLog](https://github.com/IgnacioPieve/MedLog) — registros médicos.
+- [MedLog](https://github.com/IgnacioPieve/medlog) — registros médicos.
 - [expenses](https://github.com/IgnacioPieve/expenses) — seguimiento de gastos.
