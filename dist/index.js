@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { ChevronDown, X, Loader2, Sun, Moon, Search, Check, Copy, Upload, FileText, File, Download } from 'lucide-react';
+import { ChevronDown, X, Loader2, Sun, Moon, Search, Check, Copy, Upload, FileText, File, CircleAlert, Download } from 'lucide-react';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
@@ -215,6 +215,9 @@ var labels = {
   dropzoneActive: "Solt\xE1 los archivos\u2026",
   loading: "Cargando\u2026",
   remove: "Quitar",
+  saveError: "No se pudo guardar",
+  saved: "Guardado",
+  saving: "Guardando\u2026",
   search: "Buscar\u2026",
   showLess: "Mostrar menos",
   showMore: "Mostrar m\xE1s",
@@ -387,6 +390,36 @@ function ThemeToggle({ label = labels.toggleTheme }) {
       "aria-label": label,
       title: label,
       children: theme === "dark" ? /* @__PURE__ */ jsx(Sun, { className: "h-5 w-5" }) : /* @__PURE__ */ jsx(Moon, { className: "h-5 w-5" })
+    }
+  );
+}
+function AutosaveIndicator({
+  status,
+  savingLabel = labels.saving,
+  savedLabel = labels.saved,
+  errorLabel = labels.saveError,
+  className
+}) {
+  if (status === "idle") return null;
+  const content = {
+    saving: { icon: /* @__PURE__ */ jsx(Loader2, { className: "h-3.5 w-3.5 animate-spin" }), text: savingLabel },
+    saved: { icon: /* @__PURE__ */ jsx(Check, { className: "h-3.5 w-3.5" }), text: savedLabel },
+    error: { icon: /* @__PURE__ */ jsx(CircleAlert, { className: "h-3.5 w-3.5" }), text: errorLabel }
+  }[status];
+  return /* @__PURE__ */ jsxs(
+    "span",
+    {
+      role: "status",
+      "aria-live": "polite",
+      className: cn(
+        "flex items-center gap-1.5 text-xs",
+        status === "error" ? "text-destructive" : "text-muted-foreground",
+        className
+      ),
+      children: [
+        content.icon,
+        content.text
+      ]
     }
   );
 }
@@ -966,6 +999,53 @@ function useDebounce(value, delay = 300) {
   }, [value, delay]);
   return debounced;
 }
+function useAutosave(save) {
+  const [status, setStatus] = useState("idle");
+  const saveRef = useRef(save);
+  saveRef.current = save;
+  const running = useRef(null);
+  const queued = useRef(false);
+  const mounted = useRef(true);
+  useEffect(
+    () => () => {
+      mounted.current = false;
+    },
+    []
+  );
+  const run = useCallback(async () => {
+    if (running.current) {
+      queued.current = true;
+      return running.current;
+    }
+    const exec = (async () => {
+      do {
+        queued.current = false;
+        if (mounted.current) setStatus("saving");
+        try {
+          await saveRef.current();
+          if (mounted.current) setStatus("saved");
+        } catch {
+          if (mounted.current) setStatus("error");
+          queued.current = false;
+          return;
+        }
+      } while (queued.current);
+    })();
+    running.current = exec;
+    try {
+      await exec;
+    } finally {
+      running.current = null;
+    }
+  }, []);
+  const trigger = useCallback(() => {
+    void run();
+  }, [run]);
+  const flush = useCallback(async () => {
+    await (running.current ?? Promise.resolve());
+  }, []);
+  return { status, save: trigger, flush };
+}
 
 // src/lib/http.ts
 var HttpError = class extends Error {
@@ -1030,6 +1110,6 @@ function createHttpClient(baseUrl = "") {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, Badge, Button, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, Markdown, MonthHeading, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, labels, monthKey, parseLocalDate, todayISO, useClickOutside, useDebounce, useTheme };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, Markdown, MonthHeading, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, labels, monthKey, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

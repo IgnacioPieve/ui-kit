@@ -122,6 +122,45 @@ interface ThemeToggleProps {
 }
 declare function ThemeToggle({ label }: ThemeToggleProps): React.JSX.Element;
 
+type AutosaveStatus = "idle" | "saving" | "saved" | "error";
+interface Autosave {
+    status: AutosaveStatus;
+    /** Dispara un guardado. Si ya hay uno en curso, encola exactamente uno más. */
+    save: () => void;
+    /** Espera a que no quede nada pendiente. Para navegar sin perder cambios. */
+    flush: () => Promise<void>;
+}
+/**
+ * Autoguardado serializado.
+ *
+ * `save()` se llama al terminar de editar un campo (blur, o change en los
+ * controles donde el cambio ya es el final: selects, switches, archivos). El
+ * hook garantiza que **nunca haya dos guardados en vuelo a la vez**: si llega
+ * uno mientras otro corre, se encola uno solo al final. Sin eso, dos PATCH
+ * concurrentes pueden llegar al backend en orden invertido y dejar guardado el
+ * valor viejo.
+ *
+ * No muestra toasts: el feedback va en `<AutosaveIndicator />`, que es
+ * silencioso y no interrumpe.
+ */
+declare function useAutosave(save: () => Promise<unknown>): Autosave;
+
+interface AutosaveIndicatorProps {
+    status: AutosaveStatus;
+    savingLabel?: string;
+    savedLabel?: string;
+    errorLabel?: string;
+    className?: string;
+}
+/**
+ * Feedback silencioso del autoguardado.
+ *
+ * A propósito no usa toasts: guardar es constante y un toast por campo sería
+ * ruido. Esto vive al lado del título y solo se nota si lo mirás — salvo el
+ * error, que sí se pinta en rojo porque ahí hay algo que hacer.
+ */
+declare function AutosaveIndicator({ status, savingLabel, savedLabel, errorLabel, className, }: AutosaveIndicatorProps): React.JSX.Element | null;
+
 interface SearchInputProps {
     value: string;
     onChange: (value: string) => void;
@@ -416,6 +455,9 @@ declare const labels: {
     readonly dropzoneActive: "Soltá los archivos…";
     readonly loading: "Cargando…";
     readonly remove: "Quitar";
+    readonly saveError: "No se pudo guardar";
+    readonly saved: "Guardado";
+    readonly saving: "Guardando…";
     readonly search: "Buscar…";
     readonly showLess: "Mostrar menos";
     readonly showMore: "Mostrar más";
@@ -423,4 +465,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, Badge, type BadgeProps, Button, type ButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, LOCALE, Label, type Labels, Markdown, type MarkdownProps, MonthHeading, type MonthHeadingProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, labels, monthKey, parseLocalDate, todayISO, useClickOutside, useDebounce, useTheme };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, LOCALE, Label, type Labels, Markdown, type MarkdownProps, MonthHeading, type MonthHeadingProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, labels, monthKey, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };

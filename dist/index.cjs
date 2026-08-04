@@ -242,6 +242,9 @@ var labels = {
   dropzoneActive: "Solt\xE1 los archivos\u2026",
   loading: "Cargando\u2026",
   remove: "Quitar",
+  saveError: "No se pudo guardar",
+  saved: "Guardado",
+  saving: "Guardando\u2026",
   search: "Buscar\u2026",
   showLess: "Mostrar menos",
   showMore: "Mostrar m\xE1s",
@@ -414,6 +417,36 @@ function ThemeToggle({ label = labels.toggleTheme }) {
       "aria-label": label,
       title: label,
       children: theme === "dark" ? /* @__PURE__ */ jsxRuntime.jsx(lucideReact.Sun, { className: "h-5 w-5" }) : /* @__PURE__ */ jsxRuntime.jsx(lucideReact.Moon, { className: "h-5 w-5" })
+    }
+  );
+}
+function AutosaveIndicator({
+  status,
+  savingLabel = labels.saving,
+  savedLabel = labels.saved,
+  errorLabel = labels.saveError,
+  className
+}) {
+  if (status === "idle") return null;
+  const content = {
+    saving: { icon: /* @__PURE__ */ jsxRuntime.jsx(lucideReact.Loader2, { className: "h-3.5 w-3.5 animate-spin" }), text: savingLabel },
+    saved: { icon: /* @__PURE__ */ jsxRuntime.jsx(lucideReact.Check, { className: "h-3.5 w-3.5" }), text: savedLabel },
+    error: { icon: /* @__PURE__ */ jsxRuntime.jsx(lucideReact.CircleAlert, { className: "h-3.5 w-3.5" }), text: errorLabel }
+  }[status];
+  return /* @__PURE__ */ jsxRuntime.jsxs(
+    "span",
+    {
+      role: "status",
+      "aria-live": "polite",
+      className: cn(
+        "flex items-center gap-1.5 text-xs",
+        status === "error" ? "text-destructive" : "text-muted-foreground",
+        className
+      ),
+      children: [
+        content.icon,
+        content.text
+      ]
     }
   );
 }
@@ -993,6 +1026,53 @@ function useDebounce(value, delay = 300) {
   }, [value, delay]);
   return debounced;
 }
+function useAutosave(save) {
+  const [status, setStatus] = React7.useState("idle");
+  const saveRef = React7.useRef(save);
+  saveRef.current = save;
+  const running = React7.useRef(null);
+  const queued = React7.useRef(false);
+  const mounted = React7.useRef(true);
+  React7.useEffect(
+    () => () => {
+      mounted.current = false;
+    },
+    []
+  );
+  const run = React7.useCallback(async () => {
+    if (running.current) {
+      queued.current = true;
+      return running.current;
+    }
+    const exec = (async () => {
+      do {
+        queued.current = false;
+        if (mounted.current) setStatus("saving");
+        try {
+          await saveRef.current();
+          if (mounted.current) setStatus("saved");
+        } catch {
+          if (mounted.current) setStatus("error");
+          queued.current = false;
+          return;
+        }
+      } while (queued.current);
+    })();
+    running.current = exec;
+    try {
+      await exec;
+    } finally {
+      running.current = null;
+    }
+  }, []);
+  const trigger = React7.useCallback(() => {
+    void run();
+  }, [run]);
+  const flush = React7.useCallback(async () => {
+    await (running.current ?? Promise.resolve());
+  }, []);
+  return { status, save: trigger, flush };
+}
 
 // src/lib/http.ts
 var HttpError = class extends Error {
@@ -1064,6 +1144,7 @@ Object.defineProperty(exports, "toast", {
 exports.AppBrand = AppBrand;
 exports.AppShell = AppShell;
 exports.Autocomplete = Autocomplete;
+exports.AutosaveIndicator = AutosaveIndicator;
 exports.Badge = Badge;
 exports.Button = Button;
 exports.Card = Card;
@@ -1132,6 +1213,7 @@ exports.labels = labels;
 exports.monthKey = monthKey;
 exports.parseLocalDate = parseLocalDate;
 exports.todayISO = todayISO;
+exports.useAutosave = useAutosave;
 exports.useClickOutside = useClickOutside;
 exports.useDebounce = useDebounce;
 exports.useTheme = useTheme;
