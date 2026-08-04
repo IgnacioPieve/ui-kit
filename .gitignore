@@ -1,0 +1,14 @@
+# Node
+node_modules/
+*.local
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
+
+# `dist/` is committed on purpose: the apps install this package straight from
+# git (no registry, no build step at install time). See README.md.
+
+# Claude Code (la config local es personal; settings.json sí se versiona)
+.claude/settings.local.json
