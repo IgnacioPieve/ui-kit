@@ -59,18 +59,41 @@ var Button = React7.forwardRef(
   }
 );
 Button.displayName = "Button";
-var Input = React7.forwardRef(({ className, type, ...props }, ref) => /* @__PURE__ */ jsx(
-  "input",
+var inputVariants = cva(
+  "flex w-full rounded-md bg-transparent text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 file:border-0 file:bg-transparent file:text-sm file:font-medium",
   {
-    type,
-    ref,
-    className: cn(
-      "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 file:border-0 file:bg-transparent file:text-sm file:font-medium",
-      className
-    ),
-    ...props
+    variants: {
+      variant: {
+        default: "border border-input bg-background",
+        /**
+         * Sin borde hasta que se lo apunta o se lo edita.
+         *
+         * Para tablas donde cada celda es editable: con el borde permanente,
+         * veinte filas son doscientos rectángulos compitiendo por atención y no
+         * se lee ninguna. El contenido queda al frente y el campo aparece
+         * cuando hace falta.
+         */
+        ghost: "border border-transparent hover:border-input focus-visible:border-input"
+      },
+      inputSize: {
+        default: "h-10 px-3 py-2",
+        sm: "h-8 px-2 py-1 text-xs"
+      }
+    },
+    defaultVariants: { variant: "default", inputSize: "default" }
   }
-));
+);
+var Input = React7.forwardRef(
+  ({ className, variant, inputSize, type, ...props }, ref) => /* @__PURE__ */ jsx(
+    "input",
+    {
+      type,
+      ref,
+      className: cn(inputVariants({ variant, inputSize }), className),
+      ...props
+    }
+  )
+);
 Input.displayName = "Input";
 var Textarea = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "textarea",
@@ -1160,6 +1183,6 @@ function createHttpClient(baseUrl = "") {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, Markdown, MonthHeading, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, Markdown, MonthHeading, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

@@ -17,7 +17,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | Componente | Props propias | Notas |
 |---|---|---|
 | `Button` | `variant`, `size`, `asChild` | Variantes: `default` `destructive` `outline` `secondary` `ghost` `link`. Tamaños: `default` `sm` `lg` `icon` `icon-sm`. Con `asChild` toma el hijo como elemento (para envolver un `<Link>`). |
-| `Input` | — | `<input>` nativo estilado. |
+| `Input` | `variant`, `inputSize` | `variant="ghost"` no dibuja borde hasta el hover o el foco: para tablas donde cada celda es editable y veinte bordes permanentes tapan el contenido. `inputSize="sm"` para filas densas. |
 | `Textarea` | — | `<textarea>` nativo estilado. |
 | `Label` | — | |
 | `Select` | — | `<select>` nativo + chevron. Nativo a propósito: en mobile abre el picker del sistema. |
