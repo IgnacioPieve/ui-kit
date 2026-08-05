@@ -22,6 +22,7 @@ export const labels = {
   search: "Buscar…",
   showLess: "Mostrar menos",
   showMore: "Mostrar más",
+  takePhoto: "Sacar foto",
   toggleTheme: "Cambiar tema",
 } as const;
 

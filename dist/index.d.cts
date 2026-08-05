@@ -5,6 +5,7 @@ import { VariantProps } from 'class-variance-authority';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Accept } from 'react-dropzone';
 import { ClassValue } from 'clsx';
 export { toast } from 'sonner';
 
@@ -264,6 +265,11 @@ declare function Autocomplete<T = string>({ value, onChange, options, getKey, ge
 
 interface FileDropzoneProps {
     onFiles: (files: File[]) => void;
+    /**
+     * Tipos admitidos, en el formato de react-dropzone: `{ "image/*": [] }`.
+     * Omitirlo acepta cualquier archivo.
+     */
+    accept?: Accept;
     multiple?: boolean;
     disabled?: boolean;
     /** `sm`: fila compacta en línea. `lg`: caja grande con icono centrado. */
@@ -276,7 +282,25 @@ interface FileDropzoneProps {
     className?: string;
 }
 /** Zona de drag & drop + clic para adjuntar archivos. */
-declare function FileDropzone({ onFiles, multiple, disabled, size, active, label, activeLabel, hint, className, }: FileDropzoneProps): React.JSX.Element;
+declare function FileDropzone({ onFiles, accept, multiple, disabled, size, active, label, activeLabel, hint, className, }: FileDropzoneProps): React.JSX.Element;
+
+interface CameraButtonProps extends Omit<ButtonProps, "onClick" | "children"> {
+    onCapture: (files: File[]) => void;
+    /** `environment` (default) abre la cámara trasera; `user`, la frontal. */
+    facing?: "environment" | "user";
+    multiple?: boolean;
+    label?: string;
+}
+/**
+ * Botón que abre la cámara del dispositivo para sacar una foto.
+ *
+ * Va aparte del `FileDropzone` y no como una prop suya a propósito: el atributo
+ * `capture` fuerza la cámara y deja sin acceso a la galería, así que un mismo
+ * control no puede ofrecer las dos cosas. En desktop los navegadores ignoran
+ * `capture` y abren el selector de archivos común, así que el botón no molesta
+ * — pero normalmente se lo muestra solo en mobile.
+ */
+declare function CameraButton({ onCapture, facing, multiple, label, ...buttonProps }: CameraButtonProps): React.JSX.Element;
 
 interface FilePreviewProps {
     /** URL desde donde se sirve el archivo. */
@@ -472,8 +496,9 @@ declare const labels: {
     readonly search: "Buscar…";
     readonly showLess: "Mostrar menos";
     readonly showMore: "Mostrar más";
+    readonly takePhoto: "Sacar foto";
     readonly toggleTheme: "Cambiar tema";
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, LOCALE, Label, type Labels, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, LOCALE, Label, type Labels, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };

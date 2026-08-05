@@ -244,6 +244,7 @@ var labels = {
   search: "Buscar\u2026",
   showLess: "Mostrar menos",
   showMore: "Mostrar m\xE1s",
+  takePhoto: "Sacar foto",
   toggleTheme: "Cambiar tema"
 };
 var Dialog = DialogPrimitive__namespace.Root;
@@ -748,6 +749,7 @@ function Autocomplete({
 }
 function FileDropzone({
   onFiles,
+  accept,
   multiple = false,
   disabled = false,
   size = "lg",
@@ -765,6 +767,7 @@ function FileDropzone({
   );
   const { getRootProps, getInputProps, isDragActive } = reactDropzone.useDropzone({
     onDrop,
+    accept,
     multiple,
     disabled
   });
@@ -791,6 +794,46 @@ function FileDropzone({
       ]
     }
   );
+}
+function CameraButton({
+  onCapture,
+  facing = "environment",
+  multiple = false,
+  label = labels.takePhoto,
+  ...buttonProps
+}) {
+  const inputRef = React7.useRef(null);
+  function handleChange(event) {
+    const files = Array.from(event.target.files ?? []);
+    if (files.length) onCapture(files);
+    event.target.value = "";
+  }
+  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntime.jsxs(
+      Button,
+      {
+        type: "button",
+        onClick: () => inputRef.current?.click(),
+        ...buttonProps,
+        children: [
+          /* @__PURE__ */ jsxRuntime.jsx(lucideReact.Camera, {}),
+          label
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxRuntime.jsx(
+      "input",
+      {
+        ref: inputRef,
+        type: "file",
+        accept: "image/*",
+        capture: facing,
+        multiple,
+        onChange: handleChange,
+        className: "hidden"
+      }
+    )
+  ] });
 }
 
 // src/lib/files.ts
@@ -1154,6 +1197,7 @@ exports.Autocomplete = Autocomplete;
 exports.AutosaveIndicator = AutosaveIndicator;
 exports.Badge = Badge;
 exports.Button = Button;
+exports.CameraButton = CameraButton;
 exports.Card = Card;
 exports.CardContent = CardContent;
 exports.CardFooter = CardFooter;

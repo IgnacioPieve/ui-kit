@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { ChevronDown, X, Loader2, Sun, Moon, Search, Check, Copy, Upload, FileText, File, CircleAlert, Download } from 'lucide-react';
+import { ChevronDown, X, Loader2, Sun, Moon, Search, Check, Copy, Upload, Camera, FileText, File, CircleAlert, Download } from 'lucide-react';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
@@ -217,6 +217,7 @@ var labels = {
   search: "Buscar\u2026",
   showLess: "Mostrar menos",
   showMore: "Mostrar m\xE1s",
+  takePhoto: "Sacar foto",
   toggleTheme: "Cambiar tema"
 };
 var Dialog = DialogPrimitive.Root;
@@ -721,6 +722,7 @@ function Autocomplete({
 }
 function FileDropzone({
   onFiles,
+  accept,
   multiple = false,
   disabled = false,
   size = "lg",
@@ -738,6 +740,7 @@ function FileDropzone({
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    accept,
     multiple,
     disabled
   });
@@ -764,6 +767,46 @@ function FileDropzone({
       ]
     }
   );
+}
+function CameraButton({
+  onCapture,
+  facing = "environment",
+  multiple = false,
+  label = labels.takePhoto,
+  ...buttonProps
+}) {
+  const inputRef = useRef(null);
+  function handleChange(event) {
+    const files = Array.from(event.target.files ?? []);
+    if (files.length) onCapture(files);
+    event.target.value = "";
+  }
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsxs(
+      Button,
+      {
+        type: "button",
+        onClick: () => inputRef.current?.click(),
+        ...buttonProps,
+        children: [
+          /* @__PURE__ */ jsx(Camera, {}),
+          label
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      "input",
+      {
+        ref: inputRef,
+        type: "file",
+        accept: "image/*",
+        capture: facing,
+        multiple,
+        onChange: handleChange,
+        className: "hidden"
+      }
+    )
+  ] });
 }
 
 // src/lib/files.ts
@@ -1117,6 +1160,6 @@ function createHttpClient(baseUrl = "") {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, Markdown, MonthHeading, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, Markdown, MonthHeading, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

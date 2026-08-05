@@ -1,11 +1,16 @@
 import { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
+import { useDropzone, type Accept } from "react-dropzone";
 import { Upload } from "lucide-react";
 import { cn } from "../lib/cn";
 import { labels } from "../labels";
 
 export interface FileDropzoneProps {
   onFiles: (files: File[]) => void;
+  /**
+   * Tipos admitidos, en el formato de react-dropzone: `{ "image/*": [] }`.
+   * Omitirlo acepta cualquier archivo.
+   */
+  accept?: Accept;
   multiple?: boolean;
   disabled?: boolean;
   /** `sm`: fila compacta en línea. `lg`: caja grande con icono centrado. */
@@ -21,6 +26,7 @@ export interface FileDropzoneProps {
 /** Zona de drag & drop + clic para adjuntar archivos. */
 export function FileDropzone({
   onFiles,
+  accept,
   multiple = false,
   disabled = false,
   size = "lg",
@@ -39,6 +45,7 @@ export function FileDropzone({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    accept,
     multiple,
     disabled,
   });

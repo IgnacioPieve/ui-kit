@@ -13,6 +13,7 @@ export { CopyButton, type CopyButtonProps } from "./CopyButton";
 export { Markdown, type MarkdownProps } from "./Markdown";
 export { Autocomplete, type AutocompleteProps } from "./Autocomplete";
 export { FileDropzone, type FileDropzoneProps } from "./FileDropzone";
+export { CameraButton, type CameraButtonProps } from "./CameraButton";
 export { FilePreview, type FilePreviewProps } from "./FilePreview";
 export {
   SectionHeading,
