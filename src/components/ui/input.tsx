@@ -3,7 +3,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/cn";
 
 const inputVariants = cva(
-  "flex w-full rounded-md bg-transparent text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 file:border-0 file:bg-transparent file:text-sm file:font-medium",
+  // Las flechitas de `type="number"` se esconden siempre: en un formulario real
+  // nadie suma un precio de a uno, y en una tabla de veinte filas son veinte
+  // pares de flechas tapando el valor. Se sigue escribiendo y validando como
+  // número; lo único que se va es el spinner.
+  "flex w-full rounded-md bg-transparent text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 file:border-0 file:bg-transparent file:text-sm file:font-medium [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
   {
     variants: {
       variant: {

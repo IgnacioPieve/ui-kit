@@ -60,7 +60,11 @@ var Button = React7.forwardRef(
 );
 Button.displayName = "Button";
 var inputVariants = cva(
-  "flex w-full rounded-md bg-transparent text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 file:border-0 file:bg-transparent file:text-sm file:font-medium",
+  // Las flechitas de `type="number"` se esconden siempre: en un formulario real
+  // nadie suma un precio de a uno, y en una tabla de veinte filas son veinte
+  // pares de flechas tapando el valor. Se sigue escribiendo y validando como
+  // número; lo único que se va es el spinner.
+  "flex w-full rounded-md bg-transparent text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 file:border-0 file:bg-transparent file:text-sm file:font-medium [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
   {
     variants: {
       variant: {
@@ -774,7 +778,10 @@ function FileDropzone({
       ...getRootProps(),
       className: cn(
         "cursor-pointer rounded-md border border-dashed text-muted-foreground transition-colors hover:bg-accent",
-        small ? "flex flex-1 items-center justify-center gap-2 px-3 py-4 text-xs" : "px-6 py-6 text-center text-sm",
+        // `h-10` y no padding: es la altura de un Button, y `sm` existe
+        // justamente para ir en una fila junto a botones. Con `py-4` quedaba
+        // ocho píxeles más alto y la fila se veía desalineada.
+        small ? "flex h-10 flex-1 items-center justify-center gap-2 px-3 text-xs" : "px-6 py-6 text-center text-sm",
         isDragActive && "border-primary bg-accent",
         active && "ring-1 ring-ring",
         disabled && "cursor-not-allowed opacity-50",

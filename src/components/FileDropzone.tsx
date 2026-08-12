@@ -57,8 +57,11 @@ export function FileDropzone({
       {...getRootProps()}
       className={cn(
         "cursor-pointer rounded-md border border-dashed text-muted-foreground transition-colors hover:bg-accent",
+        // `h-10` y no padding: es la altura de un Button, y `sm` existe
+        // justamente para ir en una fila junto a botones. Con `py-4` quedaba
+        // ocho píxeles más alto y la fila se veía desalineada.
         small
-          ? "flex flex-1 items-center justify-center gap-2 px-3 py-4 text-xs"
+          ? "flex h-10 flex-1 items-center justify-center gap-2 px-3 text-xs"
           : "px-6 py-6 text-center text-sm",
         isDragActive && "border-primary bg-accent",
         active && "ring-1 ring-ring",

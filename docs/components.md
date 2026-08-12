@@ -17,7 +17,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | Componente | Props propias | Notas |
 |---|---|---|
 | `Button` | `variant`, `size`, `asChild` | Variantes: `default` `destructive` `outline` `secondary` `ghost` `link`. Tamaños: `default` `sm` `lg` `icon` `icon-sm`. Con `asChild` toma el hijo como elemento (para envolver un `<Link>`). |
-| `Input` | `variant`, `inputSize` | `variant="ghost"` no dibuja borde hasta el hover o el foco: para tablas donde cada celda es editable y veinte bordes permanentes tapan el contenido. `inputSize="sm"` para filas densas. |
+| `Input` | `variant`, `inputSize` | `variant="ghost"` no dibuja borde hasta el hover o el foco: para tablas donde cada celda es editable y veinte bordes permanentes tapan el contenido. `inputSize="sm"` para filas densas. Con `type="number"` **no muestra las flechitas**: nadie suma un precio de a uno, y en una tabla son veinte pares de flechas tapando el valor. |
 | `Textarea` | — | `<textarea>` nativo estilado. |
 | `Label` | — | |
 | `Select` | — | `<select>` nativo + chevron. Nativo a propósito: en mobile abre el picker del sistema. |
@@ -45,7 +45,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `CopyButton` | `value`, `label?`, `successMessage?`, `errorMessage?` | Copia al portapapeles con feedback y fallback para HTTP plano. |
 | `Markdown` | `children`, `className?` | Markdown GFM. Los estilos viven en la clase `.markdown` de `styles.css`. |
 | `Autocomplete<T>` | `value`, `onChange`, `options`, `getKey?`, `getLabel?`, `renderOption?`, `onSelect?`, `serverFiltered?`, `maxOptions?`, `onEnter?`, `onBlur?` | Input con sugerencias navegable por teclado (↑ ↓ Enter Esc). Sirve para listas de strings y para objetos con render propio. Con `serverFiltered` no filtra localmente. |
-| `FileDropzone` | `onFiles`, `accept?`, `multiple?`, `disabled?`, `size?`, `active?`, `label?`, `activeLabel?`, `hint?` | Drag & drop + clic. `size="sm"` es una fila compacta en línea; `"lg"` una caja grande. `active` la resalta (p. ej. como destino de un pegado con Ctrl+V). `accept` usa el formato de react-dropzone: `{ "image/*": [] }`. |
+| `FileDropzone` | `onFiles`, `accept?`, `multiple?`, `disabled?`, `size?`, `active?`, `label?`, `activeLabel?`, `hint?` | Drag & drop + clic. `size="sm"` es una fila compacta en línea, con la misma altura que un `Button` para que alineen; `"lg"` una caja grande. `active` la resalta (p. ej. como destino de un pegado con Ctrl+V). `accept` usa el formato de react-dropzone: `{ "image/*": [] }`. |
 | `CameraButton` | `onCapture`, `facing?`, `multiple?`, `label?` + props de `Button` | Abre la cámara del dispositivo. Va **aparte** del `FileDropzone`: el atributo `capture` fuerza la cámara y deja sin acceso a la galería, así que un mismo control no puede ofrecer ambas. En desktop los navegadores lo ignoran y abren el selector común. |
 | `FilePreview` | `url`, `filename`, `contentType?`, `size?`, `compact?`, `downloadLabel?` | Previsualiza según el tipo: imagen con lightbox, PDF embebido, audio, video, o tarjeta de descarga. Con `compact`, miniatura o chip. |
 | `SectionHeading` | `icon?`, `children`, `actions?` | Título de sección dentro de una página. |
