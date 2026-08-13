@@ -24,6 +24,8 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `Switch` | Radix `Switch` | `checked`, `onCheckedChange`. |
 | `Card` | — | Con `CardHeader` `CardTitle` `CardContent` `CardFooter`. |
 | `Badge` | `variant` | `default` `primary` `success` `warning` `destructive` `outline`. |
+| `Progress` | `value`, `max?`, `completeVariant?` | Barra de progreso. Toma los dos enteros crudos (12 de 19) en vez de un porcentaje: hacer la división afuera invita a dividir por cero cuando el total todavía es 0. Al llegar al total se pinta de `success`, salvo `completeVariant={false}`. |
+| `ToggleGroup<T>` | `value`, `onChange`, `options`, `size?`, `block?`, `label?` | Control segmentado: opciones excluyentes que se comparan de un vistazo (👍/😐/👎, timeline/calendario). Botones nativos, sin Radix. Con más de cuatro opciones, o si no entran en una línea, va un `Select`. |
 | `Skeleton` | — | Placeholder de carga. |
 | `Spinner` | `className?` | Indicador de carga. Centrarlo es responsabilidad de quien lo usa. |
 | `Dialog` | Radix `Dialog` | `DialogContent` acepta `hideClose`. Incluye `DialogHeader` `DialogTitle` `DialogDescription` `DialogFooter` `DialogTrigger` `DialogClose`. |

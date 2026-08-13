@@ -6,6 +6,12 @@ export { Select } from "./select";
 export { Switch } from "./switch";
 export { Card, CardHeader, CardTitle, CardContent, CardFooter } from "./card";
 export { Badge, badgeVariants, type BadgeProps } from "./badge";
+export { Progress, type ProgressProps } from "./progress";
+export {
+  ToggleGroup,
+  type ToggleGroupProps,
+  type ToggleGroupOption,
+} from "./toggle-group";
 export { Skeleton } from "./skeleton";
 export { Spinner, type SpinnerProps } from "./spinner";
 export {

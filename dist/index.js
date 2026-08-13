@@ -219,6 +219,82 @@ var badgeVariants = cva(
 function Badge({ className, variant, ...props }) {
   return /* @__PURE__ */ jsx("div", { className: cn(badgeVariants({ variant }), className), ...props });
 }
+var Progress = React7.forwardRef(
+  ({ value, max = 100, completeVariant = true, className, ...props }, ref) => {
+    const percent = max > 0 ? Math.min(100, Math.max(0, value / max * 100)) : 0;
+    const complete = completeVariant && max > 0 && value >= max;
+    return /* @__PURE__ */ jsx(
+      "div",
+      {
+        ref,
+        role: "progressbar",
+        "aria-valuenow": value,
+        "aria-valuemin": 0,
+        "aria-valuemax": max,
+        className: cn(
+          "h-1.5 w-full overflow-hidden rounded-full bg-secondary",
+          className
+        ),
+        ...props,
+        children: /* @__PURE__ */ jsx(
+          "div",
+          {
+            className: cn(
+              "h-full rounded-full transition-all",
+              complete ? "bg-success" : "bg-primary"
+            ),
+            style: { width: `${percent}%` }
+          }
+        )
+      }
+    );
+  }
+);
+Progress.displayName = "Progress";
+function ToggleGroup({
+  value,
+  onChange,
+  options,
+  size = "default",
+  block = false,
+  className,
+  label
+}) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      role: "group",
+      "aria-label": label,
+      className: cn(
+        "inline-flex items-center gap-1 rounded-lg bg-muted p-1",
+        block && "flex w-full",
+        className
+      ),
+      children: options.map((option) => {
+        const selected = option.value === value;
+        return /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            title: option.title,
+            "aria-label": option.title,
+            "aria-pressed": selected,
+            disabled: option.disabled,
+            onClick: () => onChange(option.value),
+            className: cn(
+              "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0",
+              size === "sm" ? "h-7 px-2 text-xs" : "h-8 px-3 text-sm",
+              block && "flex-1",
+              selected ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+            ),
+            children: option.label
+          },
+          option.value
+        );
+      })
+    }
+  );
+}
 function Skeleton({ className, ...props }) {
   return /* @__PURE__ */ jsx("div", { className: cn("animate-pulse rounded-md bg-muted", className), ...props });
 }
@@ -1190,6 +1266,6 @@ function createHttpClient(baseUrl = "") {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, Markdown, MonthHeading, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

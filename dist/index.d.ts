@@ -53,6 +53,56 @@ interface BadgeProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<
 }
 declare function Badge({ className, variant, ...props }: BadgeProps): React.JSX.Element;
 
+interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
+    /** Cuánto se lleva hecho, en las mismas unidades que `max`. */
+    value: number;
+    /** El total. Con el default de 100, `value` es directamente un porcentaje. */
+    max?: number;
+    /** Al llegar al total la barra pasa a verde: "esto ya está". */
+    completeVariant?: boolean;
+}
+/**
+ * Barra de progreso.
+ *
+ * Toma `value` y `max` crudos en vez de un porcentaje ya calculado porque casi
+ * siempre lo que hay a mano son dos enteros (12 de 19 capítulos), y hacer la
+ * división afuera invita a dividir por cero cuando el total todavía es 0.
+ */
+declare const Progress: React.ForwardRefExoticComponent<ProgressProps & React.RefAttributes<HTMLDivElement>>;
+
+interface ToggleGroupOption<T extends string> {
+    value: T;
+    /** Lo que se ve: texto, un icono, o los dos. */
+    label: React.ReactNode;
+    /** Texto accesible cuando el label es solo un icono. */
+    title?: string;
+    disabled?: boolean;
+}
+interface ToggleGroupProps<T extends string> {
+    value: T;
+    onChange: (value: T) => void;
+    options: ToggleGroupOption<T>[];
+    size?: "sm" | "default";
+    /** Ocupa todo el ancho, repartiendo las opciones en partes iguales. */
+    block?: boolean;
+    className?: string;
+    /** Etiqueta del grupo para lectores de pantalla. */
+    label?: string;
+}
+/**
+ * Control segmentado: varias opciones excluyentes, una elegida.
+ *
+ * Botones nativos y no Radix a propósito. El foco por tabulación entre botones
+ * ya funciona, y la alternativa costaría una dependencia más en el kit para
+ * ganar el roving tabindex — que en un grupo de dos o tres opciones no cambia
+ * nada.
+ *
+ * Es la forma correcta para un puñado de opciones que se comparan de un
+ * vistazo (👍/😐/👎, timeline/calendario). Con más de cuatro, o si las opciones
+ * no entran en una línea, va un `Select`.
+ */
+declare function ToggleGroup<T extends string>({ value, onChange, options, size, block, className, label, }: ToggleGroupProps<T>): React.JSX.Element;
+
 declare function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>): React.JSX.Element;
 
 interface SpinnerProps {
@@ -507,4 +557,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
