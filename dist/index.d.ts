@@ -224,8 +224,13 @@ interface SearchInputProps {
     /** Muestra una X para vaciar el campo cuando tiene contenido. */
     clearable?: boolean;
     clearLabel?: string;
+    /**
+     * Toma el foco al montarse. Para un buscador dentro de un diálogo: se abre
+     * para escribir, y obligar a hacer un click más es puro trámite.
+     */
+    autoFocus?: boolean;
 }
-declare function SearchInput({ value, onChange, placeholder, className, clearable, clearLabel, }: SearchInputProps): React.JSX.Element;
+declare function SearchInput({ value, onChange, placeholder, className, clearable, clearLabel, autoFocus, }: SearchInputProps): React.JSX.Element;
 
 interface EmptyStateProps {
     icon?: ComponentType<{

@@ -11,6 +11,11 @@ export interface SearchInputProps {
   /** Muestra una X para vaciar el campo cuando tiene contenido. */
   clearable?: boolean;
   clearLabel?: string;
+  /**
+   * Toma el foco al montarse. Para un buscador dentro de un diálogo: se abre
+   * para escribir, y obligar a hacer un click más es puro trámite.
+   */
+  autoFocus?: boolean;
 }
 
 export function SearchInput({
@@ -20,6 +25,7 @@ export function SearchInput({
   className,
   clearable = true,
   clearLabel = labels.clear,
+  autoFocus,
 }: SearchInputProps) {
   return (
     <div className={cn("relative flex-1", className)}>
@@ -29,6 +35,7 @@ export function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        autoFocus={autoFocus}
         className={cn("pl-9", clearable && value && "pr-9")}
       />
       {clearable && value && (

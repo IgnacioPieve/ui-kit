@@ -40,7 +40,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `AppBrand` | `icon`, `title`, `className?` | Icono + nombre con el tipografiado del sistema. Se pasa como `brand` de `AppShell`, opcionalmente envuelto en un link. |
 | `ThemeToggle` | `label?` | Botón sol/luna. Usa `useTheme` internamente. |
 | `AutosaveIndicator` | `status`, `savingLabel?`, `savedLabel?`, `errorLabel?` | Feedback silencioso del autoguardado ("Guardando… / Guardado"). A propósito no usa toasts: guardar es constante y un toast por campo sería ruido. |
-| `SearchInput` | `value`, `onChange`, `placeholder?`, `clearable?`, `clearLabel?` | Input con lupa y X para vaciar. |
+| `SearchInput` | `value`, `onChange`, `placeholder?`, `clearable?`, `clearLabel?`, `autoFocus?` | Input con lupa y X para vaciar. `autoFocus` para el buscador de un diálogo, que se abre justamente para escribir. |
 | `EmptyState` | `icon?`, `title`, `description?`, `action?` | Caja punteada para listas vacías o búsquedas sin resultados. |
 | `ConfirmDialog` | `open`, `onOpenChange`, `title`, `description?`, `confirmLabel?`, `cancelLabel?`, `variant?`, `loading?`, `onConfirm` | Reemplazo del `confirm()` del browser: estilable, cierra con Escape, atrapa el foco. |
 | `Collapsible` | `children`, `collapsedHeight?`, `showMoreLabel?`, `showLessLabel?` | Recorta contenido largo con degradé y toggle. |

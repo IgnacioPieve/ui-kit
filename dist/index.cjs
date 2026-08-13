@@ -556,7 +556,8 @@ function SearchInput({
   placeholder = labels.search,
   className,
   clearable = true,
-  clearLabel = labels.clear
+  clearLabel = labels.clear,
+  autoFocus
 }) {
   return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: cn("relative flex-1", className), children: [
     /* @__PURE__ */ jsxRuntime.jsx(lucideReact.Search, { className: "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" }),
@@ -567,6 +568,7 @@ function SearchInput({
         value,
         onChange: (e) => onChange(e.target.value),
         placeholder,
+        autoFocus,
         className: cn("pl-9", clearable && value && "pr-9")
       }
     ),
