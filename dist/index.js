@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { ChevronDown, X, Loader2, Sun, Moon, Search, Check, Copy, Upload, Camera, FileText, File, CircleAlert, Download } from 'lucide-react';
+import { ChevronDown, X, Loader2, Sun, Moon, Search, Check, Copy, Upload, Camera, FileText, File, Link2, CircleAlert, ExternalLink, Download } from 'lucide-react';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
@@ -314,6 +314,7 @@ var labels = {
   download: "Descargar",
   dropzone: "Arrastr\xE1 archivos ac\xE1, hac\xE9 clic o peg\xE1 con Ctrl+V",
   dropzoneActive: "Solt\xE1 los archivos\u2026",
+  openLink: "Abrir enlace",
   saveError: "No se pudo guardar",
   saved: "Guardado",
   saving: "Guardando\u2026",
@@ -1106,6 +1107,128 @@ function FilePreview({
       );
   }
 }
+
+// src/lib/links.ts
+var YOUTUBE_HOSTS = /* @__PURE__ */ new Set([
+  "youtube.com",
+  "m.youtube.com",
+  "music.youtube.com",
+  "youtube-nocookie.com"
+]);
+var YOUTUBE_PATHS = /* @__PURE__ */ new Set(["embed", "shorts", "live", "v"]);
+function safeUrl(url) {
+  let parsed;
+  try {
+    parsed = new URL(url.trim());
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
+  return parsed.href;
+}
+function linkHost(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+function parseTimestamp(value) {
+  if (!value) return null;
+  if (/^\d+$/.test(value)) return Number(value);
+  const match = value.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/i);
+  if (!match || !match.slice(1).some(Boolean)) return null;
+  const [h, m, s] = match.slice(1).map((part) => Number(part ?? 0) || 0);
+  return h * 3600 + m * 60 + s;
+}
+function youtubeEmbedUrl(url) {
+  const safe = safeUrl(url);
+  if (!safe) return null;
+  const parsed = new URL(safe);
+  const host = parsed.hostname.replace(/^www\./, "");
+  const segments = parsed.pathname.split("/").filter(Boolean);
+  let id = null;
+  if (host === "youtu.be") {
+    id = segments[0] ?? null;
+  } else if (YOUTUBE_HOSTS.has(host)) {
+    if (segments[0] === "watch") id = parsed.searchParams.get("v");
+    else if (YOUTUBE_PATHS.has(segments[0] ?? "")) id = segments[1] ?? null;
+  }
+  if (!id || !/^[\w-]+$/.test(id)) return null;
+  const embed = new URL(`https://www.youtube-nocookie.com/embed/${id}`);
+  const start = parseTimestamp(
+    parsed.searchParams.get("t") ?? parsed.searchParams.get("start")
+  );
+  if (start) embed.searchParams.set("start", String(start));
+  return embed.toString();
+}
+function linkKind(url) {
+  return youtubeEmbedUrl(url) ? "youtube" : "other";
+}
+function LinkPreview({
+  url,
+  title,
+  compact,
+  openLabel = labels.openLink,
+  className
+}) {
+  const href = safeUrl(url);
+  const label = title || (href ? linkHost(href) : url);
+  if (!href) {
+    return /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: cn(
+          "flex items-center gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground",
+          className
+        ),
+        children: [
+          /* @__PURE__ */ jsx(Link2, { className: "h-4 w-4 shrink-0" }),
+          /* @__PURE__ */ jsx("span", { className: "truncate", children: url })
+        ]
+      }
+    );
+  }
+  const openButton = /* @__PURE__ */ jsx(Button, { asChild: true, variant: "outline", size: "sm", children: /* @__PURE__ */ jsxs("a", { href, target: "_blank", rel: "noreferrer noopener", children: [
+    /* @__PURE__ */ jsx(ExternalLink, { className: "h-4 w-4" }),
+    compact || title ? label : openLabel
+  ] }) });
+  if (compact) {
+    return /* @__PURE__ */ jsxs(
+      "a",
+      {
+        href,
+        target: "_blank",
+        rel: "noreferrer noopener",
+        className: cn(
+          "flex items-center gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm hover:bg-accent",
+          className
+        ),
+        children: [
+          /* @__PURE__ */ jsx(Link2, { className: "h-4 w-4 shrink-0 text-muted-foreground" }),
+          /* @__PURE__ */ jsx("span", { className: "truncate", children: label })
+        ]
+      }
+    );
+  }
+  const embed = youtubeEmbedUrl(href);
+  if (embed) {
+    return /* @__PURE__ */ jsxs("div", { className: cn("space-y-2", className), children: [
+      /* @__PURE__ */ jsx(
+        "iframe",
+        {
+          src: embed,
+          title: label,
+          className: "aspect-video w-full rounded-md border",
+          allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+          allowFullScreen: true
+        }
+      ),
+      openButton
+    ] });
+  }
+  return /* @__PURE__ */ jsx("div", { className: cn(className), children: openButton });
+}
 function SectionHeading({
   icon,
   children,
@@ -1268,6 +1391,6 @@ function createHttpClient(baseUrl = "") {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

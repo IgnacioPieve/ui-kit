@@ -379,6 +379,25 @@ interface FilePreviewProps {
  */
 declare function FilePreview({ url, filename, contentType, size, compact, downloadLabel, }: FilePreviewProps): React.JSX.Element;
 
+interface LinkPreviewProps {
+    url: string;
+    /** Texto del link. Default: el host. */
+    title?: string;
+    /** Chip en línea en vez del reproductor embebido. */
+    compact?: boolean;
+    openLabel?: string;
+    className?: string;
+}
+/**
+ * Muestra una URL externa: reproductor embebido si es YouTube, y si no un
+ * botón para abrirla en otra pestaña.
+ *
+ * Es el hermano de `FilePreview` para lo que no se sube sino que se enlaza. Lo
+ * que no sea http(s) igual se renderiza como texto: guardarlo y no mostrarlo
+ * es peor que mostrarlo sin poder abrirlo.
+ */
+declare function LinkPreview({ url, title, compact, openLabel, className, }: LinkPreviewProps): React.JSX.Element;
+
 interface SectionHeadingProps {
     /** Emoji o icono a la izquierda. */
     icon?: ReactNode;
@@ -485,6 +504,35 @@ type FileKind = "image" | "pdf" | "audio" | "video" | "other";
 declare function fileKind(contentType: string | null | undefined): FileKind;
 
 /**
+ * Helpers de URLs externas. Hermano de `files.ts`: ahí se clasifica un archivo
+ * por su content-type, acá una URL por lo que se puede hacer con ella.
+ */
+type LinkKind = "youtube" | "other";
+/**
+ * Normaliza a una URL http(s) navegable, o `null`.
+ *
+ * Todo lo demás (`javascript:`, `data:`, basura suelta) se descarta: estos
+ * valores terminan en el `href` de un `<a>` y en el `src` de un iframe.
+ */
+declare function safeUrl(url: string): string | null;
+/** Host sin `www.`, para etiquetar un link cuando no hay título. */
+declare function linkHost(url: string): string;
+/**
+ * URL embebible de un video de YouTube, o `null` si la URL no lo es.
+ *
+ * Cubre las formas que uno pega de verdad: `watch?v=`, `youtu.be/`, `shorts/`,
+ * `embed/` y `live/`, en cualquiera de los hosts de YouTube. Conserva el
+ * timestamp (`?t=`) como `start`, que es la mitad de la gracia de compartir un
+ * link a un momento puntual.
+ *
+ * Sale por `youtube-nocookie.com`: el reproductor embebido no debería dejarle
+ * una cookie de tracking a quien solo quiere ver el video.
+ */
+declare function youtubeEmbedUrl(url: string): string | null;
+/** Clasifica una URL para elegir cómo mostrarla. */
+declare function linkKind(url: string): LinkKind;
+
+/**
  * Helpers de browser con fallback para contexto no seguro.
  *
  * Estas apps se sirven por HTTP plano en la LAN (ej. `http://192.168.1.20:15011`),
@@ -551,6 +599,7 @@ declare const labels: {
     readonly download: "Descargar";
     readonly dropzone: "Arrastrá archivos acá, hacé clic o pegá con Ctrl+V";
     readonly dropzoneActive: "Soltá los archivos…";
+    readonly openLink: "Abrir enlace";
     readonly saveError: "No se pudo guardar";
     readonly saved: "Guardado";
     readonly saving: "Guardando…";
@@ -562,4 +611,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, parseLocalDate, todayISO, useAutosave, useClickOutside, useDebounce, useTheme };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };

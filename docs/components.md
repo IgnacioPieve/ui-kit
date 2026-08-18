@@ -50,6 +50,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `FileDropzone` | `onFiles`, `accept?`, `multiple?`, `disabled?`, `size?`, `active?`, `label?`, `activeLabel?`, `hint?` | Drag & drop + clic. `size="sm"` es una fila compacta en línea, con la misma altura que un `Button` para que alineen; `"lg"` una caja grande. `active` la resalta (p. ej. como destino de un pegado con Ctrl+V). `accept` usa el formato de react-dropzone: `{ "image/*": [] }`. |
 | `CameraButton` | `onCapture`, `facing?`, `multiple?`, `label?` + props de `Button` | Abre la cámara del dispositivo. Va **aparte** del `FileDropzone`: el atributo `capture` fuerza la cámara y deja sin acceso a la galería, así que un mismo control no puede ofrecer ambas. En desktop los navegadores lo ignoran y abren el selector común. |
 | `FilePreview` | `url`, `filename`, `contentType?`, `size?`, `compact?`, `downloadLabel?` | Previsualiza según el tipo: imagen con lightbox, PDF embebido, audio, video, o tarjeta de descarga. Con `compact`, miniatura o chip. |
+| `LinkPreview` | `url`, `title?`, `compact?`, `openLabel?`, `className?` | El hermano de `FilePreview` para lo que no se sube sino que se enlaza: si la URL es de YouTube embebe el reproductor, y si no muestra un botón para abrirla en otra pestaña. Con `compact`, un chip en línea. |
 | `SectionHeading` | `icon?`, `children`, `actions?` | Título de sección dentro de una página. |
 | `MonthHeading` | `children` | Encabezado de un grupo por mes, con línea divisoria. |
 | `InfiniteScrollTrigger` | `onLoadMore`, `enabled?`, `loading?` | Centinela para scroll infinito. Se renderiza al final de la lista. |
@@ -79,6 +80,10 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `formatCurrency(cents, currency)` | Formatea un monto guardado en centavos. |
 | `formatFileSize(bytes)` | `1,4 MB` |
 | `fileKind(contentType)` | `"image" \| "pdf" \| "audio" \| "video" \| "other"` |
+| `linkKind(url)` | `"youtube" \| "other"` |
+| `safeUrl(url)` | La URL normalizada si es http(s), o `null`. Todo lo demás (`javascript:`, `data:`) se descarta antes de llegar a un `href` o a un `src`. |
+| `youtubeEmbedUrl(url)` | URL embebible (`youtube-nocookie.com`) de un video de YouTube, o `null`. Cubre `watch?v=`, `youtu.be/`, `shorts/`, `embed/` y `live/`, y conserva el timestamp `?t=`. |
+| `linkHost(url)` | El host sin `www.`, para etiquetar un link cuando no hay título. |
 | `copyToClipboard(text)` | Con fallback para contexto no seguro (HTTP plano en la LAN). |
 | `genId()` | Id local, con fallback si no hay `crypto.randomUUID`. |
 | `downloadBlob(blob, filename)` / `downloadJson(data, filename)` | Disparan una descarga. |

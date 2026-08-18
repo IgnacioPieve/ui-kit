@@ -15,6 +15,7 @@ export { Autocomplete, type AutocompleteProps } from "./Autocomplete";
 export { FileDropzone, type FileDropzoneProps } from "./FileDropzone";
 export { CameraButton, type CameraButtonProps } from "./CameraButton";
 export { FilePreview, type FilePreviewProps } from "./FilePreview";
+export { LinkPreview, type LinkPreviewProps } from "./LinkPreview";
 export {
   SectionHeading,
   MonthHeading,

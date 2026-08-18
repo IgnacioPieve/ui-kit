@@ -341,6 +341,7 @@ var labels = {
   download: "Descargar",
   dropzone: "Arrastr\xE1 archivos ac\xE1, hac\xE9 clic o peg\xE1 con Ctrl+V",
   dropzoneActive: "Solt\xE1 los archivos\u2026",
+  openLink: "Abrir enlace",
   saveError: "No se pudo guardar",
   saved: "Guardado",
   saving: "Guardando\u2026",
@@ -1133,6 +1134,128 @@ function FilePreview({
       );
   }
 }
+
+// src/lib/links.ts
+var YOUTUBE_HOSTS = /* @__PURE__ */ new Set([
+  "youtube.com",
+  "m.youtube.com",
+  "music.youtube.com",
+  "youtube-nocookie.com"
+]);
+var YOUTUBE_PATHS = /* @__PURE__ */ new Set(["embed", "shorts", "live", "v"]);
+function safeUrl(url) {
+  let parsed;
+  try {
+    parsed = new URL(url.trim());
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
+  return parsed.href;
+}
+function linkHost(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+function parseTimestamp(value) {
+  if (!value) return null;
+  if (/^\d+$/.test(value)) return Number(value);
+  const match = value.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/i);
+  if (!match || !match.slice(1).some(Boolean)) return null;
+  const [h, m, s] = match.slice(1).map((part) => Number(part ?? 0) || 0);
+  return h * 3600 + m * 60 + s;
+}
+function youtubeEmbedUrl(url) {
+  const safe = safeUrl(url);
+  if (!safe) return null;
+  const parsed = new URL(safe);
+  const host = parsed.hostname.replace(/^www\./, "");
+  const segments = parsed.pathname.split("/").filter(Boolean);
+  let id = null;
+  if (host === "youtu.be") {
+    id = segments[0] ?? null;
+  } else if (YOUTUBE_HOSTS.has(host)) {
+    if (segments[0] === "watch") id = parsed.searchParams.get("v");
+    else if (YOUTUBE_PATHS.has(segments[0] ?? "")) id = segments[1] ?? null;
+  }
+  if (!id || !/^[\w-]+$/.test(id)) return null;
+  const embed = new URL(`https://www.youtube-nocookie.com/embed/${id}`);
+  const start = parseTimestamp(
+    parsed.searchParams.get("t") ?? parsed.searchParams.get("start")
+  );
+  if (start) embed.searchParams.set("start", String(start));
+  return embed.toString();
+}
+function linkKind(url) {
+  return youtubeEmbedUrl(url) ? "youtube" : "other";
+}
+function LinkPreview({
+  url,
+  title,
+  compact,
+  openLabel = labels.openLink,
+  className
+}) {
+  const href = safeUrl(url);
+  const label = title || (href ? linkHost(href) : url);
+  if (!href) {
+    return /* @__PURE__ */ jsxRuntime.jsxs(
+      "div",
+      {
+        className: cn(
+          "flex items-center gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm text-muted-foreground",
+          className
+        ),
+        children: [
+          /* @__PURE__ */ jsxRuntime.jsx(lucideReact.Link2, { className: "h-4 w-4 shrink-0" }),
+          /* @__PURE__ */ jsxRuntime.jsx("span", { className: "truncate", children: url })
+        ]
+      }
+    );
+  }
+  const openButton = /* @__PURE__ */ jsxRuntime.jsx(Button, { asChild: true, variant: "outline", size: "sm", children: /* @__PURE__ */ jsxRuntime.jsxs("a", { href, target: "_blank", rel: "noreferrer noopener", children: [
+    /* @__PURE__ */ jsxRuntime.jsx(lucideReact.ExternalLink, { className: "h-4 w-4" }),
+    compact || title ? label : openLabel
+  ] }) });
+  if (compact) {
+    return /* @__PURE__ */ jsxRuntime.jsxs(
+      "a",
+      {
+        href,
+        target: "_blank",
+        rel: "noreferrer noopener",
+        className: cn(
+          "flex items-center gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm hover:bg-accent",
+          className
+        ),
+        children: [
+          /* @__PURE__ */ jsxRuntime.jsx(lucideReact.Link2, { className: "h-4 w-4 shrink-0 text-muted-foreground" }),
+          /* @__PURE__ */ jsxRuntime.jsx("span", { className: "truncate", children: label })
+        ]
+      }
+    );
+  }
+  const embed = youtubeEmbedUrl(href);
+  if (embed) {
+    return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: cn("space-y-2", className), children: [
+      /* @__PURE__ */ jsxRuntime.jsx(
+        "iframe",
+        {
+          src: embed,
+          title: label,
+          className: "aspect-video w-full rounded-md border",
+          allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+          allowFullScreen: true
+        }
+      ),
+      openButton
+    ] });
+  }
+  return /* @__PURE__ */ jsxRuntime.jsx("div", { className: cn(className), children: openButton });
+}
 function SectionHeading({
   icon,
   children,
@@ -1339,6 +1462,7 @@ exports.InfiniteScrollTrigger = InfiniteScrollTrigger;
 exports.Input = Input;
 exports.LOCALE = LOCALE;
 exports.Label = Label;
+exports.LinkPreview = LinkPreview;
 exports.Markdown = Markdown;
 exports.MonthHeading = MonthHeading;
 exports.Progress = Progress;
@@ -1373,11 +1497,15 @@ exports.genId = genId;
 exports.groupByMonth = groupByMonth;
 exports.inputVariants = inputVariants;
 exports.labels = labels;
+exports.linkHost = linkHost;
+exports.linkKind = linkKind;
 exports.parseLocalDate = parseLocalDate;
+exports.safeUrl = safeUrl;
 exports.todayISO = todayISO;
 exports.useAutosave = useAutosave;
 exports.useClickOutside = useClickOutside;
 exports.useDebounce = useDebounce;
 exports.useTheme = useTheme;
+exports.youtubeEmbedUrl = youtubeEmbedUrl;
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map
