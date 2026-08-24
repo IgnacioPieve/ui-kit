@@ -68,7 +68,7 @@ import { AppShell, AppBrand, Button, SearchInput, ThemeToggle } from "@pieve/ui"
 | `styles.css` | Tokens HSL (claro/oscuro), estilos de `body`, `.markdown`, `.no-spinner`. |
 | `preset` | Preset de Tailwind + `defineAppConfig`. |
 | `ui/` | `Button` `Input` `Textarea` `Label` `Select` `Switch` `Card` `Badge` `Dialog` `DropdownMenu` `Skeleton` `Spinner` `Toaster`. |
-| Compuestos | `AppShell` `AppBrand` `ThemeToggle` `SearchInput` `EmptyState` `ConfirmDialog` `Collapsible` `CopyButton` `Markdown` `Autocomplete` `FileDropzone` `FilePreview` `SectionHeading` `MonthHeading` `InfiniteScrollTrigger`. |
+| Compuestos | `AppShell` `AppBrand` `ThemeToggle` `SearchInput` `DateInput` `EmptyState` `ConfirmDialog` `Collapsible` `CopyButton` `Markdown` `Autocomplete` `FileDropzone` `FilePreview` `SectionHeading` `MonthHeading` `InfiniteScrollTrigger`. |
 | Hooks | `useTheme` `useDebounce` `useClickOutside`. |
 | Lib | `cn`, fechas, `formatCurrency`, `formatFileSize`, `fileKind`, `copyToClipboard`, `downloadBlob`, `genId`. |
 | HTTP | `createHttpClient` — cliente `fetch` tipado que entiende los errores de FastAPI. Con `{ trace: true }` loguea toda la conversación por consola. |

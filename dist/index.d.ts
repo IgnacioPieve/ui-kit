@@ -163,14 +163,30 @@ declare function AppBrand({ icon: Icon, title, className }: AppBrandProps): Reac
 interface AppShellProps {
     /** Normalmente un `<AppBrand />`, opcionalmente envuelto en un link. */
     brand: ReactNode;
+    /**
+     * Navegación principal: los links entre secciones. En el teléfono baja a su
+     * propia fila; en escritorio va en la misma línea, antes de `actions`.
+     */
+    nav?: ReactNode;
     /** Botones de la derecha del header (tema, backup, etc.). */
     actions?: ReactNode;
     children: ReactNode;
     /** Clases extra para el `<main>`. */
     className?: string;
 }
-/** Header sticky + contenedor principal. Layout base de todas las apps. */
-declare function AppShell({ brand, actions, children, className }: AppShellProps): React.JSX.Element;
+/**
+ * Header sticky + contenedor principal. Layout base de todas las apps.
+ *
+ * **El header no se sale de la pantalla.** Con la marca, cuatro links y el
+ * botón de tema en una sola fila sin envolver, un iPhone se queda a cien
+ * píxeles: la página entera scrollea de costado y el header sticky —que va
+ * anclado al viewport— se corta. Por eso `nav` es una prop y no un `action`
+ * más: en el teléfono baja a una fila propia, que scrollea sola si los links no
+ * entran, mientras el tema y el resto de los botones quedan siempre arriba a la
+ * derecha. Los `actions` además envuelven, así que una app que todavía meta sus
+ * links ahí adentro se apilará en dos líneas, pero tampoco se irá de la caja.
+ */
+declare function AppShell({ brand, nav, actions, children, className }: AppShellProps): React.JSX.Element;
 
 interface ThemeToggleProps {
     label?: string;
@@ -238,6 +254,33 @@ interface SearchInputProps {
  * en el call site.
  */
 declare function SearchInput({ value, onChange, placeholder, className, clearable, clearLabel, autoFocus, }: SearchInputProps): React.JSX.Element;
+
+interface DateInputProps extends Omit<InputProps, "type" | "className"> {
+    /** Texto visible mientras el campo está vacío. También es su `aria-label`. */
+    placeholder?: string;
+    /** Clases del contenedor. El campo ocupa todo su ancho. */
+    className?: string;
+    /** Clases del `<input>` en sí, para lo que no sea ancho. */
+    inputClassName?: string;
+}
+/**
+ * Campo de fecha que se ve aunque esté vacío.
+ *
+ * `input[type=date]` vacío **no muestra nada en iOS**: ni el `dd/mm/aaaa` que
+ * dibujan Chrome y Firefox ni el `placeholder`, que el HTML ignora en los
+ * campos de fecha. Queda un rectángulo en blanco que recién se entiende cuando
+ * ya tiene una fecha adentro — y si el campo no trae un `<Label>` al lado,
+ * tampoco hay forma de saber cuál de los dos es "desde" y cuál "hasta". El
+ * `title` no cubre eso: en un teléfono no hay hover.
+ *
+ * Acá el texto lo pone el kit, en un `<span>` encima del campo, y se va al
+ * enfocarlo para no taparle al usuario lo que está escribiendo. En los
+ * navegadores que sí dibujan el formato nativo, el campo vacío va en
+ * `text-transparent` para que no se superpongan los dos.
+ *
+ * Para campos con `<Label>` propio alcanza con `<Input type="date" />`.
+ */
+declare const DateInput: React.ForwardRefExoticComponent<DateInputProps & React.RefAttributes<HTMLInputElement>>;
 
 interface EmptyStateProps {
     icon?: ComponentType<{
@@ -650,4 +693,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };

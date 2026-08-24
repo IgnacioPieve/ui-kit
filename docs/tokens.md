@@ -71,10 +71,12 @@ Definidas en `styles.css`, fuera de Tailwind:
 |---|---|
 | `.markdown` | Estilos del contenido renderizado por `<Markdown />`: párrafos, listas, código, tablas, citas. |
 | `.no-spinner` | Oculta las flechitas de un `<input type="number">`. |
+| `.no-scrollbar` | Scroller sin barra visible, para una fila que en el teléfono se desplaza con el dedo (la nav del `AppShell`). |
+| `.field-placeholder` | El texto que `DateInput` dibuja sobre un campo vacío. Solo existe para que suba a 16px en el teléfono junto con los campos. |
 
 ## Formularios en el teléfono
 
-`styles.css` cierra dos comportamientos de Safari en iOS que rompen el layout en
+`styles.css` cierra los comportamientos de Safari en iOS que rompen el layout en
 silencio. Están acá y no en cada app porque los causa el kit: la tipografía de
 sus `Input` y el ancho nativo de los controles de fecha.
 
@@ -82,6 +84,7 @@ sus `Input` y el ancho nativo de los controles de fecha.
 |---|---|
 | `input, select, textarea { font-size: 16px }` abajo de `sm` | iOS hace zoom al enfocar cualquier campo de menos de 16px —los del kit son de 14, 12 los `inputSize="sm"`— y **no lo deshace al salir**: la pantalla queda corrida y hay que pellizcar para volver. |
 | `input[type="date"]` con `appearance: none` y `min-width: 0` | Safari lo trata como un control nativo con ancho propio: se sale de su caja en vez de encogerse. Hacen falta las dos reglas; con una sola sigue desbordando. |
+| El campo de fecha **vacío** | Ninguna regla lo arregla: iOS no dibuja nada en un `input[type=date]` sin valor, y el `placeholder` del HTML no aplica a los campos de fecha. Un filtro sin `<Label>` queda en un rectángulo mudo hasta que tiene una fecha. Eso lo resuelve `DateInput`, que pone el texto él mismo. |
 
 El escritorio no se toca: la primera está detrás de un `max-width: 639px`.
 

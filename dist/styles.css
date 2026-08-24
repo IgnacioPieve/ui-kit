@@ -197,6 +197,18 @@ body {
  * Utilidades puntuales que no valen una clase de Tailwind
  * -------------------------------------------------------------------------- */
 
+/* Scroller sin barra visible: para una fila de links o de chips que en el
+   teléfono se desplaza con el dedo. La barra ahí no aporta —no hay puntero que
+   la arrastre— y en Windows le come 15px de alto a la fila. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Oculta las flechitas de los <input type="number">. */
 .no-spinner::-webkit-outer-spin-button,
 .no-spinner::-webkit-inner-spin-button {
@@ -226,7 +238,11 @@ body {
 @media (max-width: 639px) {
   input,
   select,
-  textarea {
+  textarea,
+  /* El texto que `DateInput` dibuja encima de un campo vacío: es un <span>, no
+     un input, así que hay que subirlo a mano o queda dos puntos más chico que
+     el valor que reemplaza. */
+  .field-placeholder {
     font-size: 16px;
   }
 }
@@ -237,7 +253,12 @@ body {
    `min-width: 0` lo deja achicarse como ítem de un flex; hacen falta las dos.
 
    El valor además viene centrado en iOS, que al lado de un campo de texto
-   normal se ve torcido. */
+   normal se ve torcido.
+
+   Lo que esto NO arregla: el campo vacío no dibuja nada en iOS —ni el
+   `dd/mm/aaaa` que ponen Chrome y Firefox, ni el `placeholder`, que el HTML
+   ignora en los campos de fecha—, así que un filtro sin `<Label>` queda en un
+   rectángulo mudo. Eso es `DateInput`, que pone el texto él mismo. */
 input[type="date"] {
   -webkit-appearance: none;
   appearance: none;

@@ -36,11 +36,12 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 
 | Componente | Props | Para qué |
 |---|---|---|
-| `AppShell` | `brand`, `actions?`, `children`, `className?` | Header sticky + contenedor principal. Layout base de todas las apps. |
+| `AppShell` | `brand`, `nav?`, `actions?`, `children`, `className?` | Header sticky + contenedor principal. Layout base de todas las apps. Los links entre secciones van en `nav`, no en `actions`: en el teléfono bajan a una fila propia que scrollea sola, y el tema y los demás botones quedan siempre arriba a la derecha. Con todo junto en una fila, cuatro links y la marca se salen de un iPhone y la página entera scrollea de costado. |
 | `AppBrand` | `icon`, `title`, `className?` | Icono + nombre con el tipografiado del sistema. Se pasa como `brand` de `AppShell`, opcionalmente envuelto en un link. |
 | `ThemeToggle` | `label?` | Botón sol/luna. Usa `useTheme` internamente. |
 | `AutosaveIndicator` | `status`, `savingLabel?`, `savedLabel?`, `errorLabel?` | Feedback silencioso del autoguardado ("Guardando… / Guardado"). A propósito no usa toasts: guardar es constante y un toast por campo sería ruido. |
 | `SearchInput` | `value`, `onChange`, `placeholder?`, `clearable?`, `clearLabel?`, `autoFocus?` | Input con lupa y X para vaciar. `autoFocus` para el buscador de un diálogo, que se abre justamente para escribir. **No trae ancho ni `flex-1`**: para que ocupe el resto de una fila, `className="flex-1"`. |
+| `DateInput` | `placeholder?`, `inputClassName?` + props de `Input` | Campo de fecha que se ve **vacío**: iOS no dibuja nada en un `input[type=date]` sin valor —ni el `dd/mm/aaaa` de Chrome, ni el `placeholder`, que el HTML ignora acá—, así que un filtro sin `<Label>` queda en un rectángulo mudo. El texto lo pone el kit encima del campo y se va al enfocarlo. `className` va al contenedor (el campo ocupa todo su ancho), como en `SearchInput`. Para un campo con `<Label>` propio alcanza con `<Input type="date" />`. |
 | `EmptyState` | `icon?`, `title`, `description?`, `action?` | Caja punteada para listas vacías o búsquedas sin resultados. |
 | `ConfirmDialog` | `open`, `onOpenChange`, `title`, `description?`, `confirmLabel?`, `cancelLabel?`, `variant?`, `loading?`, `onConfirm` | Reemplazo del `confirm()` del browser: estilable, cierra con Escape, atrapa el foco. |
 | `Collapsible` | `children`, `collapsedHeight?`, `showMoreLabel?`, `showLessLabel?` | Recorta contenido largo con degradé y toggle. |

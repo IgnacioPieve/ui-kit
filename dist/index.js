@@ -449,16 +449,20 @@ function Toaster() {
   return /* @__PURE__ */ jsx(Toaster$1, { position: "top-center", theme: "system", richColors: true });
 }
 function AppBrand({ icon: Icon, title, className }) {
-  return /* @__PURE__ */ jsxs("span", { className: cn("flex items-center gap-2 font-semibold", className), children: [
-    /* @__PURE__ */ jsx(Icon, { className: "h-5 w-5 text-primary" }),
-    /* @__PURE__ */ jsx("span", { className: "text-lg tracking-tight", children: title })
+  return /* @__PURE__ */ jsxs("span", { className: cn("flex min-w-0 items-center gap-2 font-semibold", className), children: [
+    /* @__PURE__ */ jsx(Icon, { className: "h-5 w-5 shrink-0 text-primary" }),
+    /* @__PURE__ */ jsx("span", { className: "truncate text-lg tracking-tight", children: title })
   ] });
 }
-function AppShell({ brand, actions, children, className }) {
+function AppShell({ brand, nav, actions, children, className }) {
   return /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-background", children: [
-    /* @__PURE__ */ jsx("header", { className: "sticky top-0 z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60", children: /* @__PURE__ */ jsxs("div", { className: "container flex h-16 items-center justify-between", children: [
-      brand,
-      actions && /* @__PURE__ */ jsx("div", { className: "flex items-center gap-1", children: actions })
+    /* @__PURE__ */ jsx("header", { className: "sticky top-0 z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60", children: /* @__PURE__ */ jsxs("div", { className: "container flex min-h-16 flex-wrap items-center gap-x-4 gap-y-2 py-2", children: [
+      /* @__PURE__ */ jsx("div", { className: "order-1 mr-auto flex min-w-0 items-center", children: brand }),
+      actions && /* @__PURE__ */ jsx("div", { className: "order-2 flex flex-wrap items-center justify-end gap-1 sm:order-3", children: actions }),
+      nav && // El `-mx-4 px-4` es el padding del container: en el teléfono deja
+      // que los links scrolleen de borde a borde en vez de cortarse
+      // contra un margen.
+      /* @__PURE__ */ jsx("nav", { className: "no-scrollbar order-3 -mx-4 flex w-full items-center gap-1 overflow-x-auto overscroll-x-contain px-4 sm:order-2 sm:mx-0 sm:w-auto sm:px-0 [&>*]:shrink-0", children: nav })
     ] }) }),
     /* @__PURE__ */ jsx("main", { className: cn("container py-6 md:py-10", className), children })
   ] });
@@ -559,6 +563,50 @@ function SearchInput({
     )
   ] });
 }
+var DateInput = React7.forwardRef(
+  ({
+    placeholder,
+    className,
+    inputClassName,
+    value,
+    defaultValue,
+    onChange,
+    "aria-label": ariaLabel,
+    ...props
+  }, ref) => {
+    const [innerValue, setInnerValue] = React7.useState(defaultValue ?? "");
+    const current = value !== void 0 ? value : innerValue;
+    const empty = current === "" || current === null || current === void 0;
+    const showPlaceholder = empty && !!placeholder;
+    return /* @__PURE__ */ jsxs("div", { className: cn("relative w-full", className), children: [
+      /* @__PURE__ */ jsx(
+        Input,
+        {
+          ...props,
+          ref,
+          type: "date",
+          value,
+          defaultValue,
+          "aria-label": ariaLabel ?? placeholder,
+          onChange: (event) => {
+            if (value === void 0) setInnerValue(event.target.value);
+            onChange?.(event);
+          },
+          className: cn(
+            "peer",
+            // Mientras se tipea una fecha a mano el `value` sigue vacío hasta
+            // que está completa, así que el color vuelve con el foco: si no,
+            // se escribiría a ciegas.
+            showPlaceholder && "text-transparent focus:text-foreground",
+            inputClassName
+          )
+        }
+      ),
+      showPlaceholder && /* @__PURE__ */ jsx("span", { className: "field-placeholder pointer-events-none absolute inset-y-0 left-3 flex items-center truncate text-sm text-muted-foreground peer-focus:opacity-0", children: placeholder })
+    ] });
+  }
+);
+DateInput.displayName = "DateInput";
 function EmptyState({
   icon: Icon,
   title,
@@ -1474,6 +1522,6 @@ function createHttpClient(baseUrl = "", { trace = false } = {}) {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

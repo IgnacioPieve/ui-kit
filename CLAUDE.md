@@ -122,6 +122,15 @@ Things that fail **silently** or in a confusing way:
   no error anywhere.
 - Moving an existing tag instead of creating a new one leaves apps on a cached
   tarball. Always create a new tag.
+- **Nothing here fails on a narrow screen, it just leaves the box.** A header
+  row that neither wraps nor scrolls does not error: the page grows sideways
+  (581px inside a 390px iPhone, measured on groceries) and the sticky header
+  gets cut. Anything that lines up an unknown number of children — `AppShell`,
+  a toolbar — wraps or scrolls, and a component that cannot know its own width
+  keeps `min-w-0`. Check it at 390px before releasing.
+- **An empty `input[type=date]` draws nothing on iOS**: no `dd/mm/aaaa`, and
+  `placeholder` does not apply to date fields. Without a `<Label>` next to it,
+  the field is a mute rectangle. That is what `DateInput` exists for.
 
 ## Docs
 

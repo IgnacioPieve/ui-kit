@@ -6,6 +6,7 @@ export {
   type AutosaveIndicatorProps,
 } from "./AutosaveIndicator";
 export { SearchInput, type SearchInputProps } from "./SearchInput";
+export { DateInput, type DateInputProps } from "./DateInput";
 export { EmptyState, type EmptyStateProps } from "./EmptyState";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
 export { Collapsible, type CollapsibleProps } from "./Collapsible";
