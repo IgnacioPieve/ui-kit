@@ -78,17 +78,30 @@ usar `grep -F` con la forma literal.
    git tag v0.1.1 && git push --follow-tags
    ```
 
-5. En cada app, apuntar la dependencia al tag nuevo y reconstruir:
+5. En **las cinco** apps, apuntar la dependencia al tag nuevo, regenerar el
+   lock y reconstruir:
 
    ```bash
    # frontend/package.json
    "@pieve/ui": "github:IgnacioPieve/ui-kit#v0.1.1"
 
-   docker compose build frontend
+   cd <app>/frontend
+   docker run --rm -v "$PWD:/app" -w /app -e HOME=/tmp --user "$(id -u):$(id -g)" \
+     node:22-alpine npm install --package-lock-only
+   cd .. && docker compose build frontend
    ```
+
+   El lock no es opcional: el build corre `npm ci`, que instala exactamente lo
+   que dice `package-lock.json` y falla si el pin y el lock no coinciden.
 
 Las apps apuntan a un **tag**, nunca a `main`, para que un `npm install` no
 cambie la UI sin querer.
+
+**El mismo día, las cinco.** Un release que llega a dos de cinco es como no
+haberlo hecho: la próxima vez que algo falle en una app sin el arreglo, la
+salida barata va a ser parchearlo ahí — y así fue como cuatro arreglos que
+correspondían al kit terminaron viviendo en los `index.css` de dos apps
+mientras las otras tres seguían con los bugs.
 
 ## Adoptar el kit en un proyecto nuevo
 
