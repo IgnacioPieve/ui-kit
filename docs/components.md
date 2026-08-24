@@ -94,13 +94,13 @@ El locale es `es-AR` para todo (`LOCALE`).
 ## Cliente HTTP
 
 ```ts
-const http = createHttpClient(import.meta.env.VITE_API_URL ?? "", { trace: true });
+const http = createHttpClient("", { trace: true });
 const visits = await http.get<Visit[]>("/api/visits", { q: "control" });
 ```
 
-`baseUrl` vacío significa mismo origen: nginx hace de reverse-proxy de `/api/` al
-backend, así que la app funciona desde cualquier host o IP sin URLs hardcodeadas
-en el build.
+`baseUrl` vacío —el default, y lo que usan las cinco apps— significa mismo
+origen: nginx hace de reverse-proxy de `/api/` al backend, así que la app
+funciona desde cualquier host o IP sin URLs hardcodeadas en el build.
 
 | Método | Notas |
 |---|---|
