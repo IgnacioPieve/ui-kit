@@ -26,9 +26,9 @@ componente reutilizable, no se escribe en la app, se escribe acá y se consume.
 │  └────────────────────────┘  │
 └──────────────┬───────────────┘
                │ github:IgnacioPieve/ui-kit#vX.Y.Z  (tag fijo)
-      ┌────────┴────────┐
-      ▼                 ▼
-   MedLog            expenses
+   ┌───────┬───────┼───────┬────────┐
+   ▼       ▼       ▼       ▼        ▼
+expenses watchlog health groceries finance
 ```
 
 ## Capas
@@ -95,9 +95,9 @@ sensible: son componentes de UI.
 
 ### Sin dependencia de routing
 
-`AppShell` recibe `brand` como `ReactNode` en vez de un `href`. Así MedLog lo
-envuelve con el `<Link>` de react-router y expenses, que es de una sola
-pantalla, no arrastra un router que no usa.
+`AppShell` recibe `brand` como `ReactNode` en vez de un `href`. Así las apps con
+varias pantallas lo envuelven con el `<Link>` de react-router, y una de una sola
+pantalla no arrastraría un router que no usa.
 
 ## La trampa del `content`
 

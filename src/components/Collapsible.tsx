@@ -20,10 +20,21 @@ export function Collapsible({
   const [expanded, setExpanded] = useState(false);
   const [overflowing, setOverflowing] = useState(false);
 
+  // `children` es un objeto nuevo en cada render, así que tenerlo en las deps
+  // hacía leer `scrollHeight` —que fuerza layout— cada vez que el padre
+  // renderizaba. Un ResizeObserver mide solo cuando el contenido cambia de
+  // tamaño de verdad, que es la pregunta que estamos haciendo.
   useLayoutEffect(() => {
     const el = ref.current;
-    if (el) setOverflowing(el.scrollHeight > collapsedHeight + 4);
-  }, [children, collapsedHeight]);
+    if (!el) return;
+    const measure = () => setOverflowing(el.scrollHeight > collapsedHeight + 4);
+    measure();
+    const observer = new ResizeObserver(measure);
+    // El alto del wrapper está clampeado por `maxHeight`: lo que crece o se
+    // encoge es el contenido, así que se observan los hijos.
+    for (const child of el.children) observer.observe(child);
+    return () => observer.disconnect();
+  }, [collapsedHeight]);
 
   return (
     <div>

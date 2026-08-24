@@ -14,6 +14,8 @@ export {
   buildQuery,
   HttpError,
   type HttpClient,
+  type HttpClientOptions,
   type QueryParams,
 } from "./lib/http";
+export { log } from "./lib/logger";
 export { labels, type Labels } from "./labels";

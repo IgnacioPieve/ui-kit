@@ -123,7 +123,7 @@ cambie la UI sin querer.
    @tailwind utilities;
    ```
 
-MedLog y expenses sirven como plantilla completa (backend, Docker, nginx, docs).
+watchlog sirve como plantilla completa (backend, Docker, nginx, tests, docs).
 
 ## Troubleshooting
 

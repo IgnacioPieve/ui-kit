@@ -14,7 +14,7 @@ export default defineConfig({
   sourcemap: true,
   treeshake: true,
   // Everything in `dependencies` / `peerDependencies` is external by default.
-  external: ["react", "react-dom", "tailwindcss"],
+  external: ["react", "react-dom", "tailwindcss", "tailwindcss/plugin"],
   onSuccess: async () => {
     copyFileSync("src/styles.css", "dist/styles.css");
   },

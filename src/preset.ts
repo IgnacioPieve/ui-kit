@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 import animate from "tailwindcss-animate";
 
 /**
@@ -12,13 +13,40 @@ import animate from "tailwindcss-animate";
  */
 export const uiContent = ["./node_modules/@pieve/ui/dist/**/*.{js,cjs}"];
 
+/**
+ * Devuelve el padding del `container` a 1.5rem de `sm` para arriba.
+ *
+ * **Por qué un plugin y no `container.padding: { DEFAULT, sm }`:** el core de
+ * Tailwind solo emite el padding de los breakpoints que figuran en
+ * `container.screens`, y acá esa lista es solo `2xl` —queremos ancho completo
+ * hasta 1100px, no el máximo de cada breakpoint—. Con esa configuración, una
+ * entrada `sm` en `padding` **se descarta sin decir nada**: el build queda
+ * verde y el escritorio se queda con el padding del teléfono.
+ *
+ * Los plugins del usuario se emiten después de los del core dentro de
+ * `@layer components`, así que esta regla le gana a la del container por orden,
+ * con la misma especificidad.
+ */
+const containerPadding = plugin(({ addComponents, theme }) => {
+  addComponents({
+    [`@media (min-width: ${theme("screens.sm")})`]: {
+      ".container": { paddingLeft: "1.5rem", paddingRight: "1.5rem" },
+    },
+  });
+});
+
 /** Preset de Tailwind del design system. Ver `defineAppConfig`. */
 export const preset = {
   darkMode: "class",
   theme: {
     container: {
       center: true,
-      padding: "1.5rem",
+      // 1rem y no 1.5: en un teléfono de 375px, 1.5rem son 48px de margen para
+      // 327px de contenido, y se nota en todo —grillas de tarjetas, columnas de
+      // montos, filas de tabla—. De `sm` para arriba vuelve a 1.5rem, pero eso
+      // NO se puede escribir acá: ver `containerPadding` abajo.
+      padding: "1rem",
+      // Ancho completo hasta 1100px, sin los máximos de cada breakpoint.
       screens: { "2xl": "1100px" },
     },
     extend: {
@@ -91,7 +119,7 @@ export const preset = {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate, containerPadding],
 } satisfies Partial<Config>;
 
 /**

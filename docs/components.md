@@ -40,7 +40,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `AppBrand` | `icon`, `title`, `className?` | Icono + nombre con el tipografiado del sistema. Se pasa como `brand` de `AppShell`, opcionalmente envuelto en un link. |
 | `ThemeToggle` | `label?` | Botón sol/luna. Usa `useTheme` internamente. |
 | `AutosaveIndicator` | `status`, `savingLabel?`, `savedLabel?`, `errorLabel?` | Feedback silencioso del autoguardado ("Guardando… / Guardado"). A propósito no usa toasts: guardar es constante y un toast por campo sería ruido. |
-| `SearchInput` | `value`, `onChange`, `placeholder?`, `clearable?`, `clearLabel?`, `autoFocus?` | Input con lupa y X para vaciar. `autoFocus` para el buscador de un diálogo, que se abre justamente para escribir. |
+| `SearchInput` | `value`, `onChange`, `placeholder?`, `clearable?`, `clearLabel?`, `autoFocus?` | Input con lupa y X para vaciar. `autoFocus` para el buscador de un diálogo, que se abre justamente para escribir. **No trae ancho ni `flex-1`**: para que ocupe el resto de una fila, `className="flex-1"`. |
 | `EmptyState` | `icon?`, `title`, `description?`, `action?` | Caja punteada para listas vacías o búsquedas sin resultados. |
 | `ConfirmDialog` | `open`, `onOpenChange`, `title`, `description?`, `confirmLabel?`, `cancelLabel?`, `variant?`, `loading?`, `onConfirm` | Reemplazo del `confirm()` del browser: estilable, cierra con Escape, atrapa el foco. |
 | `Collapsible` | `children`, `collapsedHeight?`, `showMoreLabel?`, `showLessLabel?` | Recorta contenido largo con degradé y toggle. |
@@ -94,7 +94,7 @@ El locale es `es-AR` para todo (`LOCALE`).
 ## Cliente HTTP
 
 ```ts
-const http = createHttpClient(import.meta.env.VITE_API_URL ?? "");
+const http = createHttpClient(import.meta.env.VITE_API_URL ?? "", { trace: true });
 const visits = await http.get<Visit[]>("/api/visits", { q: "control" });
 ```
 
@@ -113,6 +113,21 @@ en el build.
 
 Los errores se lanzan como `HttpError` con `status` y el `detail` de FastAPI
 como mensaje.
+
+### Tracing
+
+Con `{ trace: true }` el cliente loguea por consola cada request con su payload
+y cada respuesta con su duración, en grupos colapsados. **Es del cliente y no de
+cada endpoint a propósito**: el cliente ya conoce el método, el path final —con
+query string— y el body; envolver cada llamada a mano obliga a repetir los tres,
+y el día que uno se edita y el otro no, el log miente sin que falle nada.
+
+Para los hechos de dominio que no son una request, el kit exporta `log`:
+
+```ts
+import { log } from "@pieve/ui";
+log.event("receipt", `#${receipt.id} encolado para extraer`, receipt);
+```
 
 ## Autoguardado
 

@@ -1,13 +1,26 @@
+import plugin from 'tailwindcss/plugin';
 import animate from 'tailwindcss-animate';
 
 // src/preset.ts
 var uiContent = ["./node_modules/@pieve/ui/dist/**/*.{js,cjs}"];
+var containerPadding = plugin(({ addComponents, theme }) => {
+  addComponents({
+    [`@media (min-width: ${theme("screens.sm")})`]: {
+      ".container": { paddingLeft: "1.5rem", paddingRight: "1.5rem" }
+    }
+  });
+});
 var preset = {
   darkMode: "class",
   theme: {
     container: {
       center: true,
-      padding: "1.5rem",
+      // 1rem y no 1.5: en un teléfono de 375px, 1.5rem son 48px de margen para
+      // 327px de contenido, y se nota en todo —grillas de tarjetas, columnas de
+      // montos, filas de tabla—. De `sm` para arriba vuelve a 1.5rem, pero eso
+      // NO se puede escribir acá: ver `containerPadding` abajo.
+      padding: "1rem",
+      // Ancho completo hasta 1100px, sin los máximos de cada breakpoint.
       screens: { "2xl": "1100px" }
     },
     extend: {
@@ -80,7 +93,7 @@ var preset = {
       }
     }
   },
-  plugins: [animate]
+  plugins: [animate, containerPadding]
 };
 function defineAppConfig(config) {
   return {

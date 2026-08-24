@@ -1,3 +1,4 @@
+import * as tailwindcss_types_config from 'tailwindcss/types/config';
 import { Config } from 'tailwindcss';
 
 /**
@@ -96,9 +97,12 @@ declare const preset: {
             };
         };
     };
-    plugins: {
+    plugins: ({
         handler: () => void;
-    }[];
+    } | {
+        handler: tailwindcss_types_config.PluginCreator;
+        config?: Partial<tailwindcss_types_config.Config>;
+    })[];
 };
 /**
  * Arma el `tailwind.config.ts` de una app: aplica el preset y agrega el

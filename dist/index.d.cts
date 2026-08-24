@@ -230,6 +230,13 @@ interface SearchInputProps {
      */
     autoFocus?: boolean;
 }
+/**
+ * Buscador con lupa y botón de limpiar.
+ *
+ * **No trae ancho ni `flex-1`**: cómo se reparte el espacio es una decisión del
+ * contenedor, no del campo. Para que ocupe el resto de una fila, `className="flex-1"`
+ * en el call site.
+ */
 declare function SearchInput({ value, onChange, placeholder, className, clearable, clearLabel, autoFocus, }: SearchInputProps): React.JSX.Element;
 
 interface EmptyStateProps {
@@ -572,6 +579,18 @@ interface HttpClient {
 type QueryParams = Record<string, string | number | boolean | undefined | null | (string | number)[]>;
 /** Serializa params salteando `undefined`/`null` y expandiendo arrays. */
 declare function buildQuery(params?: QueryParams): string;
+interface HttpClientOptions {
+    /**
+     * Loguea por consola cada request con su payload y cada respuesta con su
+     * duración (ver `log`).
+     *
+     * Va acá y no envuelto en cada endpoint porque el cliente ya conoce el
+     * método, el path final —con query string incluido— y el body: envolver a
+     * mano obliga a repetir los tres, y el día que uno se edita y el otro no, el
+     * log miente sin que falle nada.
+     */
+    trace?: boolean;
+}
 /**
  * Cliente HTTP tipado sobre `fetch`.
  *
@@ -579,7 +598,27 @@ declare function buildQuery(params?: QueryParams): string;
  * reverse-proxy de `/api/` al backend, así que la app funciona desde cualquier
  * host o IP sin URLs hardcodeadas en el build.
  */
-declare function createHttpClient(baseUrl?: string): HttpClient;
+declare function createHttpClient(baseUrl?: string, { trace }?: HttpClientOptions): HttpClient;
+
+/**
+ * Observabilidad de desarrollo por consola.
+ *
+ * La conversación con el backend la loguea `createHttpClient` cuando se lo crea
+ * con `{ trace: true }` — no hay que instrumentar endpoint por endpoint. Lo que
+ * queda para la app es `log.event`: los hechos de dominio que no son una
+ * request y que igual conviene poder seguir desde las devtools.
+ *
+ * Los grupos vienen colapsados: la consola queda legible de un vistazo y el
+ * detalle está a un click. No usar `console.log` suelto en componentes — todo
+ * pasa por acá para que el formato sea uniforme.
+ */
+declare const log: {
+    request(method: string, path: string, payload?: unknown): void;
+    response(method: string, path: string, started: number, data: unknown): void;
+    failure(method: string, path: string, started: number, error: unknown): void;
+    /** Un hecho de dominio digno de seguir, que no es una request. */
+    event(scope: string, message: string, data?: unknown): void;
+};
 
 /**
  * Textos por defecto de los componentes del kit (UI en español).
@@ -611,4 +650,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };

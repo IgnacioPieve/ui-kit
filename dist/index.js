@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { ChevronDown, X, Loader2, Sun, Moon, Search, Check, Copy, Upload, Camera, FileText, File, Link2, CircleAlert, ExternalLink, Download } from 'lucide-react';
+import { ChevronDown, X, Loader2, Sun, Moon, Search, Check, Copy, Upload, Camera, FileText, File as File$1, Link2, CircleAlert, ExternalLink, Download } from 'lucide-react';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
@@ -533,7 +533,7 @@ function SearchInput({
   clearLabel = labels.clear,
   autoFocus
 }) {
-  return /* @__PURE__ */ jsxs("div", { className: cn("relative flex-1", className), children: [
+  return /* @__PURE__ */ jsxs("div", { className: cn("relative", className), children: [
     /* @__PURE__ */ jsx(Search, { className: "pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" }),
     /* @__PURE__ */ jsx(
       Input,
@@ -615,8 +615,13 @@ function Collapsible({
   const [overflowing, setOverflowing] = useState(false);
   useLayoutEffect(() => {
     const el = ref.current;
-    if (el) setOverflowing(el.scrollHeight > collapsedHeight + 4);
-  }, [children, collapsedHeight]);
+    if (!el) return;
+    const measure = () => setOverflowing(el.scrollHeight > collapsedHeight + 4);
+    measure();
+    const observer = new ResizeObserver(measure);
+    for (const child of el.children) observer.observe(child);
+    return () => observer.disconnect();
+  }, [collapsedHeight]);
   return /* @__PURE__ */ jsxs("div", { children: [
     /* @__PURE__ */ jsxs(
       "div",
@@ -982,7 +987,7 @@ function groupByMonth(items, getDate) {
     if (!groups.has(key)) groups.set(key, { date: first, items: [] });
     groups.get(key).items.push(item);
   }
-  return [...groups.entries()].sort((a, b) => b[1].date.getTime() - a[1].date.getTime()).map(([key, group]) => ({ key, label: formatMonthYear(group.date), items: group.items }));
+  return [...groups.entries()].sort((a, b) => b[1].date.getTime() - a[1].date.getTime()).map(([key, group2]) => ({ key, label: formatMonthYear(group2.date), items: group2.items }));
 }
 
 // src/lib/format.ts
@@ -1011,7 +1016,7 @@ function DownloadCard({
   downloadLabel
 }) {
   return /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-md border bg-muted/40 p-3", children: [
-    /* @__PURE__ */ jsx(File, { className: "h-8 w-8 shrink-0 text-muted-foreground" }),
+    /* @__PURE__ */ jsx(File$1, { className: "h-8 w-8 shrink-0 text-muted-foreground" }),
     /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
       /* @__PURE__ */ jsx("p", { className: "truncate text-sm font-medium", children: filename }),
       size !== void 0 && /* @__PURE__ */ jsx("p", { className: "text-xs text-muted-foreground", children: formatFileSize(size) })
@@ -1044,7 +1049,7 @@ function FilePreview({
       );
     }
     return /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 rounded-md border bg-muted/40 px-3 py-2 text-sm", children: [
-      kind === "pdf" ? /* @__PURE__ */ jsx(FileText, { className: "h-4 w-4 shrink-0 text-muted-foreground" }) : /* @__PURE__ */ jsx(File, { className: "h-4 w-4 shrink-0 text-muted-foreground" }),
+      kind === "pdf" ? /* @__PURE__ */ jsx(FileText, { className: "h-4 w-4 shrink-0 text-muted-foreground" }) : /* @__PURE__ */ jsx(File$1, { className: "h-4 w-4 shrink-0 text-muted-foreground" }),
       /* @__PURE__ */ jsx("span", { className: "truncate", children: filename })
     ] });
   }
@@ -1328,6 +1333,43 @@ function useAutosave(save) {
   return { status, save: trigger, flush };
 }
 
+// src/lib/logger.ts
+var STYLES = {
+  request: "color:#0284c7;font-weight:600",
+  response: "color:#16a34a;font-weight:600",
+  failure: "color:#dc2626;font-weight:600",
+  event: "color:#9333ea;font-weight:600"
+};
+function group(kind, label, body) {
+  console.groupCollapsed(`%c${label}`, STYLES[kind]);
+  body();
+  console.groupEnd();
+}
+var ms = (started) => `${(performance.now() - started).toFixed(0)}ms`;
+var log = {
+  request(method, path, payload) {
+    group("request", `\u2192 ${method} ${path}`, () => {
+      if (payload !== void 0) console.log("payload:", payload);
+    });
+  },
+  response(method, path, started, data) {
+    group("response", `\u2190 ${method} ${path} \xB7 ${ms(started)}`, () => {
+      console.log("data:", data);
+    });
+  },
+  failure(method, path, started, error) {
+    group("failure", `\u2715 ${method} ${path} \xB7 ${ms(started)}`, () => {
+      console.error(error);
+    });
+  },
+  /** Un hecho de dominio digno de seguir, que no es una request. */
+  event(scope, message, data) {
+    group("event", `\u25CF ${scope} \xB7 ${message}`, () => {
+      if (data !== void 0) console.log(data);
+    });
+  }
+};
+
 // src/lib/http.ts
 var HttpError = class extends Error {
   constructor(status, message) {
@@ -1350,8 +1392,26 @@ function buildQuery(params = {}) {
   const str = qs.toString();
   return str ? `?${str}` : "";
 }
-function createHttpClient(baseUrl = "") {
-  async function request(path, init) {
+function tracedPayload(init) {
+  const body = init?.body;
+  if (body === void 0 || body === null) return void 0;
+  if (body instanceof FormData) {
+    return Object.fromEntries(
+      [...body.entries()].map(([key, value]) => [
+        key,
+        value instanceof File ? `File(${value.name}, ${value.size}b)` : value
+      ])
+    );
+  }
+  if (typeof body !== "string") return body;
+  try {
+    return JSON.parse(body);
+  } catch {
+    return body;
+  }
+}
+function createHttpClient(baseUrl = "", { trace = false } = {}) {
+  async function send(path, init) {
     const res = await fetch(`${baseUrl}${path}`, init);
     if (!res.ok) {
       let detail = res.statusText;
@@ -1364,6 +1424,20 @@ function createHttpClient(baseUrl = "") {
     }
     if (res.status === 204) return void 0;
     return await res.json();
+  }
+  async function request(path, init) {
+    if (!trace) return send(path, init);
+    const method = init?.method ?? "GET";
+    const started = performance.now();
+    log.request(method, path, tracedPayload(init));
+    try {
+      const data = await send(path, init);
+      log.response(method, path, started, data);
+      return data;
+    } catch (error) {
+      log.failure(method, path, started, error);
+      throw error;
+    }
   }
   const json = (method, body) => ({
     method,
@@ -1380,17 +1454,26 @@ function createHttpClient(baseUrl = "") {
     postForm: (path, form) => request(path, { method: "POST", body: form }),
     patchForm: (path, form) => request(path, { method: "PATCH", body: form }),
     async download(path, fallbackName) {
-      const res = await fetch(`${baseUrl}${path}`);
-      if (!res.ok) throw new HttpError(res.status, res.statusText);
-      const filename = filenameFromDisposition(
-        res.headers.get("content-disposition"),
-        fallbackName
-      );
-      downloadBlob(await res.blob(), filename);
+      const started = performance.now();
+      if (trace) log.request("GET", path);
+      try {
+        const res = await fetch(`${baseUrl}${path}`);
+        if (!res.ok) throw new HttpError(res.status, res.statusText);
+        const filename = filenameFromDisposition(
+          res.headers.get("content-disposition"),
+          fallbackName
+        );
+        const blob = await res.blob();
+        if (trace) log.response("GET", path, started, `${filename} (${blob.size}b)`);
+        downloadBlob(blob, filename);
+      } catch (error) {
+        if (trace) log.failure("GET", path, started, error);
+        throw error;
+      }
     }
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

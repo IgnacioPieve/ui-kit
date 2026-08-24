@@ -21,5 +21,8 @@ Otros archivos relevantes en la raíz del repo:
 Comparten estructura, convenciones y este design system; lo que se aprende acá
 aplica igual allá.
 
-- [MedLog](https://github.com/IgnacioPieve/medlog) — registros médicos.
 - [expenses](https://github.com/IgnacioPieve/expenses) — seguimiento de gastos.
+- [watchlog](https://github.com/IgnacioPieve/watchlog) — registro de películas y series.
+- [health](https://github.com/IgnacioPieve/health) — registros médicos.
+- [groceries](https://github.com/IgnacioPieve/groceries) — tickets de supermercado.
+- [finance](https://github.com/IgnacioPieve/finance) — tablero de solvencia proyectada.

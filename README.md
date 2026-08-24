@@ -71,7 +71,7 @@ import { AppShell, AppBrand, Button, SearchInput, ThemeToggle } from "@pieve/ui"
 | Compuestos | `AppShell` `AppBrand` `ThemeToggle` `SearchInput` `EmptyState` `ConfirmDialog` `Collapsible` `CopyButton` `Markdown` `Autocomplete` `FileDropzone` `FilePreview` `SectionHeading` `MonthHeading` `InfiniteScrollTrigger`. |
 | Hooks | `useTheme` `useDebounce` `useClickOutside`. |
 | Lib | `cn`, fechas, `formatCurrency`, `formatFileSize`, `fileKind`, `copyToClipboard`, `downloadBlob`, `genId`. |
-| HTTP | `createHttpClient` — cliente `fetch` tipado que entiende los errores de FastAPI. |
+| HTTP | `createHttpClient` — cliente `fetch` tipado que entiende los errores de FastAPI. Con `{ trace: true }` loguea toda la conversación por consola. |
 
 Referencia completa en [`docs/components.md`](docs/components.md) y
 [`docs/tokens.md`](docs/tokens.md).
@@ -98,5 +98,8 @@ trabajen en el repo, ver [`CLAUDE.md`](CLAUDE.md).
 
 ## Proyectos hermanos
 
-- [MedLog](https://github.com/IgnacioPieve/medlog) — registros médicos.
 - [expenses](https://github.com/IgnacioPieve/expenses) — seguimiento de gastos.
+- [watchlog](https://github.com/IgnacioPieve/watchlog) — registro de películas y series.
+- [health](https://github.com/IgnacioPieve/health) — registros médicos.
+- [groceries](https://github.com/IgnacioPieve/groceries) — tickets de supermercado.
+- [finance](https://github.com/IgnacioPieve/finance) — tablero de solvencia proyectada.

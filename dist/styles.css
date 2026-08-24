@@ -35,10 +35,15 @@
   --accent: 220 14% 94%;
   --accent-foreground: 222 20% 20%;
 
-  --destructive: 0 72% 51%;
+  /* `destructive` y `success` se usan de las dos formas: como fondo de un badge
+     o un botón (con su `-foreground` encima) y como color de texto sobre el
+     fondo de la página. La segunda es la exigente: a 12px, un rojo o un verde
+     al 50% de luminosidad se apagan contra el blanco. Estos valores pasan AA
+     en los dos usos. */
+  --destructive: 0 74% 42%;
   --destructive-foreground: 0 0% 100%;
 
-  --success: 142 71% 40%;
+  --success: 142 76% 30%;
   --success-foreground: 0 0% 100%;
 
   --warning: 38 92% 44%;
@@ -73,10 +78,14 @@
   --accent: 217 19% 20%;
   --accent-foreground: 210 20% 92%;
 
-  --destructive: 0 63% 50%;
-  --destructive-foreground: 0 0% 100%;
+  /* En oscuro "notarse más" significa lo contrario: los dos suben. Y al subir,
+     el texto que va **encima** de ellos se vuelve casi-negro, igual que en
+     `primary`, `success` y `warning` — `destructive` era el único que seguía
+     con blanco y quedaba en 3.3:1. */
+  --destructive: 0 84% 65%;
+  --destructive-foreground: 222 47% 8%;
 
-  --success: 142 60% 45%;
+  --success: 142 62% 55%;
   --success-foreground: 222 47% 8%;
 
   --warning: 38 88% 55%;
@@ -198,4 +207,43 @@ body {
 .no-spinner[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
+}
+
+/* --------------------------------------------------------------------------
+ * Formularios en el teléfono
+ *
+ * Las apps se usan tanto desde el escritorio como desde el celular, y Safari en
+ * iOS tiene dos comportamientos que rompen el layout en silencio. Van acá y no
+ * en cada app porque son del kit: los causa la tipografía de los `Input` del
+ * kit y el ancho nativo de los controles de fecha.
+ * -------------------------------------------------------------------------- */
+
+/* iOS hace zoom al enfocar cualquier campo cuya tipografía baje de 16px, y los
+   del kit son de 14 (12 los `inputSize="sm"`). Lo peor no es el zoom: es que no
+   se deshace al salir del campo, así que la pantalla queda corrida y hay que
+   pellizcar para volver. 16px abajo de `sm` es el umbral exacto que mira
+   Safari, y de paso agranda el blanco de toque. El escritorio no se toca. */
+@media (max-width: 639px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* Safari trata `input[type=date]` como un control nativo con ancho propio: se
+   sale de su caja en vez de encogerse, y en un iPhone el campo termina más
+   ancho que la pantalla. `appearance: none` le saca ese ancho intrínseco y
+   `min-width: 0` lo deja achicarse como ítem de un flex; hacen falta las dos.
+
+   El valor además viene centrado en iOS, que al lado de un campo de texto
+   normal se ve torcido. */
+input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
 }
