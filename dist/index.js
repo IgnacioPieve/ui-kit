@@ -571,6 +571,10 @@ var DateInput = React7.forwardRef(
     value,
     defaultValue,
     onChange,
+    clearable = true,
+    clearLabel = labels.clear,
+    inputSize,
+    disabled,
     "aria-label": ariaLabel,
     ...props
   }, ref) => {
@@ -578,13 +582,37 @@ var DateInput = React7.forwardRef(
     const current = value !== void 0 ? value : innerValue;
     const empty = current === "" || current === null || current === void 0;
     const showPlaceholder = empty && !!placeholder;
+    const showClear = clearable && !empty && !disabled;
+    const small = inputSize === "sm";
+    const innerRef = React7.useRef(null);
+    const setRefs = React7.useCallback(
+      (node) => {
+        innerRef.current = node;
+        if (typeof ref === "function") ref(node);
+        else if (ref)
+          ref.current = node;
+      },
+      [ref]
+    );
+    function clear() {
+      const node = innerRef.current;
+      if (!node) return;
+      const setValue = Object.getOwnPropertyDescriptor(
+        HTMLInputElement.prototype,
+        "value"
+      )?.set;
+      setValue?.call(node, "");
+      node.dispatchEvent(new Event("input", { bubbles: true }));
+    }
     return /* @__PURE__ */ jsxs("div", { className: cn("relative w-full", className), children: [
       /* @__PURE__ */ jsx(
         Input,
         {
           ...props,
-          ref,
+          ref: setRefs,
           type: "date",
+          inputSize,
+          disabled,
           value,
           defaultValue,
           "aria-label": ariaLabel ?? placeholder,
@@ -598,11 +626,29 @@ var DateInput = React7.forwardRef(
             // que está completa, así que el color vuelve con el foco: si no,
             // se escribiría a ciegas.
             showPlaceholder && "text-transparent focus:text-foreground",
+            // Lugar para la X, solo cuando está.
+            showClear && (small ? "pr-8" : "pr-9"),
             inputClassName
           )
         }
       ),
-      showPlaceholder && /* @__PURE__ */ jsx("span", { className: "field-placeholder pointer-events-none absolute inset-y-0 left-3 flex items-center truncate text-sm text-muted-foreground peer-focus:opacity-0", children: placeholder })
+      showPlaceholder && /* @__PURE__ */ jsx("span", { className: "field-placeholder pointer-events-none absolute inset-y-0 left-3 flex items-center truncate text-sm text-muted-foreground peer-focus:opacity-0", children: placeholder }),
+      showClear && /* @__PURE__ */ jsx(
+        Button,
+        {
+          type: "button",
+          variant: "ghost",
+          size: "icon-sm",
+          "aria-label": clearLabel,
+          title: clearLabel,
+          onClick: clear,
+          className: cn(
+            "absolute top-1/2 -translate-y-1/2 text-muted-foreground",
+            small ? "right-0.5 h-7 w-7" : "right-1"
+          ),
+          children: /* @__PURE__ */ jsx(X, {})
+        }
+      )
     ] });
   }
 );

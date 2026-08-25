@@ -262,9 +262,19 @@ interface DateInputProps extends Omit<InputProps, "type" | "className"> {
     className?: string;
     /** Clases del `<input>` en sí, para lo que no sea ancho. */
     inputClassName?: string;
+    /**
+     * Muestra una X para vaciar el campo cuando tiene fecha.
+     *
+     * Prendida por defecto, igual que en `SearchInput`: la fecha nullable es el
+     * caso normal —"desde/hasta" sin límite, "la vi y no me acuerdo cuándo"— y un
+     * campo vacío se ve idéntico a antes, porque la X aparece recién cuando hay
+     * algo que borrar. Para una fecha obligatoria, `clearable={false}`.
+     */
+    clearable?: boolean;
+    clearLabel?: string;
 }
 /**
- * Campo de fecha que se ve aunque esté vacío.
+ * Campo de fecha que se ve aunque esté vacío, y que se puede vaciar.
  *
  * `input[type=date]` vacío **no muestra nada en iOS**: ni el `dd/mm/aaaa` que
  * dibujan Chrome y Firefox ni el `placeholder`, que el HTML ignora en los
@@ -278,7 +288,13 @@ interface DateInputProps extends Omit<InputProps, "type" | "className"> {
  * navegadores que sí dibujan el formato nativo, el campo vacío va en
  * `text-transparent` para que no se superpongan los dos.
  *
- * Para campos con `<Label>` propio alcanza con `<Input type="date" />`.
+ * **La X para vaciarlo también la pone el kit.** La del navegador no alcanza:
+ * en Android directamente no existe, y donde existe es un blanco de toque de
+ * doce píxeles, así que desde el celular no había forma de volver a "sin
+ * fecha". Estaba escrita a mano en tres apps antes de vivir acá.
+ *
+ * Para campos con `<Label>` propio y fecha obligatoria alcanza con
+ * `<Input type="date" />`.
  */
 declare const DateInput: React.ForwardRefExoticComponent<DateInputProps & React.RefAttributes<HTMLInputElement>>;
 
