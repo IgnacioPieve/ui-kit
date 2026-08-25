@@ -138,12 +138,22 @@ Things that fail **silently** or in a confusing way:
   larger and four further right than the value it replaces, so typing made the
   text jump. Nothing errored and no app noticed until one asked for a
   placeholder on a small field. Any overlay of this kind reads `inputSize`.
-- **A rule in `styles.css` cannot beat a Tailwind utility on the same
-  property.** Utilities are class selectors (0-1-0) injected *after* this file,
-  so an element selector here (`input { … }`, 0-0-1) loses twice over. It looks
-  like it works because it does beat preflight. If a base style has to win
-  against a utility that a component already carries, it belongs in the
-  component's cva as a responsive variant, not in this stylesheet.
+- **A bare element selector in `styles.css` cannot beat a Tailwind utility.**
+  Utilities are class selectors (0-1-0) injected *after* this file, so
+  `input { font-size: 16px }` (0-0-1) loses twice over. It looks like it works
+  because it does beat preflight. The iOS 16px rule was written, documented and
+  **completely inert from v0.8.0 to v0.10.2** — every app still zoomed on focus
+  on an iPhone — and nothing surfaced it until the computed `font-size` was
+  measured at 390px and came back 14. If a base style has to beat a utility the
+  components already carry, give the selector the specificity to do it
+  (`html :is(input, …)`, 0-1-1) and say in a comment that the prefix is there
+  for specificity and nothing else. Putting it in each component's cva instead
+  looks tidier and is worse: an app passing `className="text-sm"` silently wins
+  on mobile, and every call site has to remember the responsive pair.
+- **Measure, do not read, when a style is supposed to apply.** Two of the bugs
+  above (the dead 16px rule, the placeholder that ignored `inputSize`) were
+  invisible in the source and obvious in `getComputedStyle`. Headless Chrome
+  over CDP at a 390px viewport is a two-minute check.
 
 ## Docs
 

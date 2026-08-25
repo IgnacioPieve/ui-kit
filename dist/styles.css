@@ -9,6 +9,12 @@
  * las reglas usan selector de clase (especificidad 0-1-x) y le ganan igual.
  * La única excepción es `body`, que el preflight no pisa en color/fondo.
  *
+ * **Ojo con las utilities, que son otra cosa.** Ganarle al preflight (0-0-x) es
+ * gratis; ganarle a una utility de Tailwind no. `.text-sm` es 0-1-0 y se emite
+ * después de este archivo, así que una regla de acá tiene que superar 0-1-0
+ * para pisarla. La regla de los 16px de abajo estuvo escrita, documentada y sin
+ * efecto desde v0.8.0 justamente por no hacerlo.
+ *
  * Los tokens son tripletas HSL sin `hsl()` para que Tailwind pueda componer
  * opacidad: `hsl(var(--primary) / 0.1)` → `bg-primary/10`.
  */
@@ -234,15 +240,31 @@ body {
    del kit son de 14 (12 los `inputSize="sm"`). Lo peor no es el zoom: es que no
    se deshace al salir del campo, así que la pantalla queda corrida y hay que
    pellizcar para volver. 16px abajo de `sm` es el umbral exacto que mira
-   Safari, y de paso agranda el blanco de toque. El escritorio no se toca. */
+   Safari, y de paso agranda el blanco de toque. El escritorio no se toca.
+
+   **El `html` de adelante no selecciona nada distinto: sube la especificidad.**
+   Sin él esto era `input { font-size: 16px }`, un selector de elemento (0-0-1),
+   y los campos del kit **siempre** traen una utility de Tailwind encima
+   (`text-sm`, `text-xs`), que es una clase (0-1-0) y además se inyecta DESPUÉS
+   de este archivo. O sea que perdía por especificidad y por orden: la regla se
+   emitía, la media query matcheaba, y no se aplicaba nunca. Estuvo así desde
+   v0.8.0 — verde, escrita, documentada y sin efecto — hasta que se midió el
+   `font-size` computado a 390px y daba 14. Con `html` adelante son 0-1-1 y le
+   gana.
+
+   Por qué acá y no en el cva de cada campo: si el tamaño responsive viviera en
+   el componente, cualquier `className="text-sm"` de una app lo pisaría en
+   mobile y nadie se enteraría, y cada call site tendría que acordarse de
+   escribir el par `text-base sm:text-sm`. Son cinco apps y ya hay cuatro call
+   sites que pasan un tamaño a mano. Esto los cubre a todos, y también a
+   cualquier <input> suelto que no venga del kit.
+
+   Consecuencia aceptada: en mobile esta regla también le gana a un tamaño
+   puesto a propósito por la app. No importa para el zoom —cualquier cosa de
+   16px para arriba ya no lo dispara—, y de 16 para abajo la queríamos pisar
+   igual. */
 @media (max-width: 639px) {
-  input,
-  select,
-  textarea,
-  /* El texto que `DateInput` dibuja encima de un campo vacío: es un <span>, no
-     un input, así que hay que subirlo a mano o queda dos puntos más chico que
-     el valor que reemplaza. */
-  .field-placeholder {
+  html :is(input, select, textarea, .field-placeholder) {
     font-size: 16px;
   }
 }
