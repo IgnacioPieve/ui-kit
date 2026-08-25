@@ -632,7 +632,22 @@ var DateInput = React7.forwardRef(
           )
         }
       ),
-      showPlaceholder && /* @__PURE__ */ jsx("span", { className: "field-placeholder pointer-events-none absolute inset-y-0 left-3 flex items-center truncate text-sm text-muted-foreground peer-focus:opacity-0", children: placeholder }),
+      showPlaceholder && /* @__PURE__ */ jsx(
+        "span",
+        {
+          className: cn(
+            "field-placeholder pointer-events-none absolute inset-y-0 flex items-center truncate text-muted-foreground peer-focus:opacity-0",
+            // Tiene que caer **exactamente** donde caería la fecha: un campo
+            // `sm` es `text-xs px-2` y el default `text-sm px-3`. Con el
+            // tamaño y el margen cableados, un campo `sm` mostraba el
+            // placeholder dos píxeles más grande y cuatro más a la derecha
+            // que el valor que reemplaza, así que al escribir la fecha el
+            // texto saltaba y encogía.
+            small ? "left-2 text-xs" : "left-3 text-sm"
+          ),
+          children: placeholder
+        }
+      ),
       showClear && /* @__PURE__ */ jsx(
         Button,
         {
