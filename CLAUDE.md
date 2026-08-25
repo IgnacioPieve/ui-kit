@@ -131,6 +131,19 @@ Things that fail **silently** or in a confusing way:
 - **An empty `input[type=date]` draws nothing on iOS**: no `dd/mm/aaaa`, and
   `placeholder` does not apply to date fields. Without a `<Label>` next to it,
   the field is a mute rectangle. That is what `DateInput` exists for.
+- **Text drawn *over* an input has to track that input's size variant.**
+  `DateInput` paints its own placeholder in a `<span>`, and the span was
+  hardwired to `text-sm left-3` — which silently matches only the default size.
+  In an `inputSize="sm"` field (`text-xs px-2`) the placeholder sat two pixels
+  larger and four further right than the value it replaces, so typing made the
+  text jump. Nothing errored and no app noticed until one asked for a
+  placeholder on a small field. Any overlay of this kind reads `inputSize`.
+- **A rule in `styles.css` cannot beat a Tailwind utility on the same
+  property.** Utilities are class selectors (0-1-0) injected *after* this file,
+  so an element selector here (`input { … }`, 0-0-1) loses twice over. It looks
+  like it works because it does beat preflight. If a base style has to win
+  against a utility that a component already carries, it belongs in the
+  component's cva as a responsive variant, not in this stylesheet.
 
 ## Docs
 
