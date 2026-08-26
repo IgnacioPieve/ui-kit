@@ -818,7 +818,12 @@ function FilterChipGroup({
       role: "group",
       "aria-label": label,
       className: cn(
-        "inline-flex items-center gap-1 rounded-full bg-muted p-1",
+        // Scrollea adentro suyo si no entra. Cuatro respuestas de nombre largo
+        // se salen de un teléfono angosto, y una cápsula que se sale no se
+        // puede alcanzar: la última opción queda cortada contra el borde y no
+        // hay gesto que la traiga. Los chips ya son `shrink-0`, así que lo que
+        // se mueve es la cápsula y no el texto de adentro.
+        "inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full bg-muted p-1",
         className
       ),
       children: options.map((option) => {
