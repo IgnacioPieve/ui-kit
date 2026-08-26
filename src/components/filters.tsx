@@ -56,7 +56,12 @@ export function FilterToolbar({
   className,
 }: FilterToolbarProps) {
   const [open, setOpen] = useState(defaultOpen);
-  const hasControls = Boolean(children || panel || results || onClear);
+  // Los chips van en su propia fila y el botón de "Filtros", el "Limpiar" y el
+  // conteo en la de abajo, siempre. Todo junto en un solo `flex-wrap`, lo que
+  // caía en cada línea dependía de cuántos chips tuviera cada app: en una
+  // entraba el conteo al lado del botón y en la otra bajaba solo, y dos
+  // pantallas con la misma barra terminaban leyéndose distinto.
+  const hasBar = Boolean(panel || results || onClear);
 
   return (
     <div className={cn("space-y-3", className)}>
@@ -67,10 +72,12 @@ export function FilterToolbar({
         </div>
       )}
 
-      {hasControls && (
-        <div className="flex flex-wrap items-center gap-2">
-          {children}
+      {children && (
+        <div className="flex flex-wrap items-center gap-2">{children}</div>
+      )}
 
+      {hasBar && (
+        <div className="flex flex-wrap items-center gap-2">
           {panel && (
             <Button
               variant={open ? "secondary" : "ghost"}

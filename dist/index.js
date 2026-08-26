@@ -721,14 +721,14 @@ function FilterToolbar({
   className
 }) {
   const [open, setOpen] = useState(defaultOpen);
-  const hasControls = Boolean(children || panel || results || onClear);
+  const hasBar = Boolean(panel || results || onClear);
   return /* @__PURE__ */ jsxs("div", { className: cn("space-y-3", className), children: [
     (search || action) && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3 sm:flex-row sm:items-center", children: [
       search,
       action
     ] }),
-    hasControls && /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
-      children,
+    children && /* @__PURE__ */ jsx("div", { className: "flex flex-wrap items-center gap-2", children }),
+    hasBar && /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
       panel && /* @__PURE__ */ jsxs(
         Button,
         {
