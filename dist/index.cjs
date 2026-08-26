@@ -348,12 +348,14 @@ function Spinner({ className }) {
 var labels = {
   cancel: "Cancelar",
   clear: "Limpiar",
+  clearFilters: "Limpiar filtros",
   close: "Cerrar",
   confirm: "Confirmar",
   copied: "Copiado",
   copy: "Copiar",
   copyError: "No se pudo copiar",
   download: "Descargar",
+  filters: "Filtros",
   dropzone: "Arrastr\xE1 archivos ac\xE1, hac\xE9 clic o peg\xE1 con Ctrl+V",
   dropzoneActive: "Solt\xE1 los archivos\u2026",
   openLink: "Abrir enlace",
@@ -730,6 +732,145 @@ function EmptyState({
         description && /* @__PURE__ */ jsxRuntime.jsx("p", { className: "mt-1 text-sm text-muted-foreground", children: description }),
         action && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "mt-4", children: action })
       ]
+    }
+  );
+}
+function FilterToolbar({
+  search,
+  action,
+  children,
+  panel,
+  activeCount = 0,
+  onClear,
+  results,
+  defaultOpen = false,
+  filtersLabel = labels.filters,
+  clearLabel = labels.clearFilters,
+  className
+}) {
+  const [open, setOpen] = React8.useState(defaultOpen);
+  const hasControls = Boolean(children || panel || results || onClear);
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: cn("space-y-3", className), children: [
+    (search || action) && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "flex flex-col gap-3 sm:flex-row sm:items-center", children: [
+      search,
+      action
+    ] }),
+    hasControls && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
+      children,
+      panel && /* @__PURE__ */ jsxRuntime.jsxs(
+        Button,
+        {
+          variant: open ? "secondary" : "ghost",
+          size: "sm",
+          onClick: () => setOpen(!open),
+          "aria-expanded": open,
+          children: [
+            /* @__PURE__ */ jsxRuntime.jsx(lucideReact.SlidersHorizontal, {}),
+            filtersLabel,
+            activeCount > 0 && /* @__PURE__ */ jsxRuntime.jsx(Badge, { variant: "primary", children: activeCount }),
+            /* @__PURE__ */ jsxRuntime.jsx(
+              lucideReact.ChevronDown,
+              {
+                className: cn("transition-transform", open && "rotate-180")
+              }
+            )
+          ]
+        }
+      ),
+      onClear && activeCount > 0 && /* @__PURE__ */ jsxRuntime.jsxs(
+        Button,
+        {
+          variant: "ghost",
+          size: "sm",
+          onClick: onClear,
+          className: "text-muted-foreground",
+          children: [
+            /* @__PURE__ */ jsxRuntime.jsx(lucideReact.X, {}),
+            clearLabel
+          ]
+        }
+      ),
+      results !== void 0 && results !== null && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "ml-auto text-sm tabular-nums text-muted-foreground", children: results })
+    ] }),
+    panel && open && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "space-y-4 rounded-lg border bg-muted/40 p-3", children: panel })
+  ] });
+}
+function FilterField({
+  label,
+  htmlFor,
+  children,
+  className
+}) {
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: cn("space-y-1.5", className), children: [
+    /* @__PURE__ */ jsxRuntime.jsx(Label, { htmlFor, children: label }),
+    children
+  ] });
+}
+function FilterChip({
+  selected,
+  onClick,
+  icon,
+  children,
+  title,
+  className
+}) {
+  return /* @__PURE__ */ jsxRuntime.jsxs(
+    "button",
+    {
+      type: "button",
+      onClick,
+      "aria-pressed": selected,
+      title,
+      className: cn(
+        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-3.5 [&_svg]:shrink-0",
+        selected ? "border-primary bg-primary/10 font-medium text-primary" : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+        className
+      ),
+      children: [
+        icon && /* @__PURE__ */ jsxRuntime.jsx("span", { "aria-hidden": true, children: icon }),
+        children
+      ]
+    }
+  );
+}
+function FilterChipGroup({
+  label,
+  options,
+  value,
+  onChange,
+  className
+}) {
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    "div",
+    {
+      role: "group",
+      "aria-label": label,
+      className: cn(
+        "inline-flex items-center gap-1 rounded-full bg-muted p-1",
+        className
+      ),
+      children: options.map((option) => {
+        const active = option.value === value;
+        const Icon = option.icon;
+        return /* @__PURE__ */ jsxRuntime.jsxs(
+          "button",
+          {
+            type: "button",
+            "aria-pressed": active,
+            title: option.title,
+            onClick: () => onChange(active ? null : option.value),
+            className: cn(
+              "inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              active ? cn("bg-background shadow-sm", option.activeClassName ?? "text-foreground") : "text-muted-foreground hover:text-foreground"
+            ),
+            children: [
+              Icon && /* @__PURE__ */ jsxRuntime.jsx(Icon, { className: "h-3.5 w-3.5" }),
+              option.label
+            ]
+          },
+          option.value
+        );
+      })
     }
   );
 }
@@ -1666,6 +1807,10 @@ exports.DropdownMenuTrigger = DropdownMenuTrigger;
 exports.EmptyState = EmptyState;
 exports.FileDropzone = FileDropzone;
 exports.FilePreview = FilePreview;
+exports.FilterChip = FilterChip;
+exports.FilterChipGroup = FilterChipGroup;
+exports.FilterField = FilterField;
+exports.FilterToolbar = FilterToolbar;
 exports.HttpError = HttpError;
 exports.InfiniteScrollTrigger = InfiniteScrollTrigger;
 exports.Input = Input;

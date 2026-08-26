@@ -5,7 +5,7 @@ import { cva } from 'class-variance-authority';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { ChevronDown, Minus, Check, X, Loader2, Sun, Moon, Search, Copy, Upload, Camera, FileText, File as File$1, Link2, CircleAlert, ExternalLink, Download } from 'lucide-react';
+import { ChevronDown, Minus, Check, X, Loader2, Sun, Moon, Search, SlidersHorizontal, Copy, Upload, Camera, FileText, File as File$1, Link2, CircleAlert, ExternalLink, Download } from 'lucide-react';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
@@ -320,12 +320,14 @@ function Spinner({ className }) {
 var labels = {
   cancel: "Cancelar",
   clear: "Limpiar",
+  clearFilters: "Limpiar filtros",
   close: "Cerrar",
   confirm: "Confirmar",
   copied: "Copiado",
   copy: "Copiar",
   copyError: "No se pudo copiar",
   download: "Descargar",
+  filters: "Filtros",
   dropzone: "Arrastr\xE1 archivos ac\xE1, hac\xE9 clic o peg\xE1 con Ctrl+V",
   dropzoneActive: "Solt\xE1 los archivos\u2026",
   openLink: "Abrir enlace",
@@ -702,6 +704,145 @@ function EmptyState({
         description && /* @__PURE__ */ jsx("p", { className: "mt-1 text-sm text-muted-foreground", children: description }),
         action && /* @__PURE__ */ jsx("div", { className: "mt-4", children: action })
       ]
+    }
+  );
+}
+function FilterToolbar({
+  search,
+  action,
+  children,
+  panel,
+  activeCount = 0,
+  onClear,
+  results,
+  defaultOpen = false,
+  filtersLabel = labels.filters,
+  clearLabel = labels.clearFilters,
+  className
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  const hasControls = Boolean(children || panel || results || onClear);
+  return /* @__PURE__ */ jsxs("div", { className: cn("space-y-3", className), children: [
+    (search || action) && /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3 sm:flex-row sm:items-center", children: [
+      search,
+      action
+    ] }),
+    hasControls && /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
+      children,
+      panel && /* @__PURE__ */ jsxs(
+        Button,
+        {
+          variant: open ? "secondary" : "ghost",
+          size: "sm",
+          onClick: () => setOpen(!open),
+          "aria-expanded": open,
+          children: [
+            /* @__PURE__ */ jsx(SlidersHorizontal, {}),
+            filtersLabel,
+            activeCount > 0 && /* @__PURE__ */ jsx(Badge, { variant: "primary", children: activeCount }),
+            /* @__PURE__ */ jsx(
+              ChevronDown,
+              {
+                className: cn("transition-transform", open && "rotate-180")
+              }
+            )
+          ]
+        }
+      ),
+      onClear && activeCount > 0 && /* @__PURE__ */ jsxs(
+        Button,
+        {
+          variant: "ghost",
+          size: "sm",
+          onClick: onClear,
+          className: "text-muted-foreground",
+          children: [
+            /* @__PURE__ */ jsx(X, {}),
+            clearLabel
+          ]
+        }
+      ),
+      results !== void 0 && results !== null && /* @__PURE__ */ jsx("span", { className: "ml-auto text-sm tabular-nums text-muted-foreground", children: results })
+    ] }),
+    panel && open && /* @__PURE__ */ jsx("div", { className: "space-y-4 rounded-lg border bg-muted/40 p-3", children: panel })
+  ] });
+}
+function FilterField({
+  label,
+  htmlFor,
+  children,
+  className
+}) {
+  return /* @__PURE__ */ jsxs("div", { className: cn("space-y-1.5", className), children: [
+    /* @__PURE__ */ jsx(Label, { htmlFor, children: label }),
+    children
+  ] });
+}
+function FilterChip({
+  selected,
+  onClick,
+  icon,
+  children,
+  title,
+  className
+}) {
+  return /* @__PURE__ */ jsxs(
+    "button",
+    {
+      type: "button",
+      onClick,
+      "aria-pressed": selected,
+      title,
+      className: cn(
+        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-3.5 [&_svg]:shrink-0",
+        selected ? "border-primary bg-primary/10 font-medium text-primary" : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+        className
+      ),
+      children: [
+        icon && /* @__PURE__ */ jsx("span", { "aria-hidden": true, children: icon }),
+        children
+      ]
+    }
+  );
+}
+function FilterChipGroup({
+  label,
+  options,
+  value,
+  onChange,
+  className
+}) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      role: "group",
+      "aria-label": label,
+      className: cn(
+        "inline-flex items-center gap-1 rounded-full bg-muted p-1",
+        className
+      ),
+      children: options.map((option) => {
+        const active = option.value === value;
+        const Icon = option.icon;
+        return /* @__PURE__ */ jsxs(
+          "button",
+          {
+            type: "button",
+            "aria-pressed": active,
+            title: option.title,
+            onClick: () => onChange(active ? null : option.value),
+            className: cn(
+              "inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              active ? cn("bg-background shadow-sm", option.activeClassName ?? "text-foreground") : "text-muted-foreground hover:text-foreground"
+            ),
+            children: [
+              Icon && /* @__PURE__ */ jsx(Icon, { className: "h-3.5 w-3.5" }),
+              option.label
+            ]
+          },
+          option.value
+        );
+      })
     }
   );
 }
@@ -1597,6 +1738,6 @@ function createHttpClient(baseUrl = "", { trace = false } = {}) {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, FilterChip, FilterChipGroup, FilterField, FilterToolbar, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

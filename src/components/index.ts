@@ -8,6 +8,17 @@ export {
 export { SearchInput, type SearchInputProps } from "./SearchInput";
 export { DateInput, type DateInputProps } from "./DateInput";
 export { EmptyState, type EmptyStateProps } from "./EmptyState";
+export {
+  FilterToolbar,
+  FilterField,
+  FilterChip,
+  FilterChipGroup,
+  type FilterToolbarProps,
+  type FilterFieldProps,
+  type FilterChipProps,
+  type FilterChipOption,
+  type FilterChipGroupProps,
+} from "./filters";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog";
 export { Collapsible, type CollapsibleProps } from "./Collapsible";
 export { CopyButton, type CopyButtonProps } from "./CopyButton";

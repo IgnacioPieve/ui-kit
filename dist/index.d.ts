@@ -327,6 +327,103 @@ interface EmptyStateProps {
 /** Caja punteada para listas vacías o búsquedas sin resultados. */
 declare function EmptyState({ icon: Icon, title, description, action, className, }: EmptyStateProps): React.JSX.Element;
 
+interface FilterToolbarProps {
+    /** El buscador. Va solo en su fila y crece: pasale `className="flex-1"`. */
+    search?: ReactNode;
+    /** La acción principal de la pantalla ("Agregar…"), al lado del buscador. */
+    action?: ReactNode;
+    /** Controles siempre a la vista: los que se tocan todos los días. */
+    children?: ReactNode;
+    /** Lo que vive detrás de "Filtros": lo de vez en cuando. */
+    panel?: ReactNode;
+    /** Cuántos filtros están puestos. Es el número del badge. */
+    activeCount?: number;
+    /** Muestra "Limpiar filtros" cuando hay alguno puesto. */
+    onClear?: () => void;
+    /** Alineado a la derecha; normalmente el conteo de resultados. */
+    results?: ReactNode;
+    /** El panel arranca abierto (una pantalla que es sobre todo filtrar). */
+    defaultOpen?: boolean;
+    filtersLabel?: string;
+    clearLabel?: string;
+    className?: string;
+}
+/**
+ * La barra de buscar y filtrar. Misma forma en todas las apps.
+ *
+ * Cinco pantallas resolvían esto cinco veces: dos `Select` sueltos en una fila,
+ * una grilla de dos columnas, chips en una fila propia, un "limpiar" que
+ * aparecía en una sí y en otra no. Cada una defendible sola; todas juntas,
+ * cinco maneras de hacer la misma pregunta.
+ *
+ * El reparto es por frecuencia, no por tipo de control: **arriba lo de todos
+ * los días** —el buscador, la acción principal, los dos o tres chips que se
+ * tocan siempre— y **detrás de "Filtros" lo de vez en cuando**. Un filtro
+ * escondido igual se anuncia: el badge del botón cuenta lo que está puesto, así
+ * que una lista corta nunca es un misterio con el panel cerrado.
+ */
+declare function FilterToolbar({ search, action, children, panel, activeCount, onClear, results, defaultOpen, filtersLabel, clearLabel, className, }: FilterToolbarProps): React.JSX.Element;
+interface FilterFieldProps {
+    label: string;
+    /** Para que el `<label>` apunte al control cuando es uno solo. */
+    htmlFor?: string;
+    children: ReactNode;
+    className?: string;
+}
+/** Un filtro con su título dentro del panel. Da el mismo ritmo a todos. */
+declare function FilterField({ label, htmlFor, children, className, }: FilterFieldProps): React.JSX.Element;
+interface FilterChipProps {
+    selected: boolean;
+    onClick: () => void;
+    /** Emoji o icono a la izquierda. */
+    icon?: ReactNode;
+    children: ReactNode;
+    title?: string;
+    className?: string;
+}
+/**
+ * Un filtro independiente que se prende y se apaga.
+ *
+ * Para conjuntos donde varias respuestas conviven —categorías, etiquetas—: cada
+ * chip es su propia pregunta de sí o no. Cuando las respuestas son excluyentes
+ * va `FilterChipGroup`, que las mete en una cápsula y las hace verse como lo
+ * que son: una sola pregunta.
+ */
+declare function FilterChip({ selected, onClick, icon, children, title, className, }: FilterChipProps): React.JSX.Element;
+interface FilterChipOption<T extends string> {
+    value: T;
+    label: ReactNode;
+    icon?: ComponentType<{
+        className?: string;
+    }>;
+    /** El color del texto cuando está prendida. Por defecto, el del contenido. */
+    activeClassName?: string;
+    title?: string;
+}
+interface FilterChipGroupProps<T extends string> {
+    /** No se ve: el grupo se lee por el fondo. Es para el lector de pantalla. */
+    label: string;
+    options: FilterChipOption<T>[];
+    /** `null` es "no me importa", que es el estado natural de un filtro. */
+    value: T | null;
+    onChange: (next: T | null) => void;
+    className?: string;
+}
+/**
+ * Una pregunta y sus respuestas, en una cápsula.
+ *
+ * El fondo es lo que agrupa: sin él, siete chips en fila son siete opciones
+ * sueltas que hay que leer enteras para entender que "Visto" y "Estrenado" no
+ * son lo mismo. Adentro son excluyentes —una pregunta, una respuesta— pero
+ * entre cápsulas se acumulan, que es como se piden las cosas útiles: sin ver
+ * **y** estrenado es lo que puedo poner esta noche.
+ *
+ * Se apaga tocando la respuesta prendida, y por eso no es `ToggleGroup`: aquel
+ * obliga a tener siempre una elegida, que para un filtro significa agregarle un
+ * "Todos" a cada grupo — una opción más para decir que no hay filtro.
+ */
+declare function FilterChipGroup<T extends string>({ label, options, value, onChange, className, }: FilterChipGroupProps<T>): React.JSX.Element;
+
 interface ConfirmDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -705,12 +802,14 @@ declare const log: {
 declare const labels: {
     readonly cancel: "Cancelar";
     readonly clear: "Limpiar";
+    readonly clearFilters: "Limpiar filtros";
     readonly close: "Cerrar";
     readonly confirm: "Confirmar";
     readonly copied: "Copiado";
     readonly copy: "Copiar";
     readonly copyError: "No se pudo copiar";
     readonly download: "Descargar";
+    readonly filters: "Filtros";
     readonly dropzone: "Arrastrá archivos acá, hacé clic o pegá con Ctrl+V";
     readonly dropzoneActive: "Soltá los archivos…";
     readonly openLink: "Abrir enlace";
@@ -725,4 +824,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, FilterChip, FilterChipGroup, type FilterChipGroupProps, type FilterChipOption, type FilterChipProps, FilterField, type FilterFieldProps, FilterToolbar, type FilterToolbarProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
