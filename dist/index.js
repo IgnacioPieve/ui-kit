@@ -1,12 +1,13 @@
-import * as React7 from 'react';
+import * as React8 from 'react';
 import { useState, useEffect, useCallback, useRef, useLayoutEffect, useMemo } from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { ChevronDown, X, Loader2, Sun, Moon, Search, Check, Copy, Upload, Camera, FileText, File as File$1, Link2, CircleAlert, ExternalLink, Download } from 'lucide-react';
+import { ChevronDown, Minus, Check, X, Loader2, Sun, Moon, Search, Copy, Upload, Camera, FileText, File as File$1, Link2, CircleAlert, ExternalLink, Download } from 'lucide-react';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
+import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { Toaster as Toaster$1, toast } from 'sonner';
@@ -45,7 +46,7 @@ var buttonVariants = cva(
     }
   }
 );
-var Button = React7.forwardRef(
+var Button = React8.forwardRef(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return /* @__PURE__ */ jsx(
@@ -87,7 +88,7 @@ var inputVariants = cva(
     defaultVariants: { variant: "default", inputSize: "default" }
   }
 );
-var Input = React7.forwardRef(
+var Input = React8.forwardRef(
   ({ className, variant, inputSize, type, ...props }, ref) => /* @__PURE__ */ jsx(
     "input",
     {
@@ -99,7 +100,7 @@ var Input = React7.forwardRef(
   )
 );
 Input.displayName = "Input";
-var Textarea = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var Textarea = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "textarea",
   {
     ref,
@@ -111,7 +112,7 @@ var Textarea = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ 
   }
 ));
 Textarea.displayName = "Textarea";
-var Label = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var Label = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "label",
   {
     ref,
@@ -123,7 +124,7 @@ var Label = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ 
   }
 ));
 Label.displayName = "Label";
-var Select = React7.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+var Select = React8.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs("div", { className: "relative", children: [
   /* @__PURE__ */ jsx(
     "select",
     {
@@ -139,7 +140,7 @@ var Select = React7.forwardRef(({ className, children, ...props }, ref) => /* @_
   /* @__PURE__ */ jsx(ChevronDown, { className: "pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" })
 ] }));
 Select.displayName = "Select";
-var Switch = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var Switch = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   SwitchPrimitive.Root,
   {
     ref,
@@ -159,7 +160,20 @@ var Switch = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */
   }
 ));
 Switch.displayName = "Switch";
-var Card = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var Checkbox = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+  CheckboxPrimitive.Root,
+  {
+    ref,
+    className: cn(
+      "peer h-4 w-4 shrink-0 rounded-[4px] border border-input ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=indeterminate]:border-primary data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-primary-foreground",
+      className
+    ),
+    ...props,
+    children: /* @__PURE__ */ jsx(CheckboxPrimitive.Indicator, { className: "flex items-center justify-center text-current", children: props.checked === "indeterminate" ? /* @__PURE__ */ jsx(Minus, { className: "h-3 w-3", strokeWidth: 3 }) : /* @__PURE__ */ jsx(Check, { className: "h-3 w-3", strokeWidth: 3 }) })
+  }
+));
+Checkbox.displayName = "Checkbox";
+var Card = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "div",
   {
     ref,
@@ -171,7 +185,7 @@ var Card = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ j
   }
 ));
 Card.displayName = "Card";
-var CardHeader = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var CardHeader = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "div",
   {
     ref,
@@ -180,7 +194,7 @@ var CardHeader = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE_
   }
 ));
 CardHeader.displayName = "CardHeader";
-var CardTitle = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var CardTitle = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "h3",
   {
     ref,
@@ -189,9 +203,9 @@ var CardTitle = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__
   }
 ));
 CardTitle.displayName = "CardTitle";
-var CardContent = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx("div", { ref, className: cn("p-6 pt-0", className), ...props }));
+var CardContent = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx("div", { ref, className: cn("p-6 pt-0", className), ...props }));
 CardContent.displayName = "CardContent";
-var CardFooter = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var CardFooter = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "div",
   {
     ref,
@@ -219,7 +233,7 @@ var badgeVariants = cva(
 function Badge({ className, variant, ...props }) {
   return /* @__PURE__ */ jsx("div", { className: cn(badgeVariants({ variant }), className), ...props });
 }
-var Progress = React7.forwardRef(
+var Progress = React8.forwardRef(
   ({ value, max = 100, completeVariant = true, className, ...props }, ref) => {
     const percent = max > 0 ? Math.min(100, Math.max(0, value / max * 100)) : 0;
     const complete = completeVariant && max > 0 && value >= max;
@@ -328,7 +342,7 @@ var Dialog = DialogPrimitive.Root;
 var DialogTrigger = DialogPrimitive.Trigger;
 var DialogPortal = DialogPrimitive.Portal;
 var DialogClose = DialogPrimitive.Close;
-var DialogOverlay = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DialogOverlay = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DialogPrimitive.Overlay,
   {
     ref,
@@ -340,7 +354,7 @@ var DialogOverlay = React7.forwardRef(({ className, ...props }, ref) => /* @__PU
   }
 ));
 DialogOverlay.displayName = "DialogOverlay";
-var DialogContent = React7.forwardRef(({ className, children, hideClose, ...props }, ref) => /* @__PURE__ */ jsxs(DialogPortal, { children: [
+var DialogContent = React8.forwardRef(({ className, children, hideClose, ...props }, ref) => /* @__PURE__ */ jsxs(DialogPortal, { children: [
   /* @__PURE__ */ jsx(DialogOverlay, {}),
   /* @__PURE__ */ jsxs(
     DialogPrimitive.Content,
@@ -381,7 +395,7 @@ var DialogFooter = ({
   }
 );
 DialogFooter.displayName = "DialogFooter";
-var DialogTitle = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DialogTitle = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DialogPrimitive.Title,
   {
     ref,
@@ -390,7 +404,7 @@ var DialogTitle = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE
   }
 ));
 DialogTitle.displayName = "DialogTitle";
-var DialogDescription = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DialogDescription = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DialogPrimitive.Description,
   {
     ref,
@@ -402,7 +416,7 @@ DialogDescription.displayName = "DialogDescription";
 var DropdownMenu = DropdownMenuPrimitive.Root;
 var DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 var DropdownMenuGroup = DropdownMenuPrimitive.Group;
-var DropdownMenuContent = React7.forwardRef(({ className, sideOffset = 6, ...props }, ref) => /* @__PURE__ */ jsx(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx(
+var DropdownMenuContent = React8.forwardRef(({ className, sideOffset = 6, ...props }, ref) => /* @__PURE__ */ jsx(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx(
   DropdownMenuPrimitive.Content,
   {
     ref,
@@ -415,7 +429,7 @@ var DropdownMenuContent = React7.forwardRef(({ className, sideOffset = 6, ...pro
   }
 ) }));
 DropdownMenuContent.displayName = "DropdownMenuContent";
-var DropdownMenuItem = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DropdownMenuItem = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DropdownMenuPrimitive.Item,
   {
     ref,
@@ -427,7 +441,7 @@ var DropdownMenuItem = React7.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 DropdownMenuItem.displayName = "DropdownMenuItem";
-var DropdownMenuLabel = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DropdownMenuLabel = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DropdownMenuPrimitive.Label,
   {
     ref,
@@ -436,7 +450,7 @@ var DropdownMenuLabel = React7.forwardRef(({ className, ...props }, ref) => /* @
   }
 ));
 DropdownMenuLabel.displayName = "DropdownMenuLabel";
-var DropdownMenuSeparator = React7.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DropdownMenuSeparator = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DropdownMenuPrimitive.Separator,
   {
     ref,
@@ -563,7 +577,7 @@ function SearchInput({
     )
   ] });
 }
-var DateInput = React7.forwardRef(
+var DateInput = React8.forwardRef(
   ({
     placeholder,
     className,
@@ -578,14 +592,14 @@ var DateInput = React7.forwardRef(
     "aria-label": ariaLabel,
     ...props
   }, ref) => {
-    const [innerValue, setInnerValue] = React7.useState(defaultValue ?? "");
+    const [innerValue, setInnerValue] = React8.useState(defaultValue ?? "");
     const current = value !== void 0 ? value : innerValue;
     const empty = current === "" || current === null || current === void 0;
     const showPlaceholder = empty && !!placeholder;
     const showClear = clearable && !empty && !disabled;
     const small = inputSize === "sm";
-    const innerRef = React7.useRef(null);
-    const setRefs = React7.useCallback(
+    const innerRef = React8.useRef(null);
+    const setRefs = React8.useCallback(
       (node) => {
         innerRef.current = node;
         if (typeof ref === "function") ref(node);
@@ -1583,6 +1597,6 @@ function createHttpClient(baseUrl = "", { trace = false } = {}) {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

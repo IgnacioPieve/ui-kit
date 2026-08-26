@@ -22,6 +22,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `Label` | — | |
 | `Select` | — | `<select>` nativo + chevron. Nativo a propósito: en mobile abre el picker del sistema. |
 | `Switch` | Radix `Switch` | `checked`, `onCheckedChange`. |
+| `Checkbox` | Radix `Checkbox` | `checked`, `onCheckedChange`. Un solo tamaño (16px): es el blanco de toque en el teléfono, y lo que se ajusta desde una app es el espacio alrededor, no la casilla. Acepta `checked="indeterminate"` para una selección parcial. |
 | `Card` | — | Con `CardHeader` `CardTitle` `CardContent` `CardFooter`. |
 | `Badge` | `variant` | `default` `primary` `success` `warning` `destructive` `outline`. |
 | `Progress` | `value`, `max?`, `completeVariant?` | Barra de progreso. Toma los dos enteros crudos (12 de 19) en vez de un porcentaje: hacer la división afuera invita a dividir por cero cuando el total todavía es 0. Al llegar al total se pinta de `success`, salvo `completeVariant={false}`. |
