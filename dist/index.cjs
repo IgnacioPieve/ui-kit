@@ -689,7 +689,12 @@ var DateInput = React8__namespace.forwardRef(
             // placeholder dos píxeles más grande y cuatro más a la derecha
             // que el valor que reemplaza, así que al escribir la fecha el
             // texto saltaba y encogía.
-            small ? "left-2 text-xs" : "left-3 text-sm"
+            //
+            // El borde derecho reserva el ícono de calendario que Chrome y
+            // Firefox dibujan adentro del campo. Sin él un texto largo le
+            // pasa por debajo —"Fecha de compra" terminaba pegado al
+            // calendario— en vez de cortarse con puntos suspensivos.
+            small ? "left-2 right-7 text-xs" : "left-3 right-9 text-sm"
           ),
           children: placeholderText
         }
