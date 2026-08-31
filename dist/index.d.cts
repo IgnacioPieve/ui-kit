@@ -56,7 +56,25 @@ declare const Switch: React.ForwardRefExoticComponent<Omit<SwitchPrimitive.Switc
  */
 declare const Checkbox: React.ForwardRefExoticComponent<Omit<CheckboxPrimitive.CheckboxProps & React.RefAttributes<HTMLButtonElement>, "ref"> & React.RefAttributes<HTMLButtonElement>>;
 
-declare const Card: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+    /**
+     * La tarjeta entera abre algo.
+     *
+     * Es una sola respuesta a una pregunta que seis pantallas contestaban de tres
+     * maneras —`hover:bg-accent` en supermercado, `hover:border-primary/40
+     * hover:bg-accent/30` en gastos y salud—, así que dos listas de la misma
+     * familia reaccionaban distinto al mismo gesto.
+     */
+    interactive?: boolean;
+    /**
+     * Renderiza el hijo en vez de un `<div>`, con las clases de la tarjeta
+     * encima. Es la forma de que una tarjeta clickeable **sea** el `<Link>`: un
+     * `<div onClick>` no entra en el orden de tabulación, no se abre en otra
+     * pestaña y no muestra a dónde va.
+     */
+    asChild?: boolean;
+}
+declare const Card: React.ForwardRefExoticComponent<CardProps & React.RefAttributes<HTMLDivElement>>;
 declare const CardHeader: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
 declare const CardTitle: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLHeadingElement> & React.RefAttributes<HTMLHeadingElement>>;
 declare const CardContent: React.ForwardRefExoticComponent<React.HTMLAttributes<HTMLDivElement> & React.RefAttributes<HTMLDivElement>>;
@@ -342,6 +360,60 @@ interface EmptyStateProps {
 }
 /** Caja punteada para listas vacías o búsquedas sin resultados. */
 declare function EmptyState({ icon: Icon, title, description, action, className, }: EmptyStateProps): React.JSX.Element;
+
+interface PageHeaderProps {
+    /**
+     * El "Volver".
+     *
+     * Lo trae la app porque el kit no conoce el router: normalmente un
+     * `<Button asChild variant="ghost" size="sm"><Link to="…">…</Link></Button>`,
+     * o un botón con `onClick` cuando hay que volver por historia o vaciar el
+     * autoguardado antes de irse.
+     */
+    back?: ReactNode;
+    /** El nombre de la pantalla. Se corta con puntos suspensivos, no envuelve. */
+    title?: string;
+    /**
+     * Lo que le está pasando a **esta** página: el indicador de autoguardado, el
+     * estado de un ticket. Va pegado al título y no con las acciones, porque no
+     * es algo que se pueda tocar.
+     */
+    status?: ReactNode;
+    /** Botones, contra el borde derecho. Envuelven en el teléfono. */
+    actions?: ReactNode;
+    className?: string;
+}
+/**
+ * El encabezado de una pantalla de detalle: volver, qué es, y qué se puede
+ * hacer con eso.
+ *
+ * **Envuelve, siempre.** Ocho pantallas escribían esta fila a mano y con cuatro
+ * formas distintas —`justify-between` acá, `gap-3` allá, el indicador antes del
+ * título en una y después en otra—, y ninguna envolvía: los botones del kit
+ * llevan `whitespace-nowrap`, así que una fila de cuatro no se achica, se sale.
+ * En el ticket de supermercado eso dejó el botón de borrar **fuera de la
+ * pantalla**, sin manera de borrar un ticket desde el celular y con el build en
+ * verde. Acá la fila envuelve y cada grupo es `shrink-0`.
+ */
+declare function PageHeader({ back, title, status, actions, className, }: PageHeaderProps): React.JSX.Element;
+
+interface SkeletonListProps {
+    /** Cuántas filas fantasma. Las que entren en una pantalla, no más. */
+    count?: number;
+    /** Clases de cada fila; sirve sobre todo para darle el alto de la de verdad. */
+    className?: string;
+}
+/**
+ * La lista mientras carga: unas filas del alto que van a tener las reales.
+ *
+ * Cinco pantallas escribían el mismo `Array.from(...).map(<Skeleton />)` con
+ * cinco largos y tres separaciones distintas, y tres más mostraban un spinner
+ * centrado —que además de verse distinto colapsa el alto de la página y hace
+ * saltar todo cuando llegan los datos—.
+ *
+ * `aria-hidden` porque no hay nada que leer: son cajas grises.
+ */
+declare function SkeletonList({ count, className }: SkeletonListProps): React.JSX.Element;
 
 interface FilterToolbarProps {
     /** El buscador. Va solo en su fila y crece: pasale `className="flex-1"`. */
@@ -863,4 +935,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, FilterChip, FilterChipGroup, type FilterChipGroupProps, type FilterChipOption, type FilterChipProps, FilterField, type FilterFieldProps, FilterToolbar, type FilterToolbarProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, type CardProps, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, FilterChip, FilterChipGroup, type FilterChipGroupProps, type FilterChipOption, type FilterChipProps, FilterField, type FilterFieldProps, FilterToolbar, type FilterToolbarProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, PageHeader, type PageHeaderProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, SkeletonList, type SkeletonListProps, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };

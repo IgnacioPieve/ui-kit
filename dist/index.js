@@ -173,17 +173,23 @@ var Checkbox = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ 
   }
 ));
 Checkbox.displayName = "Checkbox";
-var Card = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
-  "div",
-  {
-    ref,
-    className: cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
-      className
-    ),
-    ...props
+var Card = React8.forwardRef(
+  ({ className, interactive = false, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "div";
+    return /* @__PURE__ */ jsx(
+      Comp,
+      {
+        ref,
+        className: cn(
+          "rounded-lg border bg-card text-card-foreground shadow-sm",
+          interactive && "block cursor-pointer transition-colors hover:border-primary/40 hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          className
+        ),
+        ...props
+      }
+    );
   }
-));
+);
 Card.displayName = "Card";
 var CardHeader = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "div",
@@ -713,6 +719,25 @@ function EmptyState({
       ]
     }
   );
+}
+function PageHeader({
+  back,
+  title,
+  status,
+  actions,
+  className
+}) {
+  return /* @__PURE__ */ jsxs("div", { className: cn("flex flex-wrap items-center gap-x-3 gap-y-2", className), children: [
+    back,
+    (title || status) && /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 flex-1 items-center gap-3", children: [
+      title && /* @__PURE__ */ jsx("h1", { className: "min-w-0 truncate text-lg font-semibold tracking-tight", children: title }),
+      status
+    ] }),
+    actions && /* @__PURE__ */ jsx("div", { className: "ml-auto flex flex-wrap items-center justify-end gap-2", children: actions })
+  ] });
+}
+function SkeletonList({ count = 3, className }) {
+  return /* @__PURE__ */ jsx("div", { className: "space-y-3", "aria-hidden": true, children: Array.from({ length: count }, (_, index) => /* @__PURE__ */ jsx(Skeleton, { className: cn("h-16 w-full", className) }, index)) });
 }
 function FilterToolbar({
   search,
@@ -1755,6 +1780,6 @@ function createHttpClient(baseUrl = "", { trace = false } = {}) {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, FilterChip, FilterChipGroup, FilterField, FilterToolbar, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, Progress, SearchInput, SectionHeading, Select, Skeleton, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, FilterChip, FilterChipGroup, FilterField, FilterToolbar, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, PageHeader, Progress, SearchInput, SectionHeading, Select, Skeleton, SkeletonList, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

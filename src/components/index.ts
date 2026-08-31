@@ -8,6 +8,8 @@ export {
 export { SearchInput, type SearchInputProps } from "./SearchInput";
 export { DateInput, type DateInputProps } from "./DateInput";
 export { EmptyState, type EmptyStateProps } from "./EmptyState";
+export { PageHeader, type PageHeaderProps } from "./PageHeader";
+export { SkeletonList, type SkeletonListProps } from "./SkeletonList";
 export {
   FilterToolbar,
   FilterField,

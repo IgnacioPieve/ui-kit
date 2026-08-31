@@ -165,6 +165,12 @@ Things that fail **silently** or in a confusing way:
   block one. `FilterField` looked correct next to a `Select` and wrong next to a
   chip capsule, from the same code. Any wrapper that stacks a title over
   arbitrary content has to say `block`.
+- **`asChild` takes exactly one element child.** `Card asChild` / `Button
+  asChild` merge their classes onto the child through Radix's `Slot`, which
+  throws at runtime on a fragment or on two siblings. It is what makes a
+  clickable card *be* the `<a>` instead of a `<div onClick>` — and a
+  `<div onClick>` is not a bug the type checker will ever mention: it is simply
+  not focusable, not middle-clickable, and does not show where it goes.
 - **Measure, do not read, when a style is supposed to apply.** Two of the bugs
   above (the dead 16px rule, the placeholder that ignored `inputSize`) were
   invisible in the source and obvious in `getComputedStyle`. Headless Chrome

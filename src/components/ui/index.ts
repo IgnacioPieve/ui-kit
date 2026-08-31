@@ -5,7 +5,14 @@ export { Label } from "./label";
 export { Select } from "./select";
 export { Switch } from "./switch";
 export { Checkbox } from "./checkbox";
-export { Card, CardHeader, CardTitle, CardContent, CardFooter } from "./card";
+export {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+  type CardProps,
+} from "./card";
 export { Badge, badgeVariants, type BadgeProps } from "./badge";
 export { Progress, type ProgressProps } from "./progress";
 export {
