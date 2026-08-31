@@ -780,8 +780,8 @@ function FilterField({
   children,
   className
 }) {
-  return /* @__PURE__ */ jsxs("div", { className: cn("space-y-1.5", className), children: [
-    /* @__PURE__ */ jsx(Label, { htmlFor, children: label }),
+  return /* @__PURE__ */ jsxs("div", { className: cn("min-w-0 space-y-1.5", className), children: [
+    /* @__PURE__ */ jsx(Label, { className: "block", htmlFor, children: label }),
     children
   ] });
 }

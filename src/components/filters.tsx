@@ -142,7 +142,22 @@ export interface FilterFieldProps {
   className?: string;
 }
 
-/** Un filtro con su título dentro del panel. Da el mismo ritmo a todos. */
+/**
+ * Un filtro con su título dentro del panel. Da el mismo ritmo a todos.
+ *
+ * El `min-w-0` es lo que deja que la celda se angoste: una celda de grilla mide
+ * `min-width: auto` por defecto, o sea el ancho de su contenido, así que una
+ * cápsula de cuatro chips —que sabe scrollear adentro suyo— en vez de scrollear
+ * ensanchaba la celda, la grilla y la página entera. Se veía como la barra del
+ * teléfono saliéndose para la derecha, a mil kilómetros de la línea que lo
+ * causaba.
+ *
+ * El `block` del título tampoco es cosmético: un `<label>` es inline, así que
+ * al lado de un hijo inline —una cápsula de chips— se le sentaba en la misma
+ * línea, mientras que al lado de un `Select` (que es block) quedaba arriba. El
+ * mismo componente daba dos layouts distintos según lo que le tocara adentro, y
+ * un panel con las dos cosas se leía desparejo.
+ */
 export function FilterField({
   label,
   htmlFor,
@@ -150,8 +165,10 @@ export function FilterField({
   className,
 }: FilterFieldProps) {
   return (
-    <div className={cn("space-y-1.5", className)}>
-      <Label htmlFor={htmlFor}>{label}</Label>
+    <div className={cn("min-w-0 space-y-1.5", className)}>
+      <Label className="block" htmlFor={htmlFor}>
+        {label}
+      </Label>
       {children}
     </div>
   );
