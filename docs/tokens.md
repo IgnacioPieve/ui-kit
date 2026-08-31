@@ -84,7 +84,7 @@ sus `Input` y el ancho nativo de los controles de fecha.
 |---|---|
 | `input, select, textarea { font-size: 16px }` abajo de `sm` | iOS hace zoom al enfocar cualquier campo de menos de 16px —los del kit son de 14, 12 los `inputSize="sm"`— y **no lo deshace al salir**: la pantalla queda corrida y hay que pellizcar para volver. |
 | `input[type="date"]` con `appearance: none` y `min-width: 0` | Safari lo trata como un control nativo con ancho propio: se sale de su caja en vez de encogerse. Hacen falta las dos reglas; con una sola sigue desbordando. |
-| El campo de fecha **vacío** | Ninguna regla lo arregla: iOS no dibuja nada en un `input[type=date]` sin valor, y el `placeholder` del HTML no aplica a los campos de fecha. Un filtro sin `<Label>` queda en un rectángulo mudo hasta que tiene una fecha. Eso lo resuelve `DateInput`, que pone el texto él mismo. |
+| El campo de fecha **vacío** | Ninguna regla lo arregla: iOS no dibuja nada en un `input[type=date]` sin valor, y el `placeholder` del HTML no aplica a los campos de fecha. Un filtro sin `<Label>` queda en un rectángulo mudo hasta que tiene una fecha. Eso lo resuelve `DateInput`, que pone el texto él mismo —siempre, con o sin `placeholder`: sin él dibuja `dd/mm/aaaa`— y de paso deja el formato en español, que el nativo saca del idioma del navegador y no del `lang` del documento. |
 
 El escritorio no se toca: la primera está detrás de un `max-width: 639px`.
 

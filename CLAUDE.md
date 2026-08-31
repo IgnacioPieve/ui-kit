@@ -156,6 +156,15 @@ Things that fail **silently** or in a confusing way:
   for specificity and nothing else. Putting it in each component's cva instead
   looks tidier and is worse: an app passing `className="text-sm"` silently wins
   on mobile, and every call site has to remember the responsive pair.
+- **A grid cell is `min-width: auto`.** It sizes to its content, so a child that
+  knows how to scroll inside itself — `FilterChipGroup` — widened the cell
+  instead of scrolling, and the whole page went sideways on a phone. Anything
+  laid out in a grid that can hold something wider than its share carries
+  `min-w-0`; `FilterField` does.
+- **A `<label>` is inline**, so it lands *beside* an inline child and *above* a
+  block one. `FilterField` looked correct next to a `Select` and wrong next to a
+  chip capsule, from the same code. Any wrapper that stacks a title over
+  arbitrary content has to say `block`.
 - **Measure, do not read, when a style is supposed to apply.** Two of the bugs
   above (the dead 16px rule, the placeholder that ignored `inputSize`) were
   invisible in the source and obvious in `getComputedStyle`. Headless Chrome
