@@ -7,7 +7,13 @@ import { Input, type InputProps } from "./ui/input";
 
 export interface DateInputProps
   extends Omit<InputProps, "type" | "className"> {
-  /** Texto visible mientras el campo está vacío. También es su `aria-label`. */
+  /**
+   * Texto visible mientras el campo está vacío. También es su `aria-label`.
+   *
+   * Sin él el campo igual dibuja algo —`dd/mm/aaaa`, el default del kit—, pero
+   * eso es solo el formato: no dice cuál de los dos campos es "desde". Pasalo
+   * siempre que el campo no traiga un `<Label>` pegado.
+   */
   placeholder?: string;
   /** Clases del contenedor. El campo ocupa todo su ancho. */
   className?: string;
@@ -38,15 +44,25 @@ export interface DateInputProps
  * Acá el texto lo pone el kit, en un `<span>` encima del campo, y se va al
  * enfocarlo para no taparle al usuario lo que está escribiendo. En los
  * navegadores que sí dibujan el formato nativo, el campo vacío va en
- * `text-transparent` para que no se superpongan los dos.
+ * `text-transparent` para que no se superpongan los dos — y de paso el formato
+ * queda en español en todos lados, porque el nativo lo elige el idioma del
+ * navegador y no el `lang` del documento: un Chrome en inglés escribe
+ * `mm/dd/yyyy` sobre una app que está entera en castellano.
+ *
+ * **El texto no es opcional; el que lo explica, sí.** Sin `placeholder` el
+ * campo vacío dibuja igual `dd/mm/aaaa`, para que la trampa de iOS no dependa
+ * de que cada call site se acuerde. Con `placeholder` dice además qué campo es
+ * —"Desde", "Sin fecha"— que es lo único que un rectángulo no puede contar
+ * solo, y ahí sí conviene pasarlo.
  *
  * **La X para vaciarlo también la pone el kit.** La del navegador no alcanza:
  * en Android directamente no existe, y donde existe es un blanco de toque de
  * doce píxeles, así que desde el celular no había forma de volver a "sin
  * fecha". Estaba escrita a mano en tres apps antes de vivir acá.
  *
- * Para campos con `<Label>` propio y fecha obligatoria alcanza con
- * `<Input type="date" />`.
+ * Para una fecha **obligatoria** va `clearable={false}`. `<Input type="date" />`
+ * pelado ya no es la alternativa recomendada para nada: no dibuja el vacío ni
+ * respeta el formato del idioma de la app.
  */
 export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
   (
@@ -70,7 +86,14 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
     const [innerValue, setInnerValue] = React.useState(defaultValue ?? "");
     const current = value !== undefined ? value : innerValue;
     const empty = current === "" || current === null || current === undefined;
-    const showPlaceholder = empty && !!placeholder;
+    // Un campo vacío SIEMPRE dibuja algo, lo diga la app o no: la razón de ser
+    // de este componente es que en iOS un `input[type=date]` sin valor es un
+    // rectángulo en blanco, y eso no depende de que el call site se acuerde de
+    // pasar un texto. Sin `placeholder` va el formato y nada más; con él, lo
+    // que el campo significa. El `aria-label` sigue saliendo solo del explícito
+    // —"dd/mm/aaaa" como nombre accesible sería peor que no tener ninguno, y
+    // taparía el `<Label htmlFor>` que el campo ya pueda tener—.
+    const placeholderText = placeholder ?? labels.datePlaceholder;
     const showClear = clearable && !empty && !disabled;
     const small = inputSize === "sm";
 
@@ -132,14 +155,14 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
             // Mientras se tipea una fecha a mano el `value` sigue vacío hasta
             // que está completa, así que el color vuelve con el foco: si no,
             // se escribiría a ciegas.
-            showPlaceholder && "text-transparent focus:text-foreground",
+            empty && "text-transparent focus:text-foreground",
             // Lugar para la X, solo cuando está.
             showClear && (small ? "pr-8" : "pr-9"),
             inputClassName
           )}
         />
 
-        {showPlaceholder && (
+        {empty && (
           <span
             className={cn(
               "field-placeholder pointer-events-none absolute inset-y-0 flex items-center truncate text-muted-foreground peer-focus:opacity-0",
@@ -152,7 +175,7 @@ export const DateInput = React.forwardRef<HTMLInputElement, DateInputProps>(
               small ? "left-2 text-xs" : "left-3 text-sm"
             )}
           >
-            {placeholder}
+            {placeholderText}
           </span>
         )}
 

@@ -326,6 +326,8 @@ var labels = {
   copied: "Copiado",
   copy: "Copiar",
   copyError: "No se pudo copiar",
+  /** Lo que dibuja `DateInput` cuando está vacío y la app no dijo otra cosa. */
+  datePlaceholder: "dd/mm/aaaa",
   download: "Descargar",
   filters: "Filtros",
   dropzone: "Arrastr\xE1 archivos ac\xE1, hac\xE9 clic o peg\xE1 con Ctrl+V",
@@ -597,7 +599,7 @@ var DateInput = React8.forwardRef(
     const [innerValue, setInnerValue] = React8.useState(defaultValue ?? "");
     const current = value !== void 0 ? value : innerValue;
     const empty = current === "" || current === null || current === void 0;
-    const showPlaceholder = empty && !!placeholder;
+    const placeholderText = placeholder ?? labels.datePlaceholder;
     const showClear = clearable && !empty && !disabled;
     const small = inputSize === "sm";
     const innerRef = React8.useRef(null);
@@ -641,14 +643,14 @@ var DateInput = React8.forwardRef(
             // Mientras se tipea una fecha a mano el `value` sigue vacío hasta
             // que está completa, así que el color vuelve con el foco: si no,
             // se escribiría a ciegas.
-            showPlaceholder && "text-transparent focus:text-foreground",
+            empty && "text-transparent focus:text-foreground",
             // Lugar para la X, solo cuando está.
             showClear && (small ? "pr-8" : "pr-9"),
             inputClassName
           )
         }
       ),
-      showPlaceholder && /* @__PURE__ */ jsx(
+      empty && /* @__PURE__ */ jsx(
         "span",
         {
           className: cn(
@@ -661,7 +663,7 @@ var DateInput = React8.forwardRef(
             // texto saltaba y encogía.
             small ? "left-2 text-xs" : "left-3 text-sm"
           ),
-          children: placeholder
+          children: placeholderText
         }
       ),
       showClear && /* @__PURE__ */ jsx(
@@ -764,7 +766,12 @@ function FilterToolbar({
       ),
       results !== void 0 && results !== null && /* @__PURE__ */ jsx("span", { className: "ml-auto text-sm tabular-nums text-muted-foreground", children: results })
     ] }),
-    panel && open && /* @__PURE__ */ jsx("div", { className: "space-y-4 rounded-lg border bg-muted/40 p-3", children: panel })
+    panel && open && // La grilla la pone la barra y no cada pantalla. Las cinco apps
+    // escribían su propio `grid gap-3 sm:grid-cols-2` adentro del panel
+    // —salvo la que puso tres columnas y la que no puso ninguna—, así que
+    // el mismo panel tenía un ritmo distinto en cada una. Acá cada hijo es
+    // una celda y el call site solo dice cuáles ocupan las dos.
+    /* @__PURE__ */ jsx("div", { className: "grid gap-4 rounded-lg border bg-muted/40 p-3 sm:grid-cols-2", children: panel })
   ] });
 }
 function FilterField({

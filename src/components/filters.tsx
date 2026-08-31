@@ -13,7 +13,13 @@ export interface FilterToolbarProps {
   action?: ReactNode;
   /** Controles siempre a la vista: los que se tocan todos los días. */
   children?: ReactNode;
-  /** Lo que vive detrás de "Filtros": lo de vez en cuando. */
+  /**
+   * Lo que vive detrás de "Filtros": lo de vez en cuando.
+   *
+   * Cada hijo es una celda de una grilla de dos columnas (una sola en el
+   * teléfono). Para uno que ocupe el ancho entero —una fila de chips, un grupo
+   * largo—, `className="sm:col-span-2"` en su `FilterField`.
+   */
   panel?: ReactNode;
   /** Cuántos filtros están puestos. Es el número del badge. */
   activeCount?: number;
@@ -115,7 +121,12 @@ export function FilterToolbar({
       )}
 
       {panel && open && (
-        <div className="space-y-4 rounded-lg border bg-muted/40 p-3">
+        // La grilla la pone la barra y no cada pantalla. Las cinco apps
+        // escribían su propio `grid gap-3 sm:grid-cols-2` adentro del panel
+        // —salvo la que puso tres columnas y la que no puso ninguna—, así que
+        // el mismo panel tenía un ritmo distinto en cada una. Acá cada hijo es
+        // una celda y el call site solo dice cuáles ocupan las dos.
+        <div className="grid gap-4 rounded-lg border bg-muted/40 p-3 sm:grid-cols-2">
           {panel}
         </div>
       )}

@@ -272,7 +272,13 @@ interface SearchInputProps {
 declare function SearchInput({ value, onChange, placeholder, className, clearable, clearLabel, autoFocus, }: SearchInputProps): React.JSX.Element;
 
 interface DateInputProps extends Omit<InputProps, "type" | "className"> {
-    /** Texto visible mientras el campo está vacío. También es su `aria-label`. */
+    /**
+     * Texto visible mientras el campo está vacío. También es su `aria-label`.
+     *
+     * Sin él el campo igual dibuja algo —`dd/mm/aaaa`, el default del kit—, pero
+     * eso es solo el formato: no dice cuál de los dos campos es "desde". Pasalo
+     * siempre que el campo no traiga un `<Label>` pegado.
+     */
     placeholder?: string;
     /** Clases del contenedor. El campo ocupa todo su ancho. */
     className?: string;
@@ -302,15 +308,25 @@ interface DateInputProps extends Omit<InputProps, "type" | "className"> {
  * Acá el texto lo pone el kit, en un `<span>` encima del campo, y se va al
  * enfocarlo para no taparle al usuario lo que está escribiendo. En los
  * navegadores que sí dibujan el formato nativo, el campo vacío va en
- * `text-transparent` para que no se superpongan los dos.
+ * `text-transparent` para que no se superpongan los dos — y de paso el formato
+ * queda en español en todos lados, porque el nativo lo elige el idioma del
+ * navegador y no el `lang` del documento: un Chrome en inglés escribe
+ * `mm/dd/yyyy` sobre una app que está entera en castellano.
+ *
+ * **El texto no es opcional; el que lo explica, sí.** Sin `placeholder` el
+ * campo vacío dibuja igual `dd/mm/aaaa`, para que la trampa de iOS no dependa
+ * de que cada call site se acuerde. Con `placeholder` dice además qué campo es
+ * —"Desde", "Sin fecha"— que es lo único que un rectángulo no puede contar
+ * solo, y ahí sí conviene pasarlo.
  *
  * **La X para vaciarlo también la pone el kit.** La del navegador no alcanza:
  * en Android directamente no existe, y donde existe es un blanco de toque de
  * doce píxeles, así que desde el celular no había forma de volver a "sin
  * fecha". Estaba escrita a mano en tres apps antes de vivir acá.
  *
- * Para campos con `<Label>` propio y fecha obligatoria alcanza con
- * `<Input type="date" />`.
+ * Para una fecha **obligatoria** va `clearable={false}`. `<Input type="date" />`
+ * pelado ya no es la alternativa recomendada para nada: no dibuja el vacío ni
+ * respeta el formato del idioma de la app.
  */
 declare const DateInput: React.ForwardRefExoticComponent<DateInputProps & React.RefAttributes<HTMLInputElement>>;
 
@@ -334,7 +350,13 @@ interface FilterToolbarProps {
     action?: ReactNode;
     /** Controles siempre a la vista: los que se tocan todos los días. */
     children?: ReactNode;
-    /** Lo que vive detrás de "Filtros": lo de vez en cuando. */
+    /**
+     * Lo que vive detrás de "Filtros": lo de vez en cuando.
+     *
+     * Cada hijo es una celda de una grilla de dos columnas (una sola en el
+     * teléfono). Para uno que ocupe el ancho entero —una fila de chips, un grupo
+     * largo—, `className="sm:col-span-2"` en su `FilterField`.
+     */
     panel?: ReactNode;
     /** Cuántos filtros están puestos. Es el número del badge. */
     activeCount?: number;
@@ -808,6 +830,8 @@ declare const labels: {
     readonly copied: "Copiado";
     readonly copy: "Copiar";
     readonly copyError: "No se pudo copiar";
+    /** Lo que dibuja `DateInput` cuando está vacío y la app no dijo otra cosa. */
+    readonly datePlaceholder: "dd/mm/aaaa";
     readonly download: "Descargar";
     readonly filters: "Filtros";
     readonly dropzone: "Arrastrá archivos acá, hacé clic o pegá con Ctrl+V";

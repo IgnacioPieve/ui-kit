@@ -14,6 +14,8 @@ export const labels = {
   copied: "Copiado",
   copy: "Copiar",
   copyError: "No se pudo copiar",
+  /** Lo que dibuja `DateInput` cuando está vacío y la app no dijo otra cosa. */
+  datePlaceholder: "dd/mm/aaaa",
   download: "Descargar",
   filters: "Filtros",
   dropzone: "Arrastrá archivos acá, hacé clic o pegá con Ctrl+V",

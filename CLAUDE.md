@@ -130,7 +130,13 @@ Things that fail **silently** or in a confusing way:
   keeps `min-w-0`. Check it at 390px before releasing.
 - **An empty `input[type=date]` draws nothing on iOS**: no `dd/mm/aaaa`, and
   `placeholder` does not apply to date fields. Without a `<Label>` next to it,
-  the field is a mute rectangle. That is what `DateInput` exists for.
+  the field is a mute rectangle. That is what `DateInput` exists for — and
+  since v0.13.0 it draws `dd/mm/aaaa` itself when the app passes no
+  `placeholder`, because "remember to pass a text" is not a fix: four of the
+  six date fields in the family had forgotten. The native text is no
+  consolation either — Chrome picks its format from the **browser's** language,
+  not the document's `lang`, so an app written entirely in Spanish shows
+  `mm/dd/yyyy` to anyone whose browser is in English.
 - **Text drawn *over* an input has to track that input's size variant.**
   `DateInput` paints its own placeholder in a `<span>`, and the span was
   hardwired to `text-sm left-3` — which silently matches only the default size.
