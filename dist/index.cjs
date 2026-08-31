@@ -767,6 +767,25 @@ function PageHeader({
 function SkeletonList({ count = 3, className }) {
   return /* @__PURE__ */ jsxRuntime.jsx("div", { className: "space-y-3", "aria-hidden": true, children: Array.from({ length: count }, (_, index) => /* @__PURE__ */ jsxRuntime.jsx(Skeleton, { className: cn("h-16 w-full", className) }, index)) });
 }
+function Field({ label, htmlFor, children, className }) {
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: cn("min-w-0 space-y-1.5", className), children: [
+    /* @__PURE__ */ jsxRuntime.jsx(Label, { className: "block", htmlFor, children: label }),
+    children
+  ] });
+}
+function FormActions({ children, className }) {
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    "div",
+    {
+      className: cn(
+        "sticky bottom-0 -mx-4 flex flex-wrap items-center gap-3 border-t bg-background/90 px-4 py-3 backdrop-blur",
+        "sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0",
+        className
+      ),
+      children
+    }
+  );
+}
 function FilterToolbar({
   search,
   action,
@@ -830,17 +849,6 @@ function FilterToolbar({
     // el mismo panel tenía un ritmo distinto en cada una. Acá cada hijo es
     // una celda y el call site solo dice cuáles ocupan las dos.
     /* @__PURE__ */ jsxRuntime.jsx("div", { className: "grid gap-4 rounded-lg border bg-muted/40 p-3 sm:grid-cols-2", children: panel })
-  ] });
-}
-function FilterField({
-  label,
-  htmlFor,
-  children,
-  className
-}) {
-  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: cn("min-w-0 space-y-1.5", className), children: [
-    /* @__PURE__ */ jsxRuntime.jsx(Label, { className: "block", htmlFor, children: label }),
-    children
   ] });
 }
 function FilterChip({
@@ -1847,12 +1855,13 @@ exports.DropdownMenuLabel = DropdownMenuLabel;
 exports.DropdownMenuSeparator = DropdownMenuSeparator;
 exports.DropdownMenuTrigger = DropdownMenuTrigger;
 exports.EmptyState = EmptyState;
+exports.Field = Field;
 exports.FileDropzone = FileDropzone;
 exports.FilePreview = FilePreview;
 exports.FilterChip = FilterChip;
 exports.FilterChipGroup = FilterChipGroup;
-exports.FilterField = FilterField;
 exports.FilterToolbar = FilterToolbar;
+exports.FormActions = FormActions;
 exports.HttpError = HttpError;
 exports.InfiniteScrollTrigger = InfiniteScrollTrigger;
 exports.Input = Input;

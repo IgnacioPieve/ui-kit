@@ -4,7 +4,6 @@ import { cn } from "../lib/cn";
 import { labels } from "../labels";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Label } from "./ui/label";
 
 export interface FilterToolbarProps {
   /** El buscador. Va solo en su fila y crece: pasale `className="flex-1"`. */
@@ -17,8 +16,8 @@ export interface FilterToolbarProps {
    * Lo que vive detrás de "Filtros": lo de vez en cuando.
    *
    * Cada hijo es una celda de una grilla de dos columnas (una sola en el
-   * teléfono). Para uno que ocupe el ancho entero —una fila de chips, un grupo
-   * largo—, `className="sm:col-span-2"` en su `FilterField`.
+   * teléfono), normalmente un `Field`. Para uno que ocupe el ancho entero —una
+   * fila de chips, un grupo largo—, `className="sm:col-span-2"`.
    */
   panel?: ReactNode;
   /** Cuántos filtros están puestos. Es el número del badge. */
@@ -130,46 +129,6 @@ export function FilterToolbar({
           {panel}
         </div>
       )}
-    </div>
-  );
-}
-
-export interface FilterFieldProps {
-  label: string;
-  /** Para que el `<label>` apunte al control cuando es uno solo. */
-  htmlFor?: string;
-  children: ReactNode;
-  className?: string;
-}
-
-/**
- * Un filtro con su título dentro del panel. Da el mismo ritmo a todos.
- *
- * El `min-w-0` es lo que deja que la celda se angoste: una celda de grilla mide
- * `min-width: auto` por defecto, o sea el ancho de su contenido, así que una
- * cápsula de cuatro chips —que sabe scrollear adentro suyo— en vez de scrollear
- * ensanchaba la celda, la grilla y la página entera. Se veía como la barra del
- * teléfono saliéndose para la derecha, a mil kilómetros de la línea que lo
- * causaba.
- *
- * El `block` del título tampoco es cosmético: un `<label>` es inline, así que
- * al lado de un hijo inline —una cápsula de chips— se le sentaba en la misma
- * línea, mientras que al lado de un `Select` (que es block) quedaba arriba. El
- * mismo componente daba dos layouts distintos según lo que le tocara adentro, y
- * un panel con las dos cosas se leía desparejo.
- */
-export function FilterField({
-  label,
-  htmlFor,
-  children,
-  className,
-}: FilterFieldProps) {
-  return (
-    <div className={cn("min-w-0 space-y-1.5", className)}>
-      <Label className="block" htmlFor={htmlFor}>
-        {label}
-      </Label>
-      {children}
     </div>
   );
 }

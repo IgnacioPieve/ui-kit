@@ -415,6 +415,53 @@ interface SkeletonListProps {
  */
 declare function SkeletonList({ count, className }: SkeletonListProps): React.JSX.Element;
 
+interface FieldProps {
+    label: string;
+    /** Para que el `<label>` apunte al control cuando es uno solo. */
+    htmlFor?: string;
+    children: ReactNode;
+    className?: string;
+}
+/**
+ * Un control con su título encima. La unidad de todo formulario y de todo
+ * panel de filtros de la familia.
+ *
+ * Estaba escrito veintidós veces —`<div className="space-y-1.5"><Label …>`— en
+ * siete archivos de cuatro apps. No es que costara escribirlo: es que cada
+ * copia es una oportunidad de que una quede en `space-y-2`, y entonces dos
+ * formularios de la misma familia respiran distinto sin que nadie sepa por qué.
+ *
+ * **El título va en `block`**, y eso no es cosmético: un `<label>` es inline,
+ * así que al lado de un hijo inline —una cápsula de chips— se le sentaba en la
+ * misma línea, mientras que al lado de un `<Input>` (block) quedaba arriba. El
+ * mismo componente daba dos layouts según lo que le tocara adentro.
+ *
+ * **El `min-w-0`** deja que el campo se angoste cuando es celda de una grilla:
+ * una celda mide `min-width: auto` —el ancho de su contenido— así que algo que
+ * sabe scrollear adentro suyo ensanchaba la celda, la grilla y la página, y se
+ * veía como el teléfono yéndose de costado.
+ */
+declare function Field({ label, htmlFor, children, className }: FieldProps): React.JSX.Element;
+
+interface FormActionsProps {
+    children: ReactNode;
+    className?: string;
+}
+/**
+ * El pie de un editor: pegado abajo en el teléfono, una fila más en escritorio.
+ *
+ * **El sangrado negativo tiene que ser exactamente el padding del `container`**
+ * —1rem abajo de `sm`— para que la barra llegue de borde a borde sin pasarse.
+ * Y por eso vive acá: ese padding es una decisión del preset, no de la app.
+ * Escrito a mano en dos apps, una lo puso en `-mx-6` contra un container de
+ * `px-4` y la página entera se iba 16px de costado en un iPhone —con el build
+ * en verde, sin error, y sin nada cerca del botón que lo explicara—.
+ *
+ * Envuelve, además: son botones con `whitespace-nowrap`, así que tres de ellos
+ * no se achican, se van.
+ */
+declare function FormActions({ children, className }: FormActionsProps): React.JSX.Element;
+
 interface FilterToolbarProps {
     /** El buscador. Va solo en su fila y crece: pasale `className="flex-1"`. */
     search?: ReactNode;
@@ -426,8 +473,8 @@ interface FilterToolbarProps {
      * Lo que vive detrás de "Filtros": lo de vez en cuando.
      *
      * Cada hijo es una celda de una grilla de dos columnas (una sola en el
-     * teléfono). Para uno que ocupe el ancho entero —una fila de chips, un grupo
-     * largo—, `className="sm:col-span-2"` en su `FilterField`.
+     * teléfono), normalmente un `Field`. Para uno que ocupe el ancho entero —una
+     * fila de chips, un grupo largo—, `className="sm:col-span-2"`.
      */
     panel?: ReactNode;
     /** Cuántos filtros están puestos. Es el número del badge. */
@@ -457,30 +504,6 @@ interface FilterToolbarProps {
  * que una lista corta nunca es un misterio con el panel cerrado.
  */
 declare function FilterToolbar({ search, action, children, panel, activeCount, onClear, results, defaultOpen, filtersLabel, clearLabel, className, }: FilterToolbarProps): React.JSX.Element;
-interface FilterFieldProps {
-    label: string;
-    /** Para que el `<label>` apunte al control cuando es uno solo. */
-    htmlFor?: string;
-    children: ReactNode;
-    className?: string;
-}
-/**
- * Un filtro con su título dentro del panel. Da el mismo ritmo a todos.
- *
- * El `min-w-0` es lo que deja que la celda se angoste: una celda de grilla mide
- * `min-width: auto` por defecto, o sea el ancho de su contenido, así que una
- * cápsula de cuatro chips —que sabe scrollear adentro suyo— en vez de scrollear
- * ensanchaba la celda, la grilla y la página entera. Se veía como la barra del
- * teléfono saliéndose para la derecha, a mil kilómetros de la línea que lo
- * causaba.
- *
- * El `block` del título tampoco es cosmético: un `<label>` es inline, así que
- * al lado de un hijo inline —una cápsula de chips— se le sentaba en la misma
- * línea, mientras que al lado de un `Select` (que es block) quedaba arriba. El
- * mismo componente daba dos layouts distintos según lo que le tocara adentro, y
- * un panel con las dos cosas se leía desparejo.
- */
-declare function FilterField({ label, htmlFor, children, className, }: FilterFieldProps): React.JSX.Element;
 interface FilterChipProps {
     selected: boolean;
     onClick: () => void;
@@ -935,4 +958,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, type CardProps, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, FilterChip, FilterChipGroup, type FilterChipGroupProps, type FilterChipOption, type FilterChipProps, FilterField, type FilterFieldProps, FilterToolbar, type FilterToolbarProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, PageHeader, type PageHeaderProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, SkeletonList, type SkeletonListProps, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, type CardProps, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, type EmptyStateProps, Field, type FieldProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, FilterChip, FilterChipGroup, type FilterChipGroupProps, type FilterChipOption, type FilterChipProps, FilterToolbar, type FilterToolbarProps, FormActions, type FormActionsProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, PageHeader, type PageHeaderProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, SkeletonList, type SkeletonListProps, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };

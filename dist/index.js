@@ -739,6 +739,25 @@ function PageHeader({
 function SkeletonList({ count = 3, className }) {
   return /* @__PURE__ */ jsx("div", { className: "space-y-3", "aria-hidden": true, children: Array.from({ length: count }, (_, index) => /* @__PURE__ */ jsx(Skeleton, { className: cn("h-16 w-full", className) }, index)) });
 }
+function Field({ label, htmlFor, children, className }) {
+  return /* @__PURE__ */ jsxs("div", { className: cn("min-w-0 space-y-1.5", className), children: [
+    /* @__PURE__ */ jsx(Label, { className: "block", htmlFor, children: label }),
+    children
+  ] });
+}
+function FormActions({ children, className }) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: cn(
+        "sticky bottom-0 -mx-4 flex flex-wrap items-center gap-3 border-t bg-background/90 px-4 py-3 backdrop-blur",
+        "sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0",
+        className
+      ),
+      children
+    }
+  );
+}
 function FilterToolbar({
   search,
   action,
@@ -802,17 +821,6 @@ function FilterToolbar({
     // el mismo panel tenía un ritmo distinto en cada una. Acá cada hijo es
     // una celda y el call site solo dice cuáles ocupan las dos.
     /* @__PURE__ */ jsx("div", { className: "grid gap-4 rounded-lg border bg-muted/40 p-3 sm:grid-cols-2", children: panel })
-  ] });
-}
-function FilterField({
-  label,
-  htmlFor,
-  children,
-  className
-}) {
-  return /* @__PURE__ */ jsxs("div", { className: cn("min-w-0 space-y-1.5", className), children: [
-    /* @__PURE__ */ jsx(Label, { className: "block", htmlFor, children: label }),
-    children
   ] });
 }
 function FilterChip({
@@ -1780,6 +1788,6 @@ function createHttpClient(baseUrl = "", { trace = false } = {}) {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, FileDropzone, FilePreview, FilterChip, FilterChipGroup, FilterField, FilterToolbar, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, PageHeader, Progress, SearchInput, SectionHeading, Select, Skeleton, SkeletonList, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, Field, FileDropzone, FilePreview, FilterChip, FilterChipGroup, FilterToolbar, FormActions, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, Markdown, MonthHeading, PageHeader, Progress, SearchInput, SectionHeading, Select, Skeleton, SkeletonList, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

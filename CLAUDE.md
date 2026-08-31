@@ -160,9 +160,9 @@ Things that fail **silently** or in a confusing way:
   knows how to scroll inside itself — `FilterChipGroup` — widened the cell
   instead of scrolling, and the whole page went sideways on a phone. Anything
   laid out in a grid that can hold something wider than its share carries
-  `min-w-0`; `FilterField` does.
+  `min-w-0`; `Field` does.
 - **A `<label>` is inline**, so it lands *beside* an inline child and *above* a
-  block one. `FilterField` looked correct next to a `Select` and wrong next to a
+  block one. `Field` looked correct next to a `Select` and wrong next to a
   chip capsule, from the same code. Any wrapper that stacks a title over
   arbitrary content has to say `block`.
 - **`asChild` takes exactly one element child.** `Card asChild` / `Button
