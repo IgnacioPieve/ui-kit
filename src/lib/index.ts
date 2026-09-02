@@ -11,7 +11,12 @@ export {
   todayISO,
   type MonthGroup,
 } from "./dates";
-export { formatCurrency, formatFileSize } from "./format";
+export {
+  MONEY_LOCALE,
+  formatAmount,
+  formatCurrency,
+  formatFileSize,
+} from "./format";
 export { fileKind, type FileKind } from "./files";
 export {
   linkHost,

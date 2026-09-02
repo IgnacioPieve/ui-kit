@@ -1275,70 +1275,22 @@ function fileKind(contentType) {
   return "other";
 }
 
-// src/lib/dates.ts
-var LOCALE = "es-AR";
-function parseLocalDate(iso) {
-  const [y, m, d] = iso.split("T")[0].split("-").map(Number);
-  return new Date(y, (m ?? 1) - 1, d ?? 1);
-}
-function formatDate(iso) {
-  return parseLocalDate(iso).toLocaleDateString(LOCALE, {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  });
-}
-function formatShortDate(iso) {
-  return parseLocalDate(iso).toLocaleDateString(LOCALE, {
-    day: "2-digit",
-    month: "short",
-    year: "numeric"
-  });
-}
-function formatDayMonth(iso) {
-  return parseLocalDate(iso).toLocaleDateString(LOCALE, {
-    day: "numeric",
-    month: "long"
-  });
-}
-function formatMonthYear(value) {
-  const date = typeof value === "string" ? parseLocalDate(value) : value;
-  const label = date.toLocaleDateString(LOCALE, {
-    month: "long",
-    year: "numeric"
-  });
-  return capitalize(label);
-}
-function todayISO() {
-  const now = /* @__PURE__ */ new Date();
-  const m = String(now.getMonth() + 1).padStart(2, "0");
-  const d = String(now.getDate()).padStart(2, "0");
-  return `${now.getFullYear()}-${m}-${d}`;
-}
-function capitalize(value) {
-  if (!value) return "";
-  return value.charAt(0).toUpperCase() + value.slice(1);
-}
-function groupByMonth(items, getDate) {
-  const groups = /* @__PURE__ */ new Map();
-  for (const item of items) {
-    const iso = getDate(item);
-    const date = iso ? parseLocalDate(iso) : /* @__PURE__ */ new Date();
-    const first = new Date(date.getFullYear(), date.getMonth(), 1);
-    const key = `${first.getFullYear()}-${String(first.getMonth() + 1).padStart(2, "0")}`;
-    if (!groups.has(key)) groups.set(key, { date: first, items: [] });
-    groups.get(key).items.push(item);
-  }
-  return [...groups.entries()].sort((a, b) => b[1].date.getTime() - a[1].date.getTime()).map(([key, group2]) => ({ key, label: formatMonthYear(group2.date), items: group2.items }));
-}
-
 // src/lib/format.ts
+var MONEY_LOCALE = "en-US";
+function formatAmount(value, maximumFractionDigits = 0) {
+  return new Intl.NumberFormat(MONEY_LOCALE, {
+    maximumFractionDigits,
+    minimumFractionDigits: maximumFractionDigits
+  }).format(value);
+}
+var SYMBOLS = {
+  ARS: "$",
+  USD: "US$",
+  EUR: "\u20AC"
+};
 function formatCurrency(cents, currency) {
-  return new Intl.NumberFormat(LOCALE, {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 2
-  }).format(cents / 100);
+  const symbol = SYMBOLS[currency] ?? currency;
+  return `${symbol} ${formatAmount(cents / 100, 2)}`;
 }
 function formatFileSize(bytes) {
   if (bytes < 1024) return `${bytes} B`;
@@ -1675,6 +1627,63 @@ function useAutosave(save) {
   return { status, save: trigger, flush };
 }
 
+// src/lib/dates.ts
+var LOCALE = "es-AR";
+function parseLocalDate(iso) {
+  const [y, m, d] = iso.split("T")[0].split("-").map(Number);
+  return new Date(y, (m ?? 1) - 1, d ?? 1);
+}
+function formatDate(iso) {
+  return parseLocalDate(iso).toLocaleDateString(LOCALE, {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+function formatShortDate(iso) {
+  return parseLocalDate(iso).toLocaleDateString(LOCALE, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+}
+function formatDayMonth(iso) {
+  return parseLocalDate(iso).toLocaleDateString(LOCALE, {
+    day: "numeric",
+    month: "long"
+  });
+}
+function formatMonthYear(value) {
+  const date = typeof value === "string" ? parseLocalDate(value) : value;
+  const label = date.toLocaleDateString(LOCALE, {
+    month: "long",
+    year: "numeric"
+  });
+  return capitalize(label);
+}
+function todayISO() {
+  const now = /* @__PURE__ */ new Date();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${now.getFullYear()}-${m}-${d}`;
+}
+function capitalize(value) {
+  if (!value) return "";
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+function groupByMonth(items, getDate) {
+  const groups = /* @__PURE__ */ new Map();
+  for (const item of items) {
+    const iso = getDate(item);
+    const date = iso ? parseLocalDate(iso) : /* @__PURE__ */ new Date();
+    const first = new Date(date.getFullYear(), date.getMonth(), 1);
+    const key = `${first.getFullYear()}-${String(first.getMonth() + 1).padStart(2, "0")}`;
+    if (!groups.has(key)) groups.set(key, { date: first, items: [] });
+    groups.get(key).items.push(item);
+  }
+  return [...groups.entries()].sort((a, b) => b[1].date.getTime() - a[1].date.getTime()).map(([key, group2]) => ({ key, label: formatMonthYear(group2.date), items: group2.items }));
+}
+
 // src/lib/logger.ts
 var STYLES = {
   request: "color:#0284c7;font-weight:600",
@@ -1868,6 +1877,7 @@ exports.Input = Input;
 exports.LOCALE = LOCALE;
 exports.Label = Label;
 exports.LinkPreview = LinkPreview;
+exports.MONEY_LOCALE = MONEY_LOCALE;
 exports.Markdown = Markdown;
 exports.MonthHeading = MonthHeading;
 exports.PageHeader = PageHeader;
@@ -1894,6 +1904,7 @@ exports.downloadBlob = downloadBlob;
 exports.downloadJson = downloadJson;
 exports.fileKind = fileKind;
 exports.filenameFromDisposition = filenameFromDisposition;
+exports.formatAmount = formatAmount;
 exports.formatCurrency = formatCurrency;
 exports.formatDate = formatDate;
 exports.formatDayMonth = formatDayMonth;

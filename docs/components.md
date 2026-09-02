@@ -86,7 +86,8 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `groupByMonth(items, getDate)` | Agrupa por mes, del más reciente al más viejo. Devuelve `{ key, label, items }[]`. Los items sin fecha caen en el mes actual. |
 | `todayISO()` | Hoy en `YYYY-MM-DD`, **local** (no UTC). |
 | `capitalize(s)` | |
-| `formatCurrency(cents, currency)` | Formatea un monto guardado en centavos. |
+| `formatCurrency(cents, currency)` | Un monto guardado en **centavos**: `$ 1,234.56`. |
+| `formatAmount(value, decimales = 0)` | Un número con los separadores de la familia, sin símbolo. Para las apps que guardan la plata en pesos enteros y no pueden usar `formatCurrency`. |
 | `formatFileSize(bytes)` | `1,4 MB` |
 | `fileKind(contentType)` | `"image" \| "pdf" \| "audio" \| "video" \| "other"` |
 | `linkKind(url)` | `"youtube" \| "other"` |
@@ -98,7 +99,16 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `downloadBlob(blob, filename)` / `downloadJson(data, filename)` | Disparan una descarga. |
 | `filenameFromDisposition(header, fallback)` | Lee el `filename="…"` de un `Content-Disposition`. |
 
-El locale es `es-AR` para todo (`LOCALE`).
+**Hay dos locales, y son dos decisiones distintas.** `LOCALE` (`es-AR`) es el de
+las fechas, que se leen como texto: *10 de marzo de 2026*. `MONEY_LOCALE`
+(`en-US`) es el de los números: **coma para los miles, punto para los
+decimales** (`1,234,567.50`).
+
+El símbolo de la moneda no lo pone `Intl` sino una tabla del kit (`ARS` → `$`,
+`USD` → `US$`, `EUR` → `€`). Con `style: "currency"` en `en-US`, el peso sale
+como `ARS 1,234.56` —el código entero, porque no es la moneda local del
+locale— y con `currencyDisplay: "narrowSymbol"` sale como `$`, igual que el
+dólar, que en una app con las dos monedas juntas es peor que feo.
 
 ## Cliente HTTP
 
