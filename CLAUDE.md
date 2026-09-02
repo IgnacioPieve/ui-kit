@@ -5,7 +5,7 @@ truth changes. Code is in **English**, UI strings in **Spanish**.
 
 This is the design system consumed by the five sibling apps, which follow a
 shared layout and conventions:
-[expenses](https://github.com/IgnacioPieve/expenses),
+[invoices](https://github.com/IgnacioPieve/invoices),
 [watchlog](https://github.com/IgnacioPieve/watchlog),
 [health](https://github.com/IgnacioPieve/health),
 [groceries](https://github.com/IgnacioPieve/groceries) and

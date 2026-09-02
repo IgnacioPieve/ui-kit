@@ -28,7 +28,7 @@ componente reutilizable, no se escribe en la app, se escribe acá y se consume.
                │ github:IgnacioPieve/ui-kit#vX.Y.Z  (tag fijo)
    ┌───────┬───────┼───────┬────────┐
    ▼       ▼       ▼       ▼        ▼
-expenses watchlog health groceries finance
+invoices watchlog health groceries finance
 ```
 
 ## Capas
