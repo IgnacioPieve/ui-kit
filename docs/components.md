@@ -17,7 +17,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | Componente | Props propias | Notas |
 |---|---|---|
 | `Button` | `variant`, `size`, `asChild` | Variantes: `default` `destructive` `outline` `secondary` `ghost` `link`. Tamaños: `default` `sm` `lg` `icon` `icon-sm`. Con `asChild` toma el hijo como elemento (para envolver un `<Link>`). |
-| `Input` | `variant`, `inputSize` | `variant="ghost"` no dibuja borde hasta el hover o el foco: para tablas donde cada celda es editable y veinte bordes permanentes tapan el contenido. `inputSize="sm"` para filas densas. Con `type="number"` **no muestra las flechitas**: nadie suma un precio de a uno, y en una tabla son veinte pares de flechas tapando el valor. |
+| `Input` | `variant`, `inputSize` | `variant="ghost"` no dibuja borde hasta el hover o el foco: para tablas donde cada celda es editable y veinte bordes permanentes tapan el contenido. `variant="bare"` no dibuja **nada** —ni borde, ni fondo, ni anillo—, para un campo que *es* el contenido; **no trae indicación de foco, así que el contenedor tiene que darla** (`focus-within:ring-2`). `inputSize="sm"` para filas densas. Con `type="number"` **no muestra las flechitas**: nadie suma un precio de a uno, y en una tabla son veinte pares de flechas tapando el valor. |
 | `Textarea` | — | `<textarea>` nativo estilado. |
 | `Label` | — | |
 | `Select` | — | `<select>` nativo + chevron. Nativo a propósito: en mobile abre el picker del sistema. |

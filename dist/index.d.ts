@@ -20,7 +20,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, Var
 declare const Button: React.ForwardRefExoticComponent<ButtonProps & React.RefAttributes<HTMLButtonElement>>;
 
 declare const inputVariants: (props?: ({
-    variant?: "default" | "ghost" | null | undefined;
+    variant?: "default" | "ghost" | "bare" | null | undefined;
     inputSize?: "default" | "sm" | null | undefined;
 } & class_variance_authority_types.ClassProp) | undefined) => string;
 interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">, VariantProps<typeof inputVariants> {

@@ -111,6 +111,14 @@ Subject in the imperative, ~50 chars, no trailing period. The body is where the
 
 Things that fail **silently** or in a confusing way:
 
+- **`focus-visible:ring-0` no apaga el anillo de foco.** Tailwind lo dibuja con
+  `calc(var(--tw-ring-width) + var(--tw-ring-offset-width))`, así que con el
+  `ring-offset-2` que trae el `Input` de la base queda un anillo de 2px del
+  color primario, y abajo el del offset, del color del fondo: dos sombras del
+  mismo tamaño una encima de la otra. En Safari se ve como un borde raro con
+  las esquinas sucias, y en Chrome como un halo claro. Hay que apagar las dos
+  (`ring-0` **y** `ring-offset-0`), que es lo que hace `variant="bare"`.
+
 - **Tailwind v3 does not merge `content` across presets** — the app's array wins
   outright. That is why apps must go through `defineAppConfig`; otherwise classes
   that only appear inside this package's compiled components are never generated
