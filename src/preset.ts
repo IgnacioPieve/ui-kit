@@ -95,6 +95,20 @@ export const preset = {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
+        // Las ocho ranuras de serie de los gráficos, en orden fijo. Se emiten
+        // como colores para que `fill-chart-3` o `bg-chart-3/20` existan sin
+        // que ninguna app escriba un hex. Ver `src/styles.css` para el porqué
+        // de los valores y para la obligación de etiquetar en modo claro.
+        chart: {
+          1: "hsl(var(--chart-1))",
+          2: "hsl(var(--chart-2))",
+          3: "hsl(var(--chart-3))",
+          4: "hsl(var(--chart-4))",
+          5: "hsl(var(--chart-5))",
+          6: "hsl(var(--chart-6))",
+          7: "hsl(var(--chart-7))",
+          8: "hsl(var(--chart-8))",
+        },
       },
       // El preflight de Tailwind emite `*, ::before, ::after { border-color:
       // theme(borderColor.DEFAULT) }`, así que con esto todo borde arranca en

@@ -42,6 +42,40 @@ Cada par es fondo + color de texto que va encima.
 `--border` además es el `borderColor.DEFAULT` del preset, así que el preflight de
 Tailwind ya pinta **todo** borde con el token y no hace falta declararlo.
 
+## Serie de los gráficos
+
+Ocho ranuras categóricas —`--chart-1` … `--chart-8`, clases `bg-chart-3`,
+`fill-chart-3`, `text-chart-3`, `stroke-chart-3` y sus opacidades— para
+distinguir series en un gráfico. Hoy las usa solo
+[expenses](https://github.com/IgnacioPieve/expenses); viven acá porque **el
+color siempre es del kit**, y una categoría guarda el número de la ranura, nunca
+un hex.
+
+| Ranura | Tono | Claro | Oscuro |
+|---|---|---|---|
+| `--chart-1` | azul | `#2a78d6` | `#3987e5` |
+| `--chart-2` | naranja | `#eb6834` | `#d95926` |
+| `--chart-3` | aqua | `#1baf7a` | `#199e70` |
+| `--chart-4` | amarillo | `#eda100` | `#c98500` |
+| `--chart-5` | magenta | `#e87ba4` | `#d55181` |
+| `--chart-6` | verde | `#008300` | `#008300` |
+| `--chart-7` | violeta | `#4a3aa7` | `#9085e9` |
+| `--chart-8` | rojo | `#e34948` | `#e66767` |
+
+Tres reglas, y las tres son de fondo:
+
+- **El orden es fijo y no se cicla.** El orden *es* el mecanismo de seguridad
+  para daltonismo: se asignan en secuencia. Una novena serie no es un color
+  nuevo —un tono generado colapsa con alguno de estos bajo protanopia—, se
+  pliega en "Otros".
+- **En claro, aqua, amarillo y magenta quedan abajo de 3:1 contra el blanco.**
+  Eso obliga a una vía de lectura que no sea el color: etiquetas visibles al
+  lado de cada marca, o una tabla. En oscuro los ocho pasan 3:1.
+- **Los valores no se eligen a ojo.** Pasan las seis verificaciones —banda de
+  luminosidad, piso de croma, separación protan/deutan ΔE≥8 en OKLab, piso de
+  visión normal ΔE≥15 y contraste—; el peor par adyacente da ΔE 9.1 en claro y
+  8.4 en oscuro. Tocar un valor es rehacer esa medición, no probar un tono.
+
 ## Radios
 
 | Token | Clases | Valor |
