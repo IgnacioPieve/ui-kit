@@ -107,7 +107,7 @@ const http = createHttpClient("", { trace: true });
 const visits = await http.get<Visit[]>("/api/visits", { q: "control" });
 ```
 
-`baseUrl` vacío —el default, y lo que usan las cinco apps— significa mismo
+`baseUrl` vacío —el default, y lo que usan las seis apps— significa mismo
 origen: nginx hace de reverse-proxy de `/api/` al backend, así que la app
 funciona desde cualquier host o IP sin URLs hardcodeadas en el build.
 

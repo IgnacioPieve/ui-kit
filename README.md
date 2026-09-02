@@ -99,6 +99,7 @@ trabajen en el repo, ver [`CLAUDE.md`](CLAUDE.md).
 ## Proyectos hermanos
 
 - [invoices](https://github.com/IgnacioPieve/invoices) — facturas y comprobantes.
+- [expenses](https://github.com/IgnacioPieve/expenses) — gastos del día a día.
 - [watchlog](https://github.com/IgnacioPieve/watchlog) — registro de películas y series.
 - [health](https://github.com/IgnacioPieve/health) — registros médicos.
 - [groceries](https://github.com/IgnacioPieve/groceries) — tickets de supermercado.

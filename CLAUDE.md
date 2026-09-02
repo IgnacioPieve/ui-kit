@@ -3,9 +3,10 @@
 Guidance for AI agents working in this repo. Keep it short; update it when the
 truth changes. Code is in **English**, UI strings in **Spanish**.
 
-This is the design system consumed by the five sibling apps, which follow a
+This is the design system consumed by the six sibling apps, which follow a
 shared layout and conventions:
 [invoices](https://github.com/IgnacioPieve/invoices),
+[expenses](https://github.com/IgnacioPieve/expenses),
 [watchlog](https://github.com/IgnacioPieve/watchlog),
 [health](https://github.com/IgnacioPieve/health),
 [groceries](https://github.com/IgnacioPieve/groceries) and
@@ -66,10 +67,10 @@ What consumers depend on, and therefore what cannot break casually:
   root; the preset from `@pieve/ui/preset`; the stylesheet from
   `@pieve/ui/styles.css`.
 
-Changing an export name or a prop is a breaking change for **five** repos at
+Changing an export name or a prop is a breaking change for **six** repos at
 once — bump the tag and update all of them the same day, or don't do it. A pin
 that drifts is how the kit stops mattering: a fix that reaches two apps out of
-five is not a shared design system.
+six is not a shared design system.
 
 ## Conventions & constraints
 

@@ -78,7 +78,7 @@ usar `grep -F` con la forma literal.
    git tag v0.1.1 && git push --follow-tags
    ```
 
-5. En **las cinco** apps, apuntar la dependencia al tag nuevo, regenerar el
+5. En **las seis** apps, apuntar la dependencia al tag nuevo, regenerar el
    lock y reconstruir:
 
    ```bash
@@ -97,7 +97,7 @@ usar `grep -F` con la forma literal.
 Las apps apuntan a un **tag**, nunca a `main`, para que un `npm install` no
 cambie la UI sin querer.
 
-**El mismo día, las cinco.** Un release que llega a dos de cinco es como no
+**El mismo día, las seis.** Un release que llega a dos de seis es como no
 haberlo hecho: la próxima vez que algo falle en una app sin el arreglo, la
 salida barata va a ser parchearlo ahí — y así fue como cuatro arreglos que
 correspondían al kit terminaron viviendo en los `index.css` de dos apps

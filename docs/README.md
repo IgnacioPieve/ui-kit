@@ -22,6 +22,7 @@ Comparten estructura, convenciones y este design system; lo que se aprende acá
 aplica igual allá.
 
 - [invoices](https://github.com/IgnacioPieve/invoices) — facturas y comprobantes.
+- [expenses](https://github.com/IgnacioPieve/expenses) — gastos del día a día.
 - [watchlog](https://github.com/IgnacioPieve/watchlog) — registro de películas y series.
 - [health](https://github.com/IgnacioPieve/health) — registros médicos.
 - [groceries](https://github.com/IgnacioPieve/groceries) — tickets de supermercado.
