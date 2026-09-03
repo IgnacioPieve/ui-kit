@@ -107,6 +107,7 @@ Definidas en `styles.css`, fuera de Tailwind:
 | `.no-spinner` | Oculta las flechitas de un `<input type="number">`. |
 | `.no-scrollbar` | Scroller sin barra visible, para una fila que en el teléfono se desplaza con el dedo (la nav del `AppShell`). |
 | `.field-placeholder` | El texto que `DateInput` dibuja sobre un campo vacío. Solo existe para que suba a 16px en el teléfono junto con los campos. |
+| `.keep-font-size` | Deja a un campo con **su** tipografía en el teléfono, fuera del piso de 16px de abajo. Para el campo que *es* el contenido —el monto gigante de una pantalla de alta—, que si no se dibuja más chico en el teléfono que en el escritorio. Solo si ese tamaño ya es de 16px para arriba: abajo de eso vuelve el zoom de iOS. |
 
 ## Formularios en el teléfono
 
@@ -116,7 +117,7 @@ sus `Input` y el ancho nativo de los controles de fecha.
 
 | Regla | Por qué |
 |---|---|
-| `input, select, textarea { font-size: 16px }` abajo de `sm` | iOS hace zoom al enfocar cualquier campo de menos de 16px —los del kit son de 14, 12 los `inputSize="sm"`— y **no lo deshace al salir**: la pantalla queda corrida y hay que pellizcar para volver. |
+| `input, select, textarea { font-size: 16px }` abajo de `sm` | iOS hace zoom al enfocar cualquier campo de menos de 16px —los del kit son de 14, 12 los `inputSize="sm"`— y **no lo deshace al salir**: la pantalla queda corrida y hay que pellizcar para volver. Es un **piso**, no un tamaño: un campo agrandado a propósito se sale con `.keep-font-size`, o el monto de una pantalla de alta termina más chico en el teléfono que en el escritorio. |
 | `input[type="date"]` con `appearance: none` y `min-width: 0` | Safari lo trata como un control nativo con ancho propio: se sale de su caja en vez de encogerse. Hacen falta las dos reglas; con una sola sigue desbordando. |
 | El campo de fecha **vacío** | Ninguna regla lo arregla: iOS no dibuja nada en un `input[type=date]` sin valor, y el `placeholder` del HTML no aplica a los campos de fecha. Un filtro sin `<Label>` queda en un rectángulo mudo hasta que tiene una fecha. Eso lo resuelve `DateInput`, que pone el texto él mismo —siempre, con o sin `placeholder`: sin él dibuja `dd/mm/aaaa`— y de paso deja el formato en español, que el nativo saca del idioma del navegador y no del `lang` del documento. |
 

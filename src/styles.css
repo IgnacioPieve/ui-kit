@@ -295,12 +295,16 @@ body {
    sites que pasan un tamaño a mano. Esto los cubre a todos, y también a
    cualquier <input> suelto que no venga del kit.
 
-   Consecuencia aceptada: en mobile esta regla también le gana a un tamaño
-   puesto a propósito por la app. No importa para el zoom —cualquier cosa de
-   16px para arriba ya no lo dispara—, y de 16 para abajo la queríamos pisar
-   igual. */
+   **La salida es `.keep-font-size`, y existe porque esto es un piso, no un
+   tamaño.** Escrito sin el `:not()`, el 16px le ganaba también a un campo que
+   la app agrandó a propósito: el monto de la pantalla de alta de `expenses`
+   medía `text-3xl` en el escritorio y 16px en el teléfono —el revés exacto de
+   lo que se quiso—, y el build seguía verde porque la clase estaba puesta.
+   Un campo con esta clase se queda con su propio tamaño en mobile, así que
+   **solo puede llevarla si ese tamaño es de 16px para arriba**: abajo de eso
+   vuelve el zoom de iOS, que es lo que este bloque existe para evitar. */
 @media (max-width: 639px) {
-  html :is(input, select, textarea, .field-placeholder) {
+  html :is(input, select, textarea, .field-placeholder):not(.keep-font-size) {
     font-size: 16px;
   }
 }
