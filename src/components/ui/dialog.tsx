@@ -53,9 +53,11 @@ const DialogContent = React.forwardRef<
       }}
       className={cn(
         // Redondeado también en el teléfono: el diálogo nunca llega a los
-        // bordes —mide `100vw - 2rem`—, así que el `sm:rounded-lg` heredado de
-        // shadcn, pensado para un modal que abajo de `sm` ocupa la pantalla
-        // entera, dibujaba una caja con esquinas vivas flotando sobre el fondo.
+        // bordes —mide `100vw - 2rem`—, así que redondear recién en `sm`, que es
+        // lo que hereda de shadcn (donde abajo de ese breakpoint el modal ocupa
+        // la pantalla entera), dibujaba una caja con esquinas vivas flotando
+        // sobre el fondo. El comentario no escribe esa clase entera a propósito:
+        // Tailwind escanea `dist/` y la generaría desde acá.
         //
         // El centrado es un `transform`, y las clases de `animate-in` escriben
         // ese mismo `transform` mientras dura la animación: sin decirles que el
