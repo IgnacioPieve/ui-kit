@@ -125,6 +125,12 @@ Things that fail **silently** or in a confusing way:
   and the components render unstyled **with a green build in both repos**. When
   adding a component that uses a class no app writes itself, verify it lands in
   the app's built CSS (see `docs/development.md#verificación`).
+- **Un comentario en `src/` también genera clases.** Tailwind escanea `dist/`
+  como texto plano, sin distinguir código de comentario: nombrar entera una
+  clase que se acaba de sacar la devuelve al CSS de las seis apps. Molesta poco
+  y confunde mucho, porque grepear el CSS compilado es justo como se verifica
+  que el kit llegó a una app. En un comentario, la clase va partida
+  (`sm:rounded-*`).
 - Grepping the built CSS for variants needs the escaped form: Tailwind writes
   `data-[state=checked]:` as `data-\[state\=checked\]\:`. Use `grep -F`.
 - **`animate-in` escribe el `transform` entero, y ahí se pierde el centrado.**
