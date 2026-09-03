@@ -52,12 +52,17 @@ const DialogContent = React.forwardRef<
         onOpenAutoFocus?.(event);
       }}
       className={cn(
+        // Redondeado también en el teléfono: el diálogo nunca llega a los
+        // bordes —mide `100vw - 2rem`—, así que el `sm:rounded-lg` heredado de
+        // shadcn, pensado para un modal que abajo de `sm` ocupa la pantalla
+        // entera, dibujaba una caja con esquinas vivas flotando sobre el fondo.
+        //
         // El centrado es un `transform`, y las clases de `animate-in` escriben
         // ese mismo `transform` mientras dura la animación: sin decirles que el
         // desplazamiento es -50%/-50%, el diálogo se anima desde su posición sin
         // centrar —media caja abajo y a la derecha— y salta al lugar al
         // terminar. Es la animación rara que se veía en las seis apps.
-        "fixed left-1/2 top-1/2 z-50 grid max-h-[90vh] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-1/2 data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-1/2 sm:rounded-lg",
+        "fixed left-1/2 top-1/2 z-50 grid max-h-[90vh] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-1/2 data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-1/2 rounded-lg",
         className
       )}
       {...props}
