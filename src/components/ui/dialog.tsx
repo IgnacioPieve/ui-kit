@@ -29,13 +29,35 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
     hideClose?: boolean;
   }
->(({ className, children, hideClose, ...props }, ref) => (
+>(({ className, children, hideClose, onOpenAutoFocus, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
+      // Radix enfoca el primer elemento enfocable al abrir, que en un formulario
+      // es siempre el primer campo: el diálogo abre con el título seleccionado y
+      // el teclado del teléfono tapando media pantalla, sin que nadie lo haya
+      // pedido. Se enfoca el contenedor en su lugar —tiene `tabIndex={-1}` por
+      // el `FocusScope`—, así el foco entra igual al diálogo y Escape y el Tab
+      // siguen funcionando, pero no hay ningún campo preseleccionado.
+      //
+      // Un campo con `autoFocus` explícito —el buscador de un picker, donde
+      // enfocar al abrir es el punto— ya se enfocó cuando esto corre, y ahí no
+      // se toca nada: la regla es que el foco automático se pide, no que se
+      // hereda del orden del DOM.
+      onOpenAutoFocus={(event) => {
+        event.preventDefault();
+        const content = event.currentTarget as HTMLElement | null;
+        if (content && !content.contains(document.activeElement)) content.focus();
+        onOpenAutoFocus?.(event);
+      }}
       className={cn(
-        "fixed left-1/2 top-1/2 z-50 grid max-h-[90vh] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:rounded-lg",
+        // El centrado es un `transform`, y las clases de `animate-in` escriben
+        // ese mismo `transform` mientras dura la animación: sin decirles que el
+        // desplazamiento es -50%/-50%, el diálogo se anima desde su posición sin
+        // centrar —media caja abajo y a la derecha— y salta al lugar al
+        // terminar. Es la animación rara que se veía en las seis apps.
+        "fixed left-1/2 top-1/2 z-50 grid max-h-[90vh] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-1/2 data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-1/2 sm:rounded-lg",
         className
       )}
       {...props}

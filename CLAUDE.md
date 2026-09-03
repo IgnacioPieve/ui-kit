@@ -127,6 +127,22 @@ Things that fail **silently** or in a confusing way:
   the app's built CSS (see `docs/development.md#verificación`).
 - Grepping the built CSS for variants needs the escaped form: Tailwind writes
   `data-[state=checked]:` as `data-\[state\=checked\]\:`. Use `grep -F`.
+- **`animate-in` escribe el `transform` entero, y ahí se pierde el centrado.**
+  El `DialogContent` se centra con `-translate-x-1/2 -translate-y-1/2`, pero los
+  keyframes de `tailwindcss-animate` setean `transform` de cero a partir de sus
+  propias variables: durante los 200ms de la animación el diálogo no está
+  centrado, está media caja abajo y a la derecha, y salta al lugar cuando
+  termina. Se ve como una animación diagonal rarísima y no hay nada roto que
+  buscar. Cualquier cosa posicionada con `transform` que además se anime tiene
+  que declarar ese desplazamiento como parte de la animación
+  (`slide-in-from-left-1/2` + `slide-in-from-top-1/2`, y el par `slide-out` para
+  el cierre).
+- **Radix enfoca solo el primer elemento enfocable del diálogo.** En un
+  formulario eso es siempre el primer campo, así que todo diálogo abría con un
+  input seleccionado y, en el teléfono, con el teclado tapando media pantalla.
+  El foco automático se pide (`autoFocus` en el campo que lo quiera), no se
+  hereda del orden del DOM: desde v0.20.0 `DialogContent` cancela ese foco y
+  enfoca el contenedor, salvo que ya haya foco adentro.
 - Committing `src/` without rebuilding `dist/` ships stale code to the apps with
   no error anywhere.
 - Moving an existing tag instead of creating a new one leaves apps on a cached

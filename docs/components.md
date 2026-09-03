@@ -29,7 +29,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `ToggleGroup<T>` | `value`, `onChange`, `options`, `size?`, `block?`, `label?` | Control segmentado: opciones excluyentes que se comparan de un vistazo (👍/😐/👎, timeline/calendario). Botones nativos, sin Radix. Con más de cuatro opciones, o si no entran en una línea, va un `Select`. |
 | `Skeleton` | — | Placeholder de carga. |
 | `Spinner` | `className?` | Indicador de carga. Centrarlo es responsabilidad de quien lo usa. |
-| `Dialog` | Radix `Dialog` | `DialogContent` acepta `hideClose`. Incluye `DialogHeader` `DialogTitle` `DialogDescription` `DialogFooter` `DialogTrigger` `DialogClose`. |
+| `Dialog` | Radix `Dialog` | `DialogContent` acepta `hideClose`. Abre **sin ningún campo enfocado** (v0.20.0): el foco va al contenedor, salvo que un hijo pida `autoFocus` explícito. Incluye `DialogHeader` `DialogTitle` `DialogDescription` `DialogFooter` `DialogTrigger` `DialogClose`. |
 | `DropdownMenu` | Radix | Con `DropdownMenuTrigger` `DropdownMenuContent` `DropdownMenuItem` `DropdownMenuLabel` `DropdownMenuSeparator`. |
 | `Toaster` / `toast` | — | Sonner. `<Toaster />` se monta una vez en el root; `toast.success(…)` / `toast.error(…)` desde cualquier lado. |
 
