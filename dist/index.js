@@ -1,11 +1,11 @@
-import * as React8 from 'react';
+import * as React11 from 'react';
 import { useState, useEffect, useCallback, useRef, useLayoutEffect, useMemo } from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { ChevronDown, Minus, Check, X, Loader2, Sun, Moon, Search, SlidersHorizontal, Copy, Upload, Camera, FileText, File as File$1, Link2, CircleAlert, ExternalLink, Download } from 'lucide-react';
+import { ChevronDown, Minus, Check, X, ChevronRight, Loader2, Sun, Moon, Search, SlidersHorizontal, Copy, Upload, Camera, FileText, File as File$1, Link2, CircleAlert, ExternalLink, Download } from 'lucide-react';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
@@ -46,7 +46,7 @@ var buttonVariants = cva(
     }
   }
 );
-var Button = React8.forwardRef(
+var Button = React11.forwardRef(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     return /* @__PURE__ */ jsx(
@@ -110,7 +110,7 @@ var inputVariants = cva(
     defaultVariants: { variant: "default", inputSize: "default" }
   }
 );
-var Input = React8.forwardRef(
+var Input = React11.forwardRef(
   ({ className, variant, inputSize, type, ...props }, ref) => /* @__PURE__ */ jsx(
     "input",
     {
@@ -122,7 +122,7 @@ var Input = React8.forwardRef(
   )
 );
 Input.displayName = "Input";
-var Textarea = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var Textarea = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "textarea",
   {
     ref,
@@ -134,7 +134,7 @@ var Textarea = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ 
   }
 ));
 Textarea.displayName = "Textarea";
-var Label = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var Label = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "label",
   {
     ref,
@@ -146,7 +146,7 @@ var Label = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ 
   }
 ));
 Label.displayName = "Label";
-var Select = React8.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs("div", { className: "relative", children: [
+var Select = React11.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs("div", { className: "relative", children: [
   /* @__PURE__ */ jsx(
     "select",
     {
@@ -162,7 +162,7 @@ var Select = React8.forwardRef(({ className, children, ...props }, ref) => /* @_
   /* @__PURE__ */ jsx(ChevronDown, { className: "pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" })
 ] }));
 Select.displayName = "Select";
-var Switch = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var Switch = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   SwitchPrimitive.Root,
   {
     ref,
@@ -182,7 +182,7 @@ var Switch = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */
   }
 ));
 Switch.displayName = "Switch";
-var Checkbox = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var Checkbox = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   CheckboxPrimitive.Root,
   {
     ref,
@@ -195,7 +195,7 @@ var Checkbox = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ 
   }
 ));
 Checkbox.displayName = "Checkbox";
-var Card = React8.forwardRef(
+var Card = React11.forwardRef(
   ({ className, interactive = false, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "div";
     return /* @__PURE__ */ jsx(
@@ -213,7 +213,7 @@ var Card = React8.forwardRef(
   }
 );
 Card.displayName = "Card";
-var CardHeader = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var CardHeader = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "div",
   {
     ref,
@@ -222,7 +222,7 @@ var CardHeader = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE_
   }
 ));
 CardHeader.displayName = "CardHeader";
-var CardTitle = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var CardTitle = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "h3",
   {
     ref,
@@ -231,9 +231,9 @@ var CardTitle = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__
   }
 ));
 CardTitle.displayName = "CardTitle";
-var CardContent = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx("div", { ref, className: cn("p-6 pt-0", className), ...props }));
+var CardContent = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx("div", { ref, className: cn("p-6 pt-0", className), ...props }));
 CardContent.displayName = "CardContent";
-var CardFooter = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var CardFooter = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   "div",
   {
     ref,
@@ -261,7 +261,7 @@ var badgeVariants = cva(
 function Badge({ className, variant, ...props }) {
   return /* @__PURE__ */ jsx("div", { className: cn(badgeVariants({ variant }), className), ...props });
 }
-var Progress = React8.forwardRef(
+var Progress = React11.forwardRef(
   ({ value, max = 100, completeVariant = true, className, ...props }, ref) => {
     const percent = max > 0 ? Math.min(100, Math.max(0, value / max * 100)) : 0;
     const complete = completeVariant && max > 0 && value >= max;
@@ -374,7 +374,7 @@ var Dialog = DialogPrimitive.Root;
 var DialogTrigger = DialogPrimitive.Trigger;
 var DialogPortal = DialogPrimitive.Portal;
 var DialogClose = DialogPrimitive.Close;
-var DialogOverlay = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DialogOverlay = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DialogPrimitive.Overlay,
   {
     ref,
@@ -386,7 +386,7 @@ var DialogOverlay = React8.forwardRef(({ className, ...props }, ref) => /* @__PU
   }
 ));
 DialogOverlay.displayName = "DialogOverlay";
-var DialogContent = React8.forwardRef(({ className, children, hideClose, onOpenAutoFocus, ...props }, ref) => /* @__PURE__ */ jsxs(DialogPortal, { children: [
+var DialogContent = React11.forwardRef(({ className, children, hideClose, onOpenAutoFocus, ...props }, ref) => /* @__PURE__ */ jsxs(DialogPortal, { children: [
   /* @__PURE__ */ jsx(DialogOverlay, {}),
   /* @__PURE__ */ jsxs(
     DialogPrimitive.Content,
@@ -445,7 +445,7 @@ var DialogFooter = ({
   }
 );
 DialogFooter.displayName = "DialogFooter";
-var DialogTitle = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DialogTitle = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DialogPrimitive.Title,
   {
     ref,
@@ -454,7 +454,7 @@ var DialogTitle = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE
   }
 ));
 DialogTitle.displayName = "DialogTitle";
-var DialogDescription = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DialogDescription = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DialogPrimitive.Description,
   {
     ref,
@@ -466,7 +466,8 @@ DialogDescription.displayName = "DialogDescription";
 var DropdownMenu = DropdownMenuPrimitive.Root;
 var DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 var DropdownMenuGroup = DropdownMenuPrimitive.Group;
-var DropdownMenuContent = React8.forwardRef(({ className, sideOffset = 6, ...props }, ref) => /* @__PURE__ */ jsx(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx(
+var DropdownMenuSub = DropdownMenuPrimitive.Sub;
+var DropdownMenuContent = React11.forwardRef(({ className, sideOffset = 6, ...props }, ref) => /* @__PURE__ */ jsx(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx(
   DropdownMenuPrimitive.Content,
   {
     ref,
@@ -479,7 +480,7 @@ var DropdownMenuContent = React8.forwardRef(({ className, sideOffset = 6, ...pro
   }
 ) }));
 DropdownMenuContent.displayName = "DropdownMenuContent";
-var DropdownMenuItem = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DropdownMenuItem = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DropdownMenuPrimitive.Item,
   {
     ref,
@@ -491,7 +492,35 @@ var DropdownMenuItem = React8.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 DropdownMenuItem.displayName = "DropdownMenuItem";
-var DropdownMenuLabel = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DropdownMenuSubTrigger = React11.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxs(
+  DropdownMenuPrimitive.SubTrigger,
+  {
+    ref,
+    className: cn(
+      "flex cursor-pointer select-none items-center gap-3 rounded-sm px-2 py-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&_svg]:size-4 [&_svg]:shrink-0",
+      className
+    ),
+    ...props,
+    children: [
+      children,
+      /* @__PURE__ */ jsx(ChevronRight, { className: "ml-auto h-4 w-4" })
+    ]
+  }
+));
+DropdownMenuSubTrigger.displayName = "DropdownMenuSubTrigger";
+var DropdownMenuSubContent = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(DropdownMenuPrimitive.Portal, { children: /* @__PURE__ */ jsx(
+  DropdownMenuPrimitive.SubContent,
+  {
+    ref,
+    className: cn(
+      "z-50 min-w-[10rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+      className
+    ),
+    ...props
+  }
+) }));
+DropdownMenuSubContent.displayName = "DropdownMenuSubContent";
+var DropdownMenuLabel = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DropdownMenuPrimitive.Label,
   {
     ref,
@@ -500,7 +529,7 @@ var DropdownMenuLabel = React8.forwardRef(({ className, ...props }, ref) => /* @
   }
 ));
 DropdownMenuLabel.displayName = "DropdownMenuLabel";
-var DropdownMenuSeparator = React8.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
+var DropdownMenuSeparator = React11.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsx(
   DropdownMenuPrimitive.Separator,
   {
     ref,
@@ -627,7 +656,7 @@ function SearchInput({
     )
   ] });
 }
-var DateInput = React8.forwardRef(
+var DateInput = React11.forwardRef(
   ({
     placeholder,
     className,
@@ -642,14 +671,14 @@ var DateInput = React8.forwardRef(
     "aria-label": ariaLabel,
     ...props
   }, ref) => {
-    const [innerValue, setInnerValue] = React8.useState(defaultValue ?? "");
+    const [innerValue, setInnerValue] = React11.useState(defaultValue ?? "");
     const current = value !== void 0 ? value : innerValue;
     const empty = current === "" || current === null || current === void 0;
     const placeholderText = placeholder ?? labels.datePlaceholder;
     const showClear = clearable && !empty && !disabled;
     const small = inputSize === "sm";
-    const innerRef = React8.useRef(null);
-    const setRefs = React8.useCallback(
+    const innerRef = React11.useRef(null);
+    const setRefs = React11.useCallback(
       (node) => {
         innerRef.current = node;
         if (typeof ref === "function") ref(node);
@@ -1837,6 +1866,6 @@ function createHttpClient(baseUrl = "", { trace = false } = {}) {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, EmptyState, Field, FileDropzone, FilePreview, FilterChip, FilterChipGroup, FilterToolbar, FormActions, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, MONEY_LOCALE, Markdown, MonthHeading, PageHeader, Progress, SearchInput, SectionHeading, Select, Skeleton, SkeletonList, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, EmptyState, Field, FileDropzone, FilePreview, FilterChip, FilterChipGroup, FilterToolbar, FormActions, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, MONEY_LOCALE, Markdown, MonthHeading, PageHeader, Progress, SearchInput, SectionHeading, Select, Skeleton, SkeletonList, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

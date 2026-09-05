@@ -1,6 +1,6 @@
 'use strict';
 
-var React8 = require('react');
+var React11 = require('react');
 var reactSlot = require('@radix-ui/react-slot');
 var classVarianceAuthority = require('class-variance-authority');
 var clsx = require('clsx');
@@ -36,7 +36,7 @@ function _interopNamespace(e) {
   return Object.freeze(n);
 }
 
-var React8__namespace = /*#__PURE__*/_interopNamespace(React8);
+var React11__namespace = /*#__PURE__*/_interopNamespace(React11);
 var SwitchPrimitive__namespace = /*#__PURE__*/_interopNamespace(SwitchPrimitive);
 var CheckboxPrimitive__namespace = /*#__PURE__*/_interopNamespace(CheckboxPrimitive);
 var DialogPrimitive__namespace = /*#__PURE__*/_interopNamespace(DialogPrimitive);
@@ -74,7 +74,7 @@ var buttonVariants = classVarianceAuthority.cva(
     }
   }
 );
-var Button = React8__namespace.forwardRef(
+var Button = React11__namespace.forwardRef(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? reactSlot.Slot : "button";
     return /* @__PURE__ */ jsxRuntime.jsx(
@@ -138,7 +138,7 @@ var inputVariants = classVarianceAuthority.cva(
     defaultVariants: { variant: "default", inputSize: "default" }
   }
 );
-var Input = React8__namespace.forwardRef(
+var Input = React11__namespace.forwardRef(
   ({ className, variant, inputSize, type, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
     "input",
     {
@@ -150,7 +150,7 @@ var Input = React8__namespace.forwardRef(
   )
 );
 Input.displayName = "Input";
-var Textarea = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var Textarea = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   "textarea",
   {
     ref,
@@ -162,7 +162,7 @@ var Textarea = React8__namespace.forwardRef(({ className, ...props }, ref) => /*
   }
 ));
 Textarea.displayName = "Textarea";
-var Label = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var Label = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   "label",
   {
     ref,
@@ -174,7 +174,7 @@ var Label = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @_
   }
 ));
 Label.displayName = "Label";
-var Select = React8__namespace.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "relative", children: [
+var Select = React11__namespace.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "relative", children: [
   /* @__PURE__ */ jsxRuntime.jsx(
     "select",
     {
@@ -190,7 +190,7 @@ var Select = React8__namespace.forwardRef(({ className, children, ...props }, re
   /* @__PURE__ */ jsxRuntime.jsx(lucideReact.ChevronDown, { className: "pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" })
 ] }));
 Select.displayName = "Select";
-var Switch = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var Switch = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   SwitchPrimitive__namespace.Root,
   {
     ref,
@@ -210,7 +210,7 @@ var Switch = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @
   }
 ));
 Switch.displayName = "Switch";
-var Checkbox = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var Checkbox = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   CheckboxPrimitive__namespace.Root,
   {
     ref,
@@ -223,7 +223,7 @@ var Checkbox = React8__namespace.forwardRef(({ className, ...props }, ref) => /*
   }
 ));
 Checkbox.displayName = "Checkbox";
-var Card = React8__namespace.forwardRef(
+var Card = React11__namespace.forwardRef(
   ({ className, interactive = false, asChild = false, ...props }, ref) => {
     const Comp = asChild ? reactSlot.Slot : "div";
     return /* @__PURE__ */ jsxRuntime.jsx(
@@ -241,7 +241,7 @@ var Card = React8__namespace.forwardRef(
   }
 );
 Card.displayName = "Card";
-var CardHeader = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var CardHeader = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   "div",
   {
     ref,
@@ -250,7 +250,7 @@ var CardHeader = React8__namespace.forwardRef(({ className, ...props }, ref) => 
   }
 ));
 CardHeader.displayName = "CardHeader";
-var CardTitle = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var CardTitle = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   "h3",
   {
     ref,
@@ -259,9 +259,9 @@ var CardTitle = React8__namespace.forwardRef(({ className, ...props }, ref) => /
   }
 ));
 CardTitle.displayName = "CardTitle";
-var CardContent = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx("div", { ref, className: cn("p-6 pt-0", className), ...props }));
+var CardContent = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx("div", { ref, className: cn("p-6 pt-0", className), ...props }));
 CardContent.displayName = "CardContent";
-var CardFooter = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var CardFooter = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   "div",
   {
     ref,
@@ -289,7 +289,7 @@ var badgeVariants = classVarianceAuthority.cva(
 function Badge({ className, variant, ...props }) {
   return /* @__PURE__ */ jsxRuntime.jsx("div", { className: cn(badgeVariants({ variant }), className), ...props });
 }
-var Progress = React8__namespace.forwardRef(
+var Progress = React11__namespace.forwardRef(
   ({ value, max = 100, completeVariant = true, className, ...props }, ref) => {
     const percent = max > 0 ? Math.min(100, Math.max(0, value / max * 100)) : 0;
     const complete = completeVariant && max > 0 && value >= max;
@@ -402,7 +402,7 @@ var Dialog = DialogPrimitive__namespace.Root;
 var DialogTrigger = DialogPrimitive__namespace.Trigger;
 var DialogPortal = DialogPrimitive__namespace.Portal;
 var DialogClose = DialogPrimitive__namespace.Close;
-var DialogOverlay = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var DialogOverlay = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   DialogPrimitive__namespace.Overlay,
   {
     ref,
@@ -414,7 +414,7 @@ var DialogOverlay = React8__namespace.forwardRef(({ className, ...props }, ref) 
   }
 ));
 DialogOverlay.displayName = "DialogOverlay";
-var DialogContent = React8__namespace.forwardRef(({ className, children, hideClose, onOpenAutoFocus, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsxs(DialogPortal, { children: [
+var DialogContent = React11__namespace.forwardRef(({ className, children, hideClose, onOpenAutoFocus, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsxs(DialogPortal, { children: [
   /* @__PURE__ */ jsxRuntime.jsx(DialogOverlay, {}),
   /* @__PURE__ */ jsxRuntime.jsxs(
     DialogPrimitive__namespace.Content,
@@ -473,7 +473,7 @@ var DialogFooter = ({
   }
 );
 DialogFooter.displayName = "DialogFooter";
-var DialogTitle = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var DialogTitle = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   DialogPrimitive__namespace.Title,
   {
     ref,
@@ -482,7 +482,7 @@ var DialogTitle = React8__namespace.forwardRef(({ className, ...props }, ref) =>
   }
 ));
 DialogTitle.displayName = "DialogTitle";
-var DialogDescription = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var DialogDescription = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   DialogPrimitive__namespace.Description,
   {
     ref,
@@ -494,7 +494,8 @@ DialogDescription.displayName = "DialogDescription";
 var DropdownMenu = DropdownMenuPrimitive__namespace.Root;
 var DropdownMenuTrigger = DropdownMenuPrimitive__namespace.Trigger;
 var DropdownMenuGroup = DropdownMenuPrimitive__namespace.Group;
-var DropdownMenuContent = React8__namespace.forwardRef(({ className, sideOffset = 6, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(DropdownMenuPrimitive__namespace.Portal, { children: /* @__PURE__ */ jsxRuntime.jsx(
+var DropdownMenuSub = DropdownMenuPrimitive__namespace.Sub;
+var DropdownMenuContent = React11__namespace.forwardRef(({ className, sideOffset = 6, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(DropdownMenuPrimitive__namespace.Portal, { children: /* @__PURE__ */ jsxRuntime.jsx(
   DropdownMenuPrimitive__namespace.Content,
   {
     ref,
@@ -507,7 +508,7 @@ var DropdownMenuContent = React8__namespace.forwardRef(({ className, sideOffset 
   }
 ) }));
 DropdownMenuContent.displayName = "DropdownMenuContent";
-var DropdownMenuItem = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var DropdownMenuItem = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   DropdownMenuPrimitive__namespace.Item,
   {
     ref,
@@ -519,7 +520,35 @@ var DropdownMenuItem = React8__namespace.forwardRef(({ className, ...props }, re
   }
 ));
 DropdownMenuItem.displayName = "DropdownMenuItem";
-var DropdownMenuLabel = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var DropdownMenuSubTrigger = React11__namespace.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsxs(
+  DropdownMenuPrimitive__namespace.SubTrigger,
+  {
+    ref,
+    className: cn(
+      "flex cursor-pointer select-none items-center gap-3 rounded-sm px-2 py-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground [&_svg]:size-4 [&_svg]:shrink-0",
+      className
+    ),
+    ...props,
+    children: [
+      children,
+      /* @__PURE__ */ jsxRuntime.jsx(lucideReact.ChevronRight, { className: "ml-auto h-4 w-4" })
+    ]
+  }
+));
+DropdownMenuSubTrigger.displayName = "DropdownMenuSubTrigger";
+var DropdownMenuSubContent = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(DropdownMenuPrimitive__namespace.Portal, { children: /* @__PURE__ */ jsxRuntime.jsx(
+  DropdownMenuPrimitive__namespace.SubContent,
+  {
+    ref,
+    className: cn(
+      "z-50 min-w-[10rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+      className
+    ),
+    ...props
+  }
+) }));
+DropdownMenuSubContent.displayName = "DropdownMenuSubContent";
+var DropdownMenuLabel = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   DropdownMenuPrimitive__namespace.Label,
   {
     ref,
@@ -528,7 +557,7 @@ var DropdownMenuLabel = React8__namespace.forwardRef(({ className, ...props }, r
   }
 ));
 DropdownMenuLabel.displayName = "DropdownMenuLabel";
-var DropdownMenuSeparator = React8__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
+var DropdownMenuSeparator = React11__namespace.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ jsxRuntime.jsx(
   DropdownMenuPrimitive__namespace.Separator,
   {
     ref,
@@ -566,12 +595,12 @@ function getInitialTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 function useTheme() {
-  const [theme, setTheme] = React8.useState(getInitialTheme);
-  React8.useEffect(() => {
+  const [theme, setTheme] = React11.useState(getInitialTheme);
+  React11.useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
     localStorage.setItem(STORAGE_KEY, theme);
   }, [theme]);
-  const toggle = React8.useCallback(() => {
+  const toggle = React11.useCallback(() => {
     setTheme((t) => t === "dark" ? "light" : "dark");
   }, []);
   return { theme, setTheme, toggle };
@@ -655,7 +684,7 @@ function SearchInput({
     )
   ] });
 }
-var DateInput = React8__namespace.forwardRef(
+var DateInput = React11__namespace.forwardRef(
   ({
     placeholder,
     className,
@@ -670,14 +699,14 @@ var DateInput = React8__namespace.forwardRef(
     "aria-label": ariaLabel,
     ...props
   }, ref) => {
-    const [innerValue, setInnerValue] = React8__namespace.useState(defaultValue ?? "");
+    const [innerValue, setInnerValue] = React11__namespace.useState(defaultValue ?? "");
     const current = value !== void 0 ? value : innerValue;
     const empty = current === "" || current === null || current === void 0;
     const placeholderText = placeholder ?? labels.datePlaceholder;
     const showClear = clearable && !empty && !disabled;
     const small = inputSize === "sm";
-    const innerRef = React8__namespace.useRef(null);
-    const setRefs = React8__namespace.useCallback(
+    const innerRef = React11__namespace.useRef(null);
+    const setRefs = React11__namespace.useCallback(
       (node) => {
         innerRef.current = node;
         if (typeof ref === "function") ref(node);
@@ -839,7 +868,7 @@ function FilterToolbar({
   clearLabel = labels.clearFilters,
   className
 }) {
-  const [open, setOpen] = React8.useState(defaultOpen);
+  const [open, setOpen] = React11.useState(defaultOpen);
   const hasBar = Boolean(panel || results || onClear);
   return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: cn("space-y-3", className), children: [
     (search || action) && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "flex flex-col gap-3 sm:flex-row sm:items-center", children: [
@@ -992,10 +1021,10 @@ function Collapsible({
   showMoreLabel = labels.showMore,
   showLessLabel = labels.showLess
 }) {
-  const ref = React8.useRef(null);
-  const [expanded, setExpanded] = React8.useState(false);
-  const [overflowing, setOverflowing] = React8.useState(false);
-  React8.useLayoutEffect(() => {
+  const ref = React11.useRef(null);
+  const [expanded, setExpanded] = React11.useState(false);
+  const [overflowing, setOverflowing] = React11.useState(false);
+  React11.useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
     const measure = () => setOverflowing(el.scrollHeight > collapsedHeight + 4);
@@ -1087,7 +1116,7 @@ function CopyButton({
   errorMessage = labels.copyError,
   className
 }) {
-  const [copied, setCopied] = React8.useState(false);
+  const [copied, setCopied] = React11.useState(false);
   const handleCopy = async () => {
     if (await copyToClipboard(value)) {
       setCopied(true);
@@ -1115,7 +1144,7 @@ function Markdown({ children, className }) {
   return /* @__PURE__ */ jsxRuntime.jsx("div", { className: cn("markdown", className), children: /* @__PURE__ */ jsxRuntime.jsx(ReactMarkdown__default.default, { remarkPlugins: [remarkGfm__default.default], children }) });
 }
 function useClickOutside(ref, handler, enabled = true) {
-  React8.useEffect(() => {
+  React11.useEffect(() => {
     if (!enabled) return;
     function onMouseDown(event) {
       if (!ref.current?.contains(event.target)) handler();
@@ -1140,11 +1169,11 @@ function Autocomplete({
   onEnter,
   onBlur
 }) {
-  const [open, setOpen] = React8.useState(false);
-  const [highlight, setHighlight] = React8.useState(-1);
-  const containerRef = React8.useRef(null);
+  const [open, setOpen] = React11.useState(false);
+  const [highlight, setHighlight] = React11.useState(-1);
+  const containerRef = React11.useRef(null);
   useClickOutside(containerRef, () => setOpen(false));
-  const filtered = React8.useMemo(() => {
+  const filtered = React11.useMemo(() => {
     if (serverFiltered) return options.slice(0, maxOptions);
     const term = value.trim().toLowerCase();
     return options.filter((option) => {
@@ -1225,7 +1254,7 @@ function FileDropzone({
   hint,
   className
 }) {
-  const onDrop = React8.useCallback(
+  const onDrop = React11.useCallback(
     (accepted) => {
       if (accepted.length) onFiles(accepted);
     },
@@ -1271,7 +1300,7 @@ function CameraButton({
   label = labels.takePhoto,
   ...buttonProps
 }) {
-  const inputRef = React8.useRef(null);
+  const inputRef = React11.useRef(null);
   function handleChange(event) {
     const files = Array.from(event.target.files ?? []);
     if (files.length) onCapture(files);
@@ -1369,7 +1398,7 @@ function FilePreview({
   compact,
   downloadLabel = labels.download
 }) {
-  const [lightbox, setLightbox] = React8.useState(false);
+  const [lightbox, setLightbox] = React11.useState(false);
   const kind = fileKind(contentType);
   if (compact) {
     if (kind === "image") {
@@ -1593,10 +1622,10 @@ function InfiniteScrollTrigger({
   enabled = true,
   loading = false
 }) {
-  const ref = React8.useRef(null);
-  const loadMoreRef = React8.useRef(onLoadMore);
+  const ref = React11.useRef(null);
+  const loadMoreRef = React11.useRef(onLoadMore);
   loadMoreRef.current = onLoadMore;
-  React8.useEffect(() => {
+  React11.useEffect(() => {
     const el = ref.current;
     if (!el || !enabled || loading) return;
     const observer = new IntersectionObserver(
@@ -1612,27 +1641,27 @@ function InfiniteScrollTrigger({
   return /* @__PURE__ */ jsxRuntime.jsx("div", { ref, className: "flex items-center justify-center py-8", children: loading && /* @__PURE__ */ jsxRuntime.jsx(Spinner, {}) });
 }
 function useDebounce(value, delay = 300) {
-  const [debounced, setDebounced] = React8.useState(value);
-  React8.useEffect(() => {
+  const [debounced, setDebounced] = React11.useState(value);
+  React11.useEffect(() => {
     const timer = setTimeout(() => setDebounced(value), delay);
     return () => clearTimeout(timer);
   }, [value, delay]);
   return debounced;
 }
 function useAutosave(save) {
-  const [status, setStatus] = React8.useState("idle");
-  const saveRef = React8.useRef(save);
+  const [status, setStatus] = React11.useState("idle");
+  const saveRef = React11.useRef(save);
   saveRef.current = save;
-  const running = React8.useRef(null);
-  const queued = React8.useRef(false);
-  const mounted = React8.useRef(true);
-  React8.useEffect(
+  const running = React11.useRef(null);
+  const queued = React11.useRef(false);
+  const mounted = React11.useRef(true);
+  React11.useEffect(
     () => () => {
       mounted.current = false;
     },
     []
   );
-  const run = React8.useCallback(async () => {
+  const run = React11.useCallback(async () => {
     if (running.current) {
       queued.current = true;
       return running.current;
@@ -1658,10 +1687,10 @@ function useAutosave(save) {
       running.current = null;
     }
   }, []);
-  const trigger = React8.useCallback(() => {
+  const trigger = React11.useCallback(() => {
     void run();
   }, [run]);
-  const flush = React8.useCallback(async () => {
+  const flush = React11.useCallback(async () => {
     await (running.current ?? Promise.resolve());
   }, []);
   return { status, save: trigger, flush };
@@ -1902,6 +1931,9 @@ exports.DropdownMenuGroup = DropdownMenuGroup;
 exports.DropdownMenuItem = DropdownMenuItem;
 exports.DropdownMenuLabel = DropdownMenuLabel;
 exports.DropdownMenuSeparator = DropdownMenuSeparator;
+exports.DropdownMenuSub = DropdownMenuSub;
+exports.DropdownMenuSubContent = DropdownMenuSubContent;
+exports.DropdownMenuSubTrigger = DropdownMenuSubTrigger;
 exports.DropdownMenuTrigger = DropdownMenuTrigger;
 exports.EmptyState = EmptyState;
 exports.Field = Field;
