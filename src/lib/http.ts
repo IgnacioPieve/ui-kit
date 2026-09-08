@@ -4,11 +4,30 @@ import { log } from "./logger";
 export class HttpError extends Error {
   constructor(
     public readonly status: number,
-    message: string
+    message: string,
   ) {
     super(message);
     this.name = "HttpError";
   }
+}
+
+async function responseError(response: Response): Promise<HttpError> {
+  let message = response.statusText || `HTTP ${response.status}`;
+  try {
+    const { detail } = await response.json();
+    if (typeof detail === "string" && detail.trim()) {
+      message = detail;
+    } else if (Array.isArray(detail)) {
+      const messages = detail.flatMap((item: unknown) => {
+        if (!item || typeof item !== "object" || !("msg" in item)) return [];
+        return typeof item.msg === "string" ? [item.msg] : [];
+      });
+      if (messages.length) message = messages.join("; ");
+    }
+  } catch {
+    // Proxies may return HTML or an empty body.
+  }
+  return new HttpError(response.status, message);
 }
 
 export interface HttpClient {
@@ -48,15 +67,6 @@ export function buildQuery(params: QueryParams = {}): string {
 }
 
 export interface HttpClientOptions {
-  /**
-   * Loguea por consola cada request con su payload y cada respuesta con su
-   * duración (ver `log`).
-   *
-   * Va acá y no envuelto en cada endpoint porque el cliente ya conoce el
-   * método, el path final —con query string incluido— y el body: envolver a
-   * mano obliga a repetir los tres, y el día que uno se edita y el otro no, el
-   * log miente sin que falle nada.
-   */
   trace?: boolean;
 }
 
@@ -69,7 +79,7 @@ function tracedPayload(init?: RequestInit): unknown {
       [...body.entries()].map(([key, value]) => [
         key,
         value instanceof File ? `File(${value.name}, ${value.size}b)` : value,
-      ])
+      ]),
     );
   }
   if (typeof body !== "string") return body;
@@ -80,30 +90,14 @@ function tracedPayload(init?: RequestInit): unknown {
   }
 }
 
-/**
- * Cliente HTTP tipado sobre `fetch`.
- *
- * `baseUrl` vacío (el default) significa mismo origen: nginx hace de
- * reverse-proxy de `/api/` al backend, así que la app funciona desde cualquier
- * host o IP sin URLs hardcodeadas en el build.
- */
 export function createHttpClient(
   baseUrl = "",
-  { trace = false }: HttpClientOptions = {}
+  { trace = false }: HttpClientOptions = {},
 ): HttpClient {
   /** La llamada pelada. `request` le agrega el trace si está prendido. */
   async function send<T>(path: string, init?: RequestInit): Promise<T> {
     const res = await fetch(`${baseUrl}${path}`, init);
-    if (!res.ok) {
-      let detail = res.statusText;
-      try {
-        const body = await res.json();
-        if (body?.detail) detail = body.detail;
-      } catch {
-        /* respuesta sin JSON: nos quedamos con el statusText */
-      }
-      throw new HttpError(res.status, detail);
-    }
+    if (!res.ok) throw await responseError(res);
     if (res.status === 204) return undefined as T;
     return (await res.json()) as T;
   }
@@ -143,13 +137,14 @@ export function createHttpClient(
       if (trace) log.request("GET", path);
       try {
         const res = await fetch(`${baseUrl}${path}`);
-        if (!res.ok) throw new HttpError(res.status, res.statusText);
+        if (!res.ok) throw await responseError(res);
         const filename = filenameFromDisposition(
           res.headers.get("content-disposition"),
-          fallbackName
+          fallbackName,
         );
         const blob = await res.blob();
-        if (trace) log.response("GET", path, started, `${filename} (${blob.size}b)`);
+        if (trace)
+          log.response("GET", path, started, `${filename} (${blob.size}b)`);
         downloadBlob(blob, filename);
       } catch (error) {
         if (trace) log.failure("GET", path, started, error);

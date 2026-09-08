@@ -1,6 +1,6 @@
 import * as class_variance_authority_types from 'class-variance-authority/types';
 import * as React from 'react';
-import { ComponentType, ReactNode, RefObject } from 'react';
+import { ComponentType, ReactNode, Component, ErrorInfo, RefObject } from 'react';
 import { VariantProps } from 'class-variance-authority';
 import * as SwitchPrimitive from '@radix-ui/react-switch';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
@@ -195,12 +195,6 @@ interface AppBrandProps {
     title: string;
     className?: string;
 }
-/**
- * Marca de la app (icono + nombre) con el tipografiado del sistema.
- *
- * Se separa de `AppShell` para que cada app la envuelva con lo que necesite:
- * un `<Link>` de react-router si tiene ruteo, o nada si es de una sola página.
- */
 declare function AppBrand({ icon: Icon, title, className }: AppBrandProps): React.JSX.Element;
 interface AppShellProps {
     /** Normalmente un `<AppBrand />`, opcionalmente envuelto en un link. */
@@ -216,19 +210,7 @@ interface AppShellProps {
     /** Clases extra para el `<main>`. */
     className?: string;
 }
-/**
- * Header sticky + contenedor principal. Layout base de todas las apps.
- *
- * **El header no se sale de la pantalla.** Con la marca, cuatro links y el
- * botón de tema en una sola fila sin envolver, un iPhone se queda a cien
- * píxeles: la página entera scrollea de costado y el header sticky —que va
- * anclado al viewport— se corta. Por eso `nav` es una prop y no un `action`
- * más: en el teléfono baja a una fila propia, que scrollea sola si los links no
- * entran, mientras el tema y el resto de los botones quedan siempre arriba a la
- * derecha. Los `actions` además envuelven, así que una app que todavía meta sus
- * links ahí adentro se apilará en dos líneas, pero tampoco se irá de la caja.
- */
-declare function AppShell({ brand, nav, actions, children, className }: AppShellProps): React.JSX.Element;
+declare function AppShell({ brand, nav, actions, children, className, }: AppShellProps): React.JSX.Element;
 
 interface ThemeToggleProps {
     label?: string;
@@ -240,22 +222,9 @@ interface Autosave {
     status: AutosaveStatus;
     /** Dispara un guardado. Si ya hay uno en curso, encola exactamente uno más. */
     save: () => void;
-    /** Espera a que no quede nada pendiente. Para navegar sin perder cambios. */
-    flush: () => Promise<void>;
+    /** Waits for pending saves; false means the last save failed. */
+    flush: () => Promise<boolean>;
 }
-/**
- * Autoguardado serializado.
- *
- * `save()` se llama al terminar de editar un campo (blur, o change en los
- * controles donde el cambio ya es el final: selects, switches, archivos). El
- * hook garantiza que **nunca haya dos guardados en vuelo a la vez**: si llega
- * uno mientras otro corre, se encola uno solo al final. Sin eso, dos PATCH
- * concurrentes pueden llegar al backend en orden invertido y dejar guardado el
- * valor viejo.
- *
- * No muestra toasts: el feedback va en `<AutosaveIndicator />`, que es
- * silencioso y no interrumpe.
- */
 declare function useAutosave(save: () => Promise<unknown>): Autosave;
 
 interface AutosaveIndicatorProps {
@@ -748,6 +717,21 @@ interface InfiniteScrollTriggerProps {
  */
 declare function InfiniteScrollTrigger({ onLoadMore, enabled, loading, }: InfiniteScrollTriggerProps): React.JSX.Element | null;
 
+declare class ErrorBoundary extends Component<{
+    children: ReactNode;
+}, {
+    failed: boolean;
+}> {
+    state: {
+        failed: boolean;
+    };
+    static getDerivedStateFromError(): {
+        failed: boolean;
+    };
+    componentDidCatch(error: Error, info: ErrorInfo): void;
+    render(): string | number | boolean | React.JSX.Element | Iterable<ReactNode> | null | undefined;
+}
+
 type Theme = "light" | "dark";
 /**
  * Tema claro/oscuro persistido en localStorage, con el sistema como default.
@@ -808,35 +792,8 @@ interface MonthGroup<T> {
  */
 declare function groupByMonth<T>(items: T[], getDate: (item: T) => string | null | undefined): MonthGroup<T>[];
 
-/**
- * El locale de los **números**, que no es el de las fechas.
- *
- * Toda la familia escribe la plata con **coma para los miles y punto para los
- * decimales** (`1,234,567.50`), mientras las fechas siguen en `es-AR`. Son dos
- * decisiones separadas y por eso son dos constantes: `LOCALE` para lo que se
- * lee como texto —"10 de marzo de 2025"— y ésta para lo que se lee como
- * número.
- *
- * Está acá y no en cada app porque ya se había desprendido en cuatro: `es-AR`
- * en supermercado y en gastos, `en-US` a mano en finanzas, y el `LOCALE` de las
- * fechas adentro de `formatCurrency`. Cuatro pantallas de la misma familia
- * mostrando la misma plata de dos formas distintas.
- */
 declare const MONEY_LOCALE = "en-US";
-/**
- * Un número con los separadores de la familia. Sin símbolo de moneda.
- *
- * Es la pieza que comparten las apps que guardan la plata en unidades enteras
- * —pesos— en vez de centavos, que son las que no pueden usar `formatCurrency`.
- */
 declare function formatAmount(value: number, maximumFractionDigits?: number): string;
-/**
- * Formatea un monto guardado en centavos.
- *
- * Los montos viajan como enteros para no arrastrar errores de punto flotante;
- * la división por 100 pasa solo al mostrarlos. Una moneda que no esté en la
- * tabla se muestra con su código, que es feo pero no miente.
- */
 declare function formatCurrency(cents: number, currency: string): string;
 /** `1,4 MB` */
 declare function formatFileSize(bytes: number): string;
@@ -915,24 +872,8 @@ type QueryParams = Record<string, string | number | boolean | undefined | null |
 /** Serializa params salteando `undefined`/`null` y expandiendo arrays. */
 declare function buildQuery(params?: QueryParams): string;
 interface HttpClientOptions {
-    /**
-     * Loguea por consola cada request con su payload y cada respuesta con su
-     * duración (ver `log`).
-     *
-     * Va acá y no envuelto en cada endpoint porque el cliente ya conoce el
-     * método, el path final —con query string incluido— y el body: envolver a
-     * mano obliga a repetir los tres, y el día que uno se edita y el otro no, el
-     * log miente sin que falle nada.
-     */
     trace?: boolean;
 }
-/**
- * Cliente HTTP tipado sobre `fetch`.
- *
- * `baseUrl` vacío (el default) significa mismo origen: nginx hace de
- * reverse-proxy de `/api/` al backend, así que la app funciona desde cualquier
- * host o IP sin URLs hardcodeadas en el build.
- */
 declare function createHttpClient(baseUrl?: string, { trace }?: HttpClientOptions): HttpClient;
 
 /**
@@ -963,6 +904,10 @@ declare const log: {
  * de cada app viven en su `lib/strings.ts`, no acá.
  */
 declare const labels: {
+    readonly skipToContent: "Ir al contenido";
+    readonly mainNavigation: "Navegación principal";
+    readonly pageError: "No se pudo mostrar esta pantalla";
+    readonly reload: "Volver a cargar";
     readonly cancel: "Cancelar";
     readonly clear: "Limpiar";
     readonly clearFilters: "Limpiar filtros";
@@ -989,4 +934,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, type CardProps, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, EmptyState, type EmptyStateProps, Field, type FieldProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, FilterChip, FilterChipGroup, type FilterChipGroupProps, type FilterChipOption, type FilterChipProps, FilterToolbar, type FilterToolbarProps, FormActions, type FormActionsProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, MONEY_LOCALE, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, PageHeader, type PageHeaderProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, SkeletonList, type SkeletonListProps, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, type CardProps, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, EmptyState, type EmptyStateProps, ErrorBoundary, Field, type FieldProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, FilterChip, FilterChipGroup, type FilterChipGroupProps, type FilterChipOption, type FilterChipProps, FilterToolbar, type FilterToolbarProps, FormActions, type FormActionsProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, MONEY_LOCALE, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, PageHeader, type PageHeaderProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, SkeletonList, type SkeletonListProps, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };

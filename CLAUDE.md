@@ -36,7 +36,7 @@ $D npm run build        # tsup -> dist/ (ESM + CJS + .d.ts + styles.css)
 $D npm run dev          # tsup --watch
 ```
 
-There is no lint or test suite. A green `typecheck` plus a green `build` is the
+Run `npm test` for autosave and HTTP regression tests. A green `typecheck` plus a green `test` is the
 gate — but see **Traps**: green does not prove the styles reach the apps.
 
 ## Architecture

@@ -6,6 +6,10 @@
  * de cada app viven en su `lib/strings.ts`, no acá.
  */
 export const labels = {
+  skipToContent: "Ir al contenido",
+  mainNavigation: "Navegación principal",
+  pageError: "No se pudo mostrar esta pantalla",
+  reload: "Volver a cargar",
   cancel: "Cancelar",
   clear: "Limpiar",
   clearFilters: "Limpiar filtros",

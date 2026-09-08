@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { Input } from "./ui/input";
 import { useClickOutside } from "../hooks/useClickOutside";
 import { cn } from "../lib/cn";
@@ -53,6 +53,7 @@ export function Autocomplete<T = string>({
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
+  const listId = useId();
 
   useClickOutside(containerRef, () => setOpen(false));
 
@@ -82,14 +83,28 @@ export function Autocomplete<T = string>({
         value={value}
         placeholder={placeholder}
         autoComplete="off"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded={open && filtered.length > 0}
+        aria-controls={open && filtered.length > 0 ? listId : undefined}
+        aria-activedescendant={
+          open && highlight >= 0 && highlight < filtered.length
+            ? `${listId}-${highlight}`
+            : undefined
+        }
         onChange={(e) => {
           onChange(e.target.value);
           setOpen(true);
           setHighlight(-1);
         }}
         onFocus={() => setOpen(true)}
-        onBlur={onBlur}
+        onBlur={() => {
+          setOpen(false);
+          setHighlight(-1);
+          onBlur?.();
+        }}
         onKeyDown={(e) => {
+          if (e.nativeEvent.isComposing) return;
           if (e.key === "ArrowDown") {
             e.preventDefault();
             setOpen(true);
@@ -111,14 +126,24 @@ export function Autocomplete<T = string>({
         }}
       />
       {open && filtered.length > 0 && (
-        <ul className="absolute z-40 mt-1 max-h-72 w-full overflow-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md">
+        <ul
+          id={listId}
+          role="listbox"
+          className="absolute z-40 mt-1 max-h-72 w-full overflow-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
+        >
           {filtered.map((option, i) => (
-            <li key={getKey(option)}>
+            <li
+              key={getKey(option)}
+              role="option"
+              id={`${listId}-${i}`}
+              aria-selected={i === highlight}
+            >
               <button
                 type="button"
+                tabIndex={-1}
                 className={cn(
                   "w-full rounded-sm px-2 py-1.5 text-left text-sm hover:bg-accent",
-                  i === highlight && "bg-accent"
+                  i === highlight && "bg-accent",
                 )}
                 onMouseEnter={() => setHighlight(i)}
                 onMouseDown={(e) => {

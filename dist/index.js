@@ -1,5 +1,5 @@
 import * as React11 from 'react';
-import { useState, useEffect, useCallback, useRef, useLayoutEffect, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef, useLayoutEffect, useId, useMemo, Component } from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
 import { clsx } from 'clsx';
@@ -346,6 +346,10 @@ function Spinner({ className }) {
 
 // src/labels.ts
 var labels = {
+  skipToContent: "Ir al contenido",
+  mainNavigation: "Navegaci\xF3n principal",
+  pageError: "No se pudo mostrar esta pantalla",
+  reload: "Volver a cargar",
   cancel: "Cancelar",
   clear: "Limpiar",
   clearFilters: "Limpiar filtros",
@@ -395,29 +399,18 @@ var DialogContent = React11.forwardRef(({ className, children, hideClose, onOpen
       onOpenAutoFocus: (event) => {
         event.preventDefault();
         const content = event.currentTarget;
-        if (content && !content.contains(document.activeElement)) content.focus();
+        if (content && !content.contains(document.activeElement))
+          content.focus();
         onOpenAutoFocus?.(event);
       },
       className: cn(
-        // Redondeado también en el teléfono: el diálogo nunca llega a los
-        // bordes —mide `100vw - 2rem`—, así que redondear recién en `sm`, que es
-        // lo que hereda de shadcn (donde abajo de ese breakpoint el modal ocupa
-        // la pantalla entera), dibujaba una caja con esquinas vivas flotando
-        // sobre el fondo. El comentario no escribe esa clase entera a propósito:
-        // Tailwind escanea `dist/` y la generaría desde acá.
-        //
-        // El centrado es un `transform`, y las clases de `animate-in` escriben
-        // ese mismo `transform` mientras dura la animación: sin decirles que el
-        // desplazamiento es -50%/-50%, el diálogo se anima desde su posición sin
-        // centrar —media caja abajo y a la derecha— y salta al lugar al
-        // terminar. Es la animación rara que se veía en las seis apps.
-        "fixed left-1/2 top-1/2 z-50 grid max-h-[90vh] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-1/2 data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-1/2 rounded-lg",
+        "fixed left-1/2 top-1/2 z-50 grid max-h-[90dvh] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto overscroll-contain border bg-background p-4 sm:p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-1/2 data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-1/2 rounded-lg",
         className
       ),
       ...props,
       children: [
         children,
-        !hideClose && /* @__PURE__ */ jsxs(DialogPrimitive.Close, { className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2", children: [
+        !hideClose && /* @__PURE__ */ jsxs(DialogPrimitive.Close, { className: "absolute right-2 top-2 flex h-10 w-10 items-center justify-center rounded-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2", children: [
           /* @__PURE__ */ jsx(X, { className: "h-4 w-4" }),
           /* @__PURE__ */ jsx("span", { className: "sr-only", children: labels.close })
         ] })
@@ -429,7 +422,13 @@ DialogContent.displayName = "DialogContent";
 var DialogHeader = ({
   className,
   ...props
-}) => /* @__PURE__ */ jsx("div", { className: cn("flex flex-col space-y-1.5 text-left", className), ...props });
+}) => /* @__PURE__ */ jsx(
+  "div",
+  {
+    className: cn("flex flex-col space-y-1.5 pr-8 text-left", className),
+    ...props
+  }
+);
 DialogHeader.displayName = "DialogHeader";
 var DialogFooter = ({
   className,
@@ -449,7 +448,10 @@ var DialogTitle = React11.forwardRef(({ className, ...props }, ref) => /* @__PUR
   DialogPrimitive.Title,
   {
     ref,
-    className: cn("text-lg font-semibold leading-none tracking-tight", className),
+    className: cn(
+      "text-lg font-semibold leading-none tracking-tight",
+      className
+    ),
     ...props
   }
 ));
@@ -542,35 +544,80 @@ function Toaster() {
   return /* @__PURE__ */ jsx(Toaster$1, { position: "top-center", theme: "system", richColors: true });
 }
 function AppBrand({ icon: Icon, title, className }) {
-  return /* @__PURE__ */ jsxs("span", { className: cn("flex min-w-0 items-center gap-2 font-semibold", className), children: [
-    /* @__PURE__ */ jsx(Icon, { className: "h-5 w-5 shrink-0 text-primary" }),
-    /* @__PURE__ */ jsx("span", { className: "truncate text-lg tracking-tight", children: title })
-  ] });
+  return /* @__PURE__ */ jsxs(
+    "span",
+    {
+      className: cn("flex min-w-0 items-center gap-2 font-semibold", className),
+      children: [
+        /* @__PURE__ */ jsx(Icon, { className: "h-5 w-5 shrink-0 text-primary" }),
+        /* @__PURE__ */ jsx("span", { className: "truncate text-lg tracking-tight", children: title })
+      ]
+    }
+  );
 }
-function AppShell({ brand, nav, actions, children, className }) {
-  return /* @__PURE__ */ jsxs("div", { className: "min-h-screen bg-background", children: [
+function AppShell({
+  brand,
+  nav,
+  actions,
+  children,
+  className
+}) {
+  return /* @__PURE__ */ jsxs("div", { className: "min-h-dvh bg-background", children: [
+    /* @__PURE__ */ jsx(
+      "a",
+      {
+        href: "#main-content",
+        className: "sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground",
+        children: labels.skipToContent
+      }
+    ),
     /* @__PURE__ */ jsx("header", { className: "sticky top-0 z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60", children: /* @__PURE__ */ jsxs("div", { className: "container flex min-h-16 flex-wrap items-center gap-x-4 gap-y-2 py-2", children: [
       /* @__PURE__ */ jsx("div", { className: "order-1 mr-auto flex min-w-0 items-center", children: brand }),
       actions && /* @__PURE__ */ jsx("div", { className: "order-2 flex flex-wrap items-center justify-end gap-1 sm:order-3", children: actions }),
       nav && // El `-mx-4 px-4` es el padding del container: en el teléfono deja
       // que los links scrolleen de borde a borde en vez de cortarse
       // contra un margen.
-      /* @__PURE__ */ jsx("nav", { className: "no-scrollbar order-3 -mx-4 flex w-full items-center gap-1 overflow-x-auto overscroll-x-contain px-4 sm:order-2 sm:mx-0 sm:w-auto sm:px-0 [&>*]:shrink-0", children: nav })
+      /* @__PURE__ */ jsx(
+        "nav",
+        {
+          "aria-label": labels.mainNavigation,
+          className: "no-scrollbar order-3 -mx-4 flex w-full items-center gap-1 overflow-x-auto overscroll-x-contain px-4 sm:order-2 sm:mx-0 sm:w-auto sm:px-0 [&>*]:shrink-0",
+          children: nav
+        }
+      )
     ] }) }),
-    /* @__PURE__ */ jsx("main", { className: cn("container py-6 md:py-10", className), children })
+    /* @__PURE__ */ jsx(
+      "main",
+      {
+        id: "main-content",
+        tabIndex: -1,
+        className: cn(
+          "container min-w-0 py-6 outline-none md:py-10",
+          className
+        ),
+        children
+      }
+    )
   ] });
 }
 var STORAGE_KEY = "pieve-theme";
 function getInitialTheme() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === "light" || stored === "dark") return stored;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {
+  }
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 function useTheme() {
   const [theme, setTheme] = useState(getInitialTheme);
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem(STORAGE_KEY, theme);
+    document.documentElement.style.colorScheme = theme;
+    try {
+      localStorage.setItem(STORAGE_KEY, theme);
+    } catch {
+    }
   }, [theme]);
   const toggle = useCallback(() => {
     setTheme((t) => t === "dark" ? "light" : "dark");
@@ -1144,6 +1191,7 @@ function Autocomplete({
   const [open, setOpen] = useState(false);
   const [highlight, setHighlight] = useState(-1);
   const containerRef = useRef(null);
+  const listId = useId();
   useClickOutside(containerRef, () => setOpen(false));
   const filtered = useMemo(() => {
     if (serverFiltered) return options.slice(0, maxOptions);
@@ -1167,14 +1215,24 @@ function Autocomplete({
         value,
         placeholder,
         autoComplete: "off",
+        role: "combobox",
+        "aria-autocomplete": "list",
+        "aria-expanded": open && filtered.length > 0,
+        "aria-controls": open && filtered.length > 0 ? listId : void 0,
+        "aria-activedescendant": open && highlight >= 0 && highlight < filtered.length ? `${listId}-${highlight}` : void 0,
         onChange: (e) => {
           onChange(e.target.value);
           setOpen(true);
           setHighlight(-1);
         },
         onFocus: () => setOpen(true),
-        onBlur,
+        onBlur: () => {
+          setOpen(false);
+          setHighlight(-1);
+          onBlur?.();
+        },
         onKeyDown: (e) => {
+          if (e.nativeEvent.isComposing) return;
           if (e.key === "ArrowDown") {
             e.preventDefault();
             setOpen(true);
@@ -1196,22 +1254,40 @@ function Autocomplete({
         }
       }
     ),
-    open && filtered.length > 0 && /* @__PURE__ */ jsx("ul", { className: "absolute z-40 mt-1 max-h-72 w-full overflow-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md", children: filtered.map((option, i) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(
-      "button",
+    open && filtered.length > 0 && /* @__PURE__ */ jsx(
+      "ul",
       {
-        type: "button",
-        className: cn(
-          "w-full rounded-sm px-2 py-1.5 text-left text-sm hover:bg-accent",
-          i === highlight && "bg-accent"
-        ),
-        onMouseEnter: () => setHighlight(i),
-        onMouseDown: (e) => {
-          e.preventDefault();
-          choose(option);
-        },
-        children: renderOption ? renderOption(option) : getLabel(option)
+        id: listId,
+        role: "listbox",
+        className: "absolute z-40 mt-1 max-h-72 w-full overflow-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+        children: filtered.map((option, i) => /* @__PURE__ */ jsx(
+          "li",
+          {
+            role: "option",
+            id: `${listId}-${i}`,
+            "aria-selected": i === highlight,
+            children: /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                tabIndex: -1,
+                className: cn(
+                  "w-full rounded-sm px-2 py-1.5 text-left text-sm hover:bg-accent",
+                  i === highlight && "bg-accent"
+                ),
+                onMouseEnter: () => setHighlight(i),
+                onMouseDown: (e) => {
+                  e.preventDefault();
+                  choose(option);
+                },
+                children: renderOption ? renderOption(option) : getLabel(option)
+              }
+            )
+          },
+          getKey(option)
+        ))
       }
-    ) }, getKey(option))) })
+    )
   ] });
 }
 function FileDropzone({
@@ -1612,6 +1688,29 @@ function InfiniteScrollTrigger({
   if (!enabled) return null;
   return /* @__PURE__ */ jsx("div", { ref, className: "flex items-center justify-center py-8", children: loading && /* @__PURE__ */ jsx(Spinner, {}) });
 }
+var ErrorBoundary = class extends Component {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(error, info) {
+    console.error(error, info.componentStack);
+  }
+  render() {
+    if (!this.state.failed) return this.props.children;
+    return /* @__PURE__ */ jsxs(
+      "div",
+      {
+        role: "alert",
+        className: "mx-auto max-w-md space-y-4 rounded-lg border p-6 text-center",
+        children: [
+          /* @__PURE__ */ jsx("p", { className: "font-medium", children: labels.pageError }),
+          /* @__PURE__ */ jsx(Button, { onClick: () => window.location.reload(), children: labels.reload })
+        ]
+      }
+    );
+  }
+};
 function useDebounce(value, delay = 300) {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
@@ -1626,13 +1725,14 @@ function useAutosave(save) {
   saveRef.current = save;
   const running = useRef(null);
   const queued = useRef(false);
+  const failed = useRef(false);
   const mounted = useRef(true);
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
       mounted.current = false;
-    },
-    []
-  );
+    };
+  }, []);
   const run = useCallback(async () => {
     if (running.current) {
       queued.current = true;
@@ -1644,8 +1744,10 @@ function useAutosave(save) {
         if (mounted.current) setStatus("saving");
         try {
           await saveRef.current();
+          failed.current = false;
           if (mounted.current) setStatus("saved");
         } catch {
+          failed.current = true;
           if (mounted.current) setStatus("error");
           queued.current = false;
           return;
@@ -1663,7 +1765,8 @@ function useAutosave(save) {
     void run();
   }, [run]);
   const flush = useCallback(async () => {
-    await (running.current ?? Promise.resolve());
+    await running.current;
+    return !failed.current;
   }, []);
   return { status, save: trigger, flush };
 }
@@ -1771,6 +1874,23 @@ var HttpError = class extends Error {
   }
   status;
 };
+async function responseError(response) {
+  let message = response.statusText || `HTTP ${response.status}`;
+  try {
+    const { detail } = await response.json();
+    if (typeof detail === "string" && detail.trim()) {
+      message = detail;
+    } else if (Array.isArray(detail)) {
+      const messages = detail.flatMap((item) => {
+        if (!item || typeof item !== "object" || !("msg" in item)) return [];
+        return typeof item.msg === "string" ? [item.msg] : [];
+      });
+      if (messages.length) message = messages.join("; ");
+    }
+  } catch {
+  }
+  return new HttpError(response.status, message);
+}
 function buildQuery(params = {}) {
   const qs = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
@@ -1805,15 +1925,7 @@ function tracedPayload(init) {
 function createHttpClient(baseUrl = "", { trace = false } = {}) {
   async function send(path, init) {
     const res = await fetch(`${baseUrl}${path}`, init);
-    if (!res.ok) {
-      let detail = res.statusText;
-      try {
-        const body = await res.json();
-        if (body?.detail) detail = body.detail;
-      } catch {
-      }
-      throw new HttpError(res.status, detail);
-    }
+    if (!res.ok) throw await responseError(res);
     if (res.status === 204) return void 0;
     return await res.json();
   }
@@ -1850,13 +1962,14 @@ function createHttpClient(baseUrl = "", { trace = false } = {}) {
       if (trace) log.request("GET", path);
       try {
         const res = await fetch(`${baseUrl}${path}`);
-        if (!res.ok) throw new HttpError(res.status, res.statusText);
+        if (!res.ok) throw await responseError(res);
         const filename = filenameFromDisposition(
           res.headers.get("content-disposition"),
           fallbackName
         );
         const blob = await res.blob();
-        if (trace) log.response("GET", path, started, `${filename} (${blob.size}b)`);
+        if (trace)
+          log.response("GET", path, started, `${filename} (${blob.size}b)`);
         downloadBlob(blob, filename);
       } catch (error) {
         if (trace) log.failure("GET", path, started, error);
@@ -1866,6 +1979,6 @@ function createHttpClient(baseUrl = "", { trace = false } = {}) {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, EmptyState, Field, FileDropzone, FilePreview, FilterChip, FilterChipGroup, FilterToolbar, FormActions, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, MONEY_LOCALE, Markdown, MonthHeading, PageHeader, Progress, SearchInput, SectionHeading, Select, Skeleton, SkeletonList, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, EmptyState, ErrorBoundary, Field, FileDropzone, FilePreview, FilterChip, FilterChipGroup, FilterToolbar, FormActions, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, MONEY_LOCALE, Markdown, MonthHeading, PageHeader, Progress, SearchInput, SectionHeading, Select, Skeleton, SkeletonList, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

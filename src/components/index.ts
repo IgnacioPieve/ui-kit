@@ -40,3 +40,4 @@ export {
   InfiniteScrollTrigger,
   type InfiniteScrollTriggerProps,
 } from "./InfiniteScrollTrigger";
+export { ErrorBoundary } from "./ErrorBoundary";

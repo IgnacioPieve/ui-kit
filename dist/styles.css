@@ -1,24 +1,3 @@
-/**
- * @pieve/ui — design tokens + estilos base.
- *
- * CSS plano a propósito (sin `@apply` ni directivas de Tailwind): las apps lo
- * importan desde `main.tsx` ANTES de su propio `index.css`, así que no necesita
- * pasar por PostCSS y el orden queda garantizado por el grafo de módulos.
- *
- * El preflight de Tailwind se inyecta después de este archivo, por eso todas
- * las reglas usan selector de clase (especificidad 0-1-x) y le ganan igual.
- * La única excepción es `body`, que el preflight no pisa en color/fondo.
- *
- * **Ojo con las utilities, que son otra cosa.** Ganarle al preflight (0-0-x) es
- * gratis; ganarle a una utility de Tailwind no. `.text-sm` es 0-1-0 y se emite
- * después de este archivo, así que una regla de acá tiene que superar 0-1-0
- * para pisarla. La regla de los 16px de abajo estuvo escrita, documentada y sin
- * efecto desde v0.8.0 justamente por no hacerlo.
- *
- * Los tokens son tripletas HSL sin `hsl()` para que Tailwind pueda componer
- * opacidad: `hsl(var(--primary) / 0.1)` → `bg-primary/10`.
- */
-
 :root {
   --background: 0 0% 100%;
   --foreground: 222 20% 12%;
@@ -29,7 +8,7 @@
   --popover: 0 0% 100%;
   --popover-foreground: 222 20% 12%;
 
-  --primary: 199 89% 48%;
+  --primary: 199 89% 34%;
   --primary-foreground: 0 0% 100%;
 
   --secondary: 220 14% 96%;
@@ -52,30 +31,15 @@
   --success: 142 76% 30%;
   --success-foreground: 0 0% 100%;
 
-  --warning: 38 92% 44%;
+  --warning: 32 95% 30%;
   --warning-foreground: 0 0% 100%;
 
   --border: 220 13% 91%;
   --input: 220 13% 88%;
-  --ring: 199 89% 48%;
+  --ring: 199 89% 34%;
 
   --radius: 0.75rem;
 
-  /* Serie categórica de los gráficos. Ocho ranuras en orden fijo: el orden ES
-     el mecanismo de seguridad para daltonismo, así que se asignan en secuencia
-     y **nunca se ciclan**. Una novena serie no es un color nuevo —se pliega en
-     "Otros"—, porque un tono generado es indistinguible de alguno de estos bajo
-     protanopia y rompe la separación que estos ocho garantizan.
-
-     Los valores no son elegidos a ojo: pasan las seis verificaciones (banda de
-     luminosidad, piso de croma, separación protan/deutan ΔE≥8 en OKLab, piso de
-     visión normal ΔE≥15 y contraste contra la superficie). Peor par adyacente:
-     ΔE 9.1 en claro, 8.4 en oscuro.
-
-     **Tres de los claros —aqua, amarillo y magenta— quedan abajo de 3:1 contra
-     el blanco**, y eso obliga a una vía de lectura que no sea el color: la
-     pantalla que los use tiene que traer etiquetas visibles al lado de cada
-     marca. No es opcional. */
   --chart-1: 212.8 67.7% 50.2%;
   --chart-2: 17 82.1% 56.3%;
   --chart-3: 158.5 73.3% 39.6%;
@@ -263,64 +227,12 @@ body {
   appearance: textfield;
 }
 
-/* --------------------------------------------------------------------------
- * Formularios en el teléfono
- *
- * Las apps se usan tanto desde el escritorio como desde el celular, y Safari en
- * iOS tiene dos comportamientos que rompen el layout en silencio. Van acá y no
- * en cada app porque son del kit: los causa la tipografía de los `Input` del
- * kit y el ancho nativo de los controles de fecha.
- * -------------------------------------------------------------------------- */
-
-/* iOS hace zoom al enfocar cualquier campo cuya tipografía baje de 16px, y los
-   del kit son de 14 (12 los `inputSize="sm"`). Lo peor no es el zoom: es que no
-   se deshace al salir del campo, así que la pantalla queda corrida y hay que
-   pellizcar para volver. 16px abajo de `sm` es el umbral exacto que mira
-   Safari, y de paso agranda el blanco de toque. El escritorio no se toca.
-
-   **El `html` de adelante no selecciona nada distinto: sube la especificidad.**
-   Sin él esto era `input { font-size: 16px }`, un selector de elemento (0-0-1),
-   y los campos del kit **siempre** traen una utility de Tailwind encima
-   (`text-sm`, `text-xs`), que es una clase (0-1-0) y además se inyecta DESPUÉS
-   de este archivo. O sea que perdía por especificidad y por orden: la regla se
-   emitía, la media query matcheaba, y no se aplicaba nunca. Estuvo así desde
-   v0.8.0 — verde, escrita, documentada y sin efecto — hasta que se midió el
-   `font-size` computado a 390px y daba 14. Con `html` adelante son 0-1-1 y le
-   gana.
-
-   Por qué acá y no en el cva de cada campo: si el tamaño responsive viviera en
-   el componente, cualquier `className="text-sm"` de una app lo pisaría en
-   mobile y nadie se enteraría, y cada call site tendría que acordarse de
-   escribir el par `text-base sm:text-sm`. Son cinco apps y ya hay cuatro call
-   sites que pasan un tamaño a mano. Esto los cubre a todos, y también a
-   cualquier <input> suelto que no venga del kit.
-
-   **La salida es `.keep-font-size`, y existe porque esto es un piso, no un
-   tamaño.** Escrito sin el `:not()`, el 16px le ganaba también a un campo que
-   la app agrandó a propósito: el monto de la pantalla de alta de `expenses`
-   medía `text-3xl` en el escritorio y 16px en el teléfono —el revés exacto de
-   lo que se quiso—, y el build seguía verde porque la clase estaba puesta.
-   Un campo con esta clase se queda con su propio tamaño en mobile, así que
-   **solo puede llevarla si ese tamaño es de 16px para arriba**: abajo de eso
-   vuelve el zoom de iOS, que es lo que este bloque existe para evitar. */
 @media (max-width: 639px) {
   html :is(input, select, textarea, .field-placeholder):not(.keep-font-size) {
     font-size: 16px;
   }
 }
 
-/* Safari trata `input[type=date]` como un control nativo con ancho propio: se
-   sale de su caja en vez de encogerse, y en un iPhone el campo termina más
-   ancho que la pantalla. `appearance: none` le saca ese ancho intrínseco y
-   `min-width: 0` lo deja achicarse como ítem de un flex; hacen falta las dos.
-
-   El valor además viene centrado en iOS, que al lado de un campo de texto
-   normal se ve torcido.
-
-   Lo que esto NO arregla: el campo vacío no dibuja nada en iOS —ni el
-   `dd/mm/aaaa` que ponen Chrome y Firefox, ni el `placeholder`, que el HTML
-   ignora en los campos de fecha—, así que un filtro sin `<Label>` queda en un
-   rectángulo mudo. Eso es `DateInput`, que pone el texto él mismo. */
 input[type="date"] {
   -webkit-appearance: none;
   appearance: none;
@@ -329,4 +241,16 @@ input[type="date"] {
 
 input[type="date"]::-webkit-date-and-time-value {
   text-align: left;
+}
+
+/* Honor reduced motion across shared components and app transitions. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
