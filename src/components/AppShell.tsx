@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from "react";
+import { useEffect, useRef, type ComponentType, type ReactNode } from "react";
 import { cn } from "../lib/cn";
 import { labels } from "../labels";
 
@@ -14,7 +14,9 @@ export function AppBrand({ icon: Icon, title, className }: AppBrandProps) {
     <span
       className={cn("flex min-w-0 items-center gap-2 font-semibold", className)}
     >
-      <Icon className="h-5 w-5 shrink-0 text-primary" />
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <Icon className="h-5 w-5" />
+      </span>
       <span className="truncate text-lg tracking-tight">{title}</span>
     </span>
   );
@@ -42,6 +44,20 @@ export function AppShell({
   children,
   className,
 }: AppShellProps) {
+  const headerRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const updateHeight = () =>
+      header.parentElement?.style.setProperty(
+        "--app-header-height",
+        `${header.getBoundingClientRect().height}px`,
+      );
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
   return (
     <div className="min-h-dvh bg-background">
       <a
@@ -50,7 +66,10 @@ export function AppShell({
       >
         {labels.skipToContent}
       </a>
-      <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header
+        ref={headerRef}
+        className="sticky top-0 z-30 border-b bg-card/95 backdrop-blur"
+      >
         <div className="container flex min-h-16 flex-wrap items-center gap-x-4 gap-y-2 py-2">
           <div className="order-1 mr-auto flex min-w-0 items-center">
             {brand}

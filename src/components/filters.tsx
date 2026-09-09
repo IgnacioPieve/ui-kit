@@ -69,11 +69,16 @@ export function FilterToolbar({
   const hasBar = Boolean(panel || results || onClear);
 
   return (
-    <div className={cn("space-y-3", className)}>
+    <div
+      className={cn(
+        "space-y-3 rounded-xl border bg-card p-3 sm:p-4",
+        className,
+      )}
+    >
       {(search || action) && (
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           {search}
-          {action}
+          {action && <div className="shrink-0">{action}</div>}
         </div>
       )}
 
@@ -92,7 +97,9 @@ export function FilterToolbar({
             >
               <SlidersHorizontal />
               {filtersLabel}
-              {activeCount > 0 && <Badge variant="primary">{activeCount}</Badge>}
+              {activeCount > 0 && (
+                <Badge variant="primary">{activeCount}</Badge>
+              )}
               <ChevronDown
                 className={cn("transition-transform", open && "rotate-180")}
               />
@@ -170,7 +177,7 @@ export function FilterChip({
         selected
           ? "border-primary bg-primary/10 font-medium text-primary"
           : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-        className
+        className,
       )}
     >
       {icon && <span aria-hidden>{icon}</span>}
@@ -229,7 +236,7 @@ export function FilterChipGroup<T extends string>({
         // hay gesto que la traiga. Los chips ya son `shrink-0`, así que lo que
         // se mueve es la cápsula y no el texto de adentro.
         "inline-flex max-w-full items-center gap-1 overflow-x-auto rounded-full bg-muted p-1",
-        className
+        className,
       )}
     >
       {options.map((option) => {
@@ -245,8 +252,11 @@ export function FilterChipGroup<T extends string>({
             className={cn(
               "inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               active
-                ? cn("bg-background shadow-sm", option.activeClassName ?? "text-foreground")
-                : "text-muted-foreground hover:text-foreground"
+                ? cn(
+                    "bg-background shadow-sm",
+                    option.activeClassName ?? "text-foreground",
+                  )
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             {Icon && <Icon className="h-3.5 w-3.5" />}

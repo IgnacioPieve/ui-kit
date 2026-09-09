@@ -10,6 +10,8 @@ export const labels = {
   mainNavigation: "Navegación principal",
   pageError: "No se pudo mostrar esta pantalla",
   reload: "Volver a cargar",
+  loadError: "No se pudieron cargar los datos",
+  retry: "Reintentar",
   cancel: "Cancelar",
   clear: "Limpiar",
   clearFilters: "Limpiar filtros",

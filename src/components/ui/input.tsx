@@ -11,7 +11,7 @@ const inputVariants = cva(
   {
     variants: {
       variant: {
-        default: "border border-input bg-background",
+        default: "border border-input bg-card",
         /**
          * Sin borde hasta que se lo apunta o se lo edita.
          *

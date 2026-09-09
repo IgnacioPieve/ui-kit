@@ -97,7 +97,7 @@ var inputVariants = classVarianceAuthority.cva(
   {
     variants: {
       variant: {
-        default: "border border-input bg-background",
+        default: "border border-input bg-card",
         /**
          * Sin borde hasta que se lo apunta o se lo edita.
          *
@@ -378,6 +378,8 @@ var labels = {
   mainNavigation: "Navegaci\xF3n principal",
   pageError: "No se pudo mostrar esta pantalla",
   reload: "Volver a cargar",
+  loadError: "No se pudieron cargar los datos",
+  retry: "Reintentar",
   cancel: "Cancelar",
   clear: "Limpiar",
   clearFilters: "Limpiar filtros",
@@ -577,7 +579,7 @@ function AppBrand({ icon: Icon, title, className }) {
     {
       className: cn("flex min-w-0 items-center gap-2 font-semibold", className),
       children: [
-        /* @__PURE__ */ jsxRuntime.jsx(Icon, { className: "h-5 w-5 shrink-0 text-primary" }),
+        /* @__PURE__ */ jsxRuntime.jsx("span", { className: "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary", children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { className: "h-5 w-5" }) }),
         /* @__PURE__ */ jsxRuntime.jsx("span", { className: "truncate text-lg tracking-tight", children: title })
       ]
     }
@@ -590,6 +592,19 @@ function AppShell({
   children,
   className
 }) {
+  const headerRef = React11.useRef(null);
+  React11.useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const updateHeight = () => header.parentElement?.style.setProperty(
+      "--app-header-height",
+      `${header.getBoundingClientRect().height}px`
+    );
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
   return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "min-h-dvh bg-background", children: [
     /* @__PURE__ */ jsxRuntime.jsx(
       "a",
@@ -599,21 +614,28 @@ function AppShell({
         children: labels.skipToContent
       }
     ),
-    /* @__PURE__ */ jsxRuntime.jsx("header", { className: "sticky top-0 z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60", children: /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "container flex min-h-16 flex-wrap items-center gap-x-4 gap-y-2 py-2", children: [
-      /* @__PURE__ */ jsxRuntime.jsx("div", { className: "order-1 mr-auto flex min-w-0 items-center", children: brand }),
-      actions && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "order-2 flex flex-wrap items-center justify-end gap-1 sm:order-3", children: actions }),
-      nav && // El `-mx-4 px-4` es el padding del container: en el teléfono deja
-      // que los links scrolleen de borde a borde en vez de cortarse
-      // contra un margen.
-      /* @__PURE__ */ jsxRuntime.jsx(
-        "nav",
-        {
-          "aria-label": labels.mainNavigation,
-          className: "no-scrollbar order-3 -mx-4 flex w-full items-center gap-1 overflow-x-auto overscroll-x-contain px-4 sm:order-2 sm:mx-0 sm:w-auto sm:px-0 [&>*]:shrink-0",
-          children: nav
-        }
-      )
-    ] }) }),
+    /* @__PURE__ */ jsxRuntime.jsx(
+      "header",
+      {
+        ref: headerRef,
+        className: "sticky top-0 z-30 border-b bg-card/95 backdrop-blur",
+        children: /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "container flex min-h-16 flex-wrap items-center gap-x-4 gap-y-2 py-2", children: [
+          /* @__PURE__ */ jsxRuntime.jsx("div", { className: "order-1 mr-auto flex min-w-0 items-center", children: brand }),
+          actions && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "order-2 flex flex-wrap items-center justify-end gap-1 sm:order-3", children: actions }),
+          nav && // El `-mx-4 px-4` es el padding del container: en el teléfono deja
+          // que los links scrolleen de borde a borde en vez de cortarse
+          // contra un margen.
+          /* @__PURE__ */ jsxRuntime.jsx(
+            "nav",
+            {
+              "aria-label": labels.mainNavigation,
+              className: "no-scrollbar order-3 -mx-4 flex w-full items-center gap-1 overflow-x-auto overscroll-x-contain px-4 sm:order-2 sm:mx-0 sm:w-auto sm:px-0 [&>*]:shrink-0",
+              children: nav
+            }
+          )
+        ] })
+      }
+    ),
     /* @__PURE__ */ jsxRuntime.jsx(
       "main",
       {
@@ -852,11 +874,11 @@ function EmptyState({
     "div",
     {
       className: cn(
-        "flex flex-col items-center rounded-lg border border-dashed px-6 py-16 text-center",
+        "flex flex-col items-center rounded-xl border bg-card px-6 py-10 text-center sm:py-14",
         className
       ),
       children: [
-        Icon && /* @__PURE__ */ jsxRuntime.jsx(Icon, { className: "mb-3 h-8 w-8 text-muted-foreground" }),
+        Icon && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-muted", children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { "aria-hidden": true, className: "h-6 w-6 text-muted-foreground" }) }),
         /* @__PURE__ */ jsxRuntime.jsx("p", { className: "font-medium", children: title }),
         description && /* @__PURE__ */ jsxRuntime.jsx("p", { className: "mt-1 text-sm text-muted-foreground", children: description }),
         action && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "mt-4", children: action })
@@ -917,55 +939,64 @@ function FilterToolbar({
 }) {
   const [open, setOpen] = React11.useState(defaultOpen);
   const hasBar = Boolean(panel || results || onClear);
-  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: cn("space-y-3", className), children: [
-    (search || action) && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "flex flex-col gap-3 sm:flex-row sm:items-center", children: [
-      search,
-      action
-    ] }),
-    children && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "flex flex-wrap items-center gap-2", children }),
-    hasBar && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
-      panel && /* @__PURE__ */ jsxRuntime.jsxs(
-        Button,
-        {
-          variant: open ? "secondary" : "ghost",
-          size: "sm",
-          onClick: () => setOpen(!open),
-          "aria-expanded": open,
-          children: [
-            /* @__PURE__ */ jsxRuntime.jsx(lucideReact.SlidersHorizontal, {}),
-            filtersLabel,
-            activeCount > 0 && /* @__PURE__ */ jsxRuntime.jsx(Badge, { variant: "primary", children: activeCount }),
-            /* @__PURE__ */ jsxRuntime.jsx(
-              lucideReact.ChevronDown,
-              {
-                className: cn("transition-transform", open && "rotate-180")
-              }
-            )
-          ]
-        }
+  return /* @__PURE__ */ jsxRuntime.jsxs(
+    "div",
+    {
+      className: cn(
+        "space-y-3 rounded-xl border bg-card p-3 sm:p-4",
+        className
       ),
-      onClear && activeCount > 0 && /* @__PURE__ */ jsxRuntime.jsxs(
-        Button,
-        {
-          variant: "ghost",
-          size: "sm",
-          onClick: onClear,
-          className: "text-muted-foreground",
-          children: [
-            /* @__PURE__ */ jsxRuntime.jsx(lucideReact.X, {}),
-            clearLabel
-          ]
-        }
-      ),
-      results !== void 0 && results !== null && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "ml-auto text-sm tabular-nums text-muted-foreground", children: results })
-    ] }),
-    panel && open && // La grilla la pone la barra y no cada pantalla. Las cinco apps
-    // escribían su propio `grid gap-3 sm:grid-cols-2` adentro del panel
-    // —salvo la que puso tres columnas y la que no puso ninguna—, así que
-    // el mismo panel tenía un ritmo distinto en cada una. Acá cada hijo es
-    // una celda y el call site solo dice cuáles ocupan las dos.
-    /* @__PURE__ */ jsxRuntime.jsx("div", { className: "grid gap-4 rounded-lg border bg-muted/40 p-3 sm:grid-cols-2", children: panel })
-  ] });
+      children: [
+        (search || action) && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "flex min-w-0 items-center gap-2 sm:gap-3", children: [
+          search,
+          action && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "shrink-0", children: action })
+        ] }),
+        children && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "flex flex-wrap items-center gap-2", children }),
+        hasBar && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
+          panel && /* @__PURE__ */ jsxRuntime.jsxs(
+            Button,
+            {
+              variant: open ? "secondary" : "ghost",
+              size: "sm",
+              onClick: () => setOpen(!open),
+              "aria-expanded": open,
+              children: [
+                /* @__PURE__ */ jsxRuntime.jsx(lucideReact.SlidersHorizontal, {}),
+                filtersLabel,
+                activeCount > 0 && /* @__PURE__ */ jsxRuntime.jsx(Badge, { variant: "primary", children: activeCount }),
+                /* @__PURE__ */ jsxRuntime.jsx(
+                  lucideReact.ChevronDown,
+                  {
+                    className: cn("transition-transform", open && "rotate-180")
+                  }
+                )
+              ]
+            }
+          ),
+          onClear && activeCount > 0 && /* @__PURE__ */ jsxRuntime.jsxs(
+            Button,
+            {
+              variant: "ghost",
+              size: "sm",
+              onClick: onClear,
+              className: "text-muted-foreground",
+              children: [
+                /* @__PURE__ */ jsxRuntime.jsx(lucideReact.X, {}),
+                clearLabel
+              ]
+            }
+          ),
+          results !== void 0 && results !== null && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "ml-auto text-sm tabular-nums text-muted-foreground", children: results })
+        ] }),
+        panel && open && // La grilla la pone la barra y no cada pantalla. Las cinco apps
+        // escribían su propio `grid gap-3 sm:grid-cols-2` adentro del panel
+        // —salvo la que puso tres columnas y la que no puso ninguna—, así que
+        // el mismo panel tenía un ritmo distinto en cada una. Acá cada hijo es
+        // una celda y el call site solo dice cuáles ocupan las dos.
+        /* @__PURE__ */ jsxRuntime.jsx("div", { className: "grid gap-4 rounded-lg border bg-muted/40 p-3 sm:grid-cols-2", children: panel })
+      ]
+    }
+  );
 }
 function FilterChip({
   selected,
@@ -1027,7 +1058,10 @@ function FilterChipGroup({
             onClick: () => onChange(active ? null : option.value),
             className: cn(
               "inline-flex h-7 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              active ? cn("bg-background shadow-sm", option.activeClassName ?? "text-foreground") : "text-muted-foreground hover:text-foreground"
+              active ? cn(
+                "bg-background shadow-sm",
+                option.activeClassName ?? "text-foreground"
+              ) : "text-muted-foreground hover:text-foreground"
             ),
             children: [
               Icon && /* @__PURE__ */ jsxRuntime.jsx(Icon, { className: "h-3.5 w-3.5" }),
@@ -1739,6 +1773,32 @@ var ErrorBoundary = class extends React11.Component {
     );
   }
 };
+function LoadError({ onRetry, retrying = false }) {
+  return /* @__PURE__ */ jsxRuntime.jsxs(
+    "div",
+    {
+      role: "alert",
+      className: "flex flex-wrap items-center gap-3 rounded-lg border border-destructive/30 bg-destructive/5 p-4",
+      children: [
+        /* @__PURE__ */ jsxRuntime.jsx(lucideReact.AlertCircle, { "aria-hidden": true, className: "h-5 w-5 shrink-0 text-destructive" }),
+        /* @__PURE__ */ jsxRuntime.jsx("p", { className: "min-w-0 flex-1 text-sm", children: labels.loadError }),
+        /* @__PURE__ */ jsxRuntime.jsxs(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            disabled: retrying,
+            onClick: () => void onRetry(),
+            children: [
+              /* @__PURE__ */ jsxRuntime.jsx(lucideReact.RotateCcw, {}),
+              labels.retry
+            ]
+          }
+        )
+      ]
+    }
+  );
+}
 function useDebounce(value, delay = 300) {
   const [debounced, setDebounced] = React11.useState(value);
   React11.useEffect(() => {
@@ -2063,6 +2123,7 @@ exports.Input = Input;
 exports.LOCALE = LOCALE;
 exports.Label = Label;
 exports.LinkPreview = LinkPreview;
+exports.LoadError = LoadError;
 exports.MONEY_LOCALE = MONEY_LOCALE;
 exports.Markdown = Markdown;
 exports.MonthHeading = MonthHeading;

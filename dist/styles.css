@@ -1,5 +1,5 @@
 :root {
-  --background: 0 0% 100%;
+  --background: 220 20% 98%;
   --foreground: 222 20% 12%;
 
   --card: 0 0% 100%;
@@ -253,4 +253,11 @@ input[type="date"]::-webkit-date-and-time-value {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Active navigation stays distinct from secondary actions. */
+nav[aria-label] a[aria-current="page"] {
+  background: hsl(var(--primary) / 0.09);
+  color: hsl(var(--primary));
+  box-shadow: inset 0 -2px 0 hsl(var(--primary));
 }

@@ -41,3 +41,4 @@ export {
   type InfiniteScrollTriggerProps,
 } from "./InfiniteScrollTrigger";
 export { ErrorBoundary } from "./ErrorBoundary";
+export { LoadError, type LoadErrorProps } from "./LoadError";
