@@ -259,5 +259,4 @@ input[type="date"]::-webkit-date-and-time-value {
 nav[aria-label] a[aria-current="page"] {
   background: hsl(var(--primary) / 0.09);
   color: hsl(var(--primary));
-  box-shadow: inset 0 -2px 0 hsl(var(--primary));
 }
