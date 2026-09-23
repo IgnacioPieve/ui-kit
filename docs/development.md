@@ -163,3 +163,15 @@ si hay que forzar, `npm install --prefer-online` o borrar `node_modules`.
 El repo del kit tiene que ser **público**: el build de Docker lo baja de forma
 anónima y no tiene credenciales. Es seguro que lo sea — acá no hay nada
 sensible, son componentes de UI.
+
+### Pulido visual e iconos de instalación (v0.24.0)
+
+AppShell ajusta el espacio vertical por breakpoint y reserva 44px para los
+controles de navegación en dispositivos táctiles. Las tarjetas comparten radio
+xl. El alto real del header sigue disponible en --app-header-height.
+
+Un link apple-touch-icon con data-light-icon y data-dark-icon permite elegir
+el PNG de instalación según prefers-color-scheme. AppShell escucha los cambios
+del sistema, independientemente del tema elegido dentro de la app. Esto no
+controla el icono ya instalado en iOS: su apariencia depende de SpringBoard.
+Los PNG v4 de las seis apps son opacos; mantienen un mismo trazo y escala.

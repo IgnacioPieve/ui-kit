@@ -14,7 +14,7 @@ export function AppBrand({ icon: Icon, title, className }: AppBrandProps) {
     <span
       className={cn("flex min-w-0 items-center gap-2 font-semibold", className)}
     >
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-primary/15 bg-primary/10 text-primary">
         <Icon className="h-5 w-5" />
       </span>
       <span className="truncate text-lg tracking-tight">{title}</span>
@@ -46,6 +46,21 @@ export function AppShell({
 }: AppShellProps) {
   const headerRef = useRef<HTMLElement>(null);
   useEffect(() => {
+    // Some iOS versions ignore media on touch-icon links when installing.
+    // Select the installation asset explicitly; SpringBoard owns installed icons.
+    const icon = document.querySelector<HTMLLinkElement>(
+      'link[rel="apple-touch-icon"][data-light-icon][data-dark-icon]',
+    );
+    if (!icon) return;
+    const scheme = window.matchMedia("(prefers-color-scheme: dark)");
+    const updateIcon = () => {
+      icon.href = (scheme.matches ? icon.dataset.darkIcon : icon.dataset.lightIcon)!;
+    };
+    updateIcon();
+    scheme.addEventListener("change", updateIcon);
+    return () => scheme.removeEventListener("change", updateIcon);
+  }, []);
+  useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
     const updateHeight = () =>
@@ -68,7 +83,7 @@ export function AppShell({
       </a>
       <header
         ref={headerRef}
-        className="sticky top-0 z-30 border-b bg-card/95 backdrop-blur"
+        className="app-header sticky top-0 z-30 border-b bg-card/95 shadow-sm backdrop-blur"
       >
         <div className="container flex min-h-16 flex-wrap items-center gap-x-4 gap-y-2 py-2">
           <div className="order-1 mr-auto flex min-w-0 items-center">
@@ -96,7 +111,7 @@ export function AppShell({
         id="main-content"
         tabIndex={-1}
         className={cn(
-          "container min-w-0 py-6 outline-none md:py-10",
+          "container min-w-0 py-4 outline-none sm:py-6 md:py-8",
           className,
         )}
       >

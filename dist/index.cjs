@@ -231,7 +231,7 @@ var Card = React11__namespace.forwardRef(
       {
         ref,
         className: cn(
-          "rounded-lg border bg-card text-card-foreground shadow-sm",
+          "rounded-xl border bg-card text-card-foreground shadow-sm",
           interactive && "block cursor-pointer transition-colors hover:border-primary/40 hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           className
         ),
@@ -579,7 +579,7 @@ function AppBrand({ icon: Icon, title, className }) {
     {
       className: cn("flex min-w-0 items-center gap-2 font-semibold", className),
       children: [
-        /* @__PURE__ */ jsxRuntime.jsx("span", { className: "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary", children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { className: "h-5 w-5" }) }),
+        /* @__PURE__ */ jsxRuntime.jsx("span", { className: "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-primary/15 bg-primary/10 text-primary", children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { className: "h-5 w-5" }) }),
         /* @__PURE__ */ jsxRuntime.jsx("span", { className: "truncate text-lg tracking-tight", children: title })
       ]
     }
@@ -593,6 +593,19 @@ function AppShell({
   className
 }) {
   const headerRef = React11.useRef(null);
+  React11.useEffect(() => {
+    const icon = document.querySelector(
+      'link[rel="apple-touch-icon"][data-light-icon][data-dark-icon]'
+    );
+    if (!icon) return;
+    const scheme = window.matchMedia("(prefers-color-scheme: dark)");
+    const updateIcon = () => {
+      icon.href = scheme.matches ? icon.dataset.darkIcon : icon.dataset.lightIcon;
+    };
+    updateIcon();
+    scheme.addEventListener("change", updateIcon);
+    return () => scheme.removeEventListener("change", updateIcon);
+  }, []);
   React11.useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
@@ -618,7 +631,7 @@ function AppShell({
       "header",
       {
         ref: headerRef,
-        className: "sticky top-0 z-30 border-b bg-card/95 backdrop-blur",
+        className: "app-header sticky top-0 z-30 border-b bg-card/95 shadow-sm backdrop-blur",
         children: /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "container flex min-h-16 flex-wrap items-center gap-x-4 gap-y-2 py-2", children: [
           /* @__PURE__ */ jsxRuntime.jsx("div", { className: "order-1 mr-auto flex min-w-0 items-center", children: brand }),
           actions && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "order-2 flex flex-wrap items-center justify-end gap-1 sm:order-3", children: actions }),
@@ -642,7 +655,7 @@ function AppShell({
         id: "main-content",
         tabIndex: -1,
         className: cn(
-          "container min-w-0 py-6 outline-none md:py-10",
+          "container min-w-0 py-4 outline-none sm:py-6 md:py-8",
           className
         ),
         children

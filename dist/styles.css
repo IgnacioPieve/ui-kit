@@ -110,6 +110,14 @@ body {
   font-feature-settings: "cv11", "ss01";
 }
 
+/* Keep header controls comfortable to tap without enlarging dense data rows. */
+@media (pointer: coarse) {
+  .app-header :is(button, nav a) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
 /* --------------------------------------------------------------------------
  * Markdown renderizado (componente <Markdown />)
  * -------------------------------------------------------------------------- */
