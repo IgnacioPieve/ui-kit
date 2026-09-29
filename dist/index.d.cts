@@ -163,6 +163,46 @@ declare const DialogFooter: {
 declare const DialogTitle: React.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogTitleProps & React.RefAttributes<HTMLHeadingElement>, "ref"> & React.RefAttributes<HTMLHeadingElement>>;
 declare const DialogDescription: React.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogDescriptionProps & React.RefAttributes<HTMLParagraphElement>, "ref"> & React.RefAttributes<HTMLParagraphElement>>;
 
+/**
+ * Una hoja que sube desde abajo en el teléfono y es un diálogo centrado desde
+ * `sm` para arriba.
+ *
+ * Es el mismo `Dialog` de Radix —foco atrapado, Escape, tocar afuera cierra—
+ * con otra forma. En el teléfono un diálogo centrado es el peor lugar para una
+ * lista: el teclado sube, tapa la mitad de abajo, y lo que queda para elegir es
+ * una franja de 150px en el medio. Pegada abajo, la hoja queda a mano del
+ * pulgar; con `size="full"` ocupa la pantalla entera, que es lo que necesita
+ * un selector con buscador.
+ *
+ * Las partes arman una columna: `SheetHeader` y `SheetFooter` quedan fijos y
+ * `SheetBody` es lo único que scrollea, así un botón de "Crear" o "Guardar" no
+ * se va de la pantalla con una lista larga.
+ */
+declare const Sheet: React.FC<DialogPrimitive.DialogProps>;
+declare const SheetTrigger: React.ForwardRefExoticComponent<DialogPrimitive.DialogTriggerProps & React.RefAttributes<HTMLButtonElement>>;
+declare const SheetClose: React.ForwardRefExoticComponent<DialogPrimitive.DialogCloseProps & React.RefAttributes<HTMLButtonElement>>;
+interface SheetContentProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
+    /** `auto`: la altura de su contenido. `full`: toda la pantalla en el teléfono. */
+    size?: "auto" | "full";
+    hideClose?: boolean;
+}
+declare const SheetContent: React.ForwardRefExoticComponent<SheetContentProps & React.RefAttributes<HTMLDivElement>>;
+declare const SheetHeader: {
+    ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>): React.JSX.Element;
+    displayName: string;
+};
+/** Lo único que scrollea. Llega hasta los bordes de la hoja. */
+declare const SheetBody: {
+    ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>): React.JSX.Element;
+    displayName: string;
+};
+declare const SheetFooter: {
+    ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>): React.JSX.Element;
+    displayName: string;
+};
+declare const SheetTitle: React.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogTitleProps & React.RefAttributes<HTMLHeadingElement>, "ref"> & React.RefAttributes<HTMLHeadingElement>>;
+declare const SheetDescription: React.ForwardRefExoticComponent<Omit<DialogPrimitive.DialogDescriptionProps & React.RefAttributes<HTMLParagraphElement>, "ref"> & React.RefAttributes<HTMLParagraphElement>>;
+
 declare const DropdownMenu: React.FC<DropdownMenuPrimitive.DropdownMenuProps>;
 declare const DropdownMenuTrigger: React.ForwardRefExoticComponent<DropdownMenuPrimitive.DropdownMenuTriggerProps & React.RefAttributes<HTMLButtonElement>>;
 declare const DropdownMenuGroup: React.ForwardRefExoticComponent<DropdownMenuPrimitive.DropdownMenuGroupProps & React.RefAttributes<HTMLDivElement>>;
@@ -942,4 +982,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, type CardProps, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, EmptyState, type EmptyStateProps, ErrorBoundary, Field, type FieldProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, FilterChip, FilterChipGroup, type FilterChipGroupProps, type FilterChipOption, type FilterChipProps, FilterToolbar, type FilterToolbarProps, FormActions, type FormActionsProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, LoadError, type LoadErrorProps, MONEY_LOCALE, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, PageHeader, type PageHeaderProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Skeleton, SkeletonList, type SkeletonListProps, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, type CardProps, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, EmptyState, type EmptyStateProps, ErrorBoundary, Field, type FieldProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, FilterChip, FilterChipGroup, type FilterChipGroupProps, type FilterChipOption, type FilterChipProps, FilterToolbar, type FilterToolbarProps, FormActions, type FormActionsProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, LoadError, type LoadErrorProps, MONEY_LOCALE, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, PageHeader, type PageHeaderProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Sheet, SheetBody, SheetClose, SheetContent, type SheetContentProps, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger, Skeleton, SkeletonList, type SkeletonListProps, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };

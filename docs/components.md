@@ -30,6 +30,7 @@ Estilo shadcn: sin estado propio, sin lógica de negocio.
 | `Skeleton` | — | Placeholder de carga. |
 | `Spinner` | `className?` | Indicador de carga. Centrarlo es responsabilidad de quien lo usa. |
 | `Dialog` | Radix `Dialog` | `DialogContent` acepta `hideClose`. Abre **sin ningún campo enfocado** (v0.20.0): el foco va al contenedor, salvo que un hijo pida `autoFocus` explícito. Incluye `DialogHeader` `DialogTitle` `DialogDescription` `DialogFooter` `DialogTrigger` `DialogClose`. |
+| `Sheet` | Radix `Dialog` | Hoja que **sube desde abajo en el teléfono** y es un diálogo centrado desde `sm` (v0.25.0). `SheetContent` acepta `size` (`auto`, la altura del contenido, o `full`, la pantalla entera: para un selector con buscador) y `hideClose`. Las partes arman una columna: `SheetHeader` y `SheetFooter` quedan fijos y `SheetBody` es lo único que scrollea. Mismo foco que `Dialog`: abre sin campo enfocado. Incluye `SheetTitle` `SheetDescription` `SheetTrigger` `SheetClose`. |
 | `DropdownMenu` | Radix | Con `DropdownMenuTrigger` `DropdownMenuContent` `DropdownMenuItem` `DropdownMenuLabel` `DropdownMenuSeparator`. |
 | `Toaster` / `toast` | — | Sonner. `<Toaster />` se monta una vez en el root; `toast.success(…)` / `toast.error(…)` desde cualquier lado. |
 

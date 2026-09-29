@@ -35,6 +35,18 @@ export {
   DialogDescription,
 } from "./dialog";
 export {
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetBody,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+  type SheetContentProps,
+} from "./sheet";
+export {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuGroup,
