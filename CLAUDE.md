@@ -36,8 +36,12 @@ $D npm run build        # tsup -> dist/ (ESM + CJS + .d.ts + styles.css)
 $D npm run dev          # tsup --watch
 ```
 
-Run `npm test` for autosave and HTTP regression tests. A green `typecheck` plus a green `test` is the
-gate — but see **Traps**: green does not prove the styles reach the apps.
+`$D npm test` builds and runs the autosave and HTTP regression tests. A green
+`typecheck` plus a green `test` is the gate — but see **Traps**: green does not
+prove the styles reach the apps. `scripts/measure-ui.mjs` is what proves it: it
+opens every app at 390px in both themes over CDP and fails on horizontal
+overflow or a field under 16px (how to run it: `docs/development.md`, or the
+`measure-ui` skill).
 
 ## Architecture
 
@@ -50,6 +54,7 @@ gate — but see **Traps**: green does not prove the styles reach the apps.
 | `src/hooks/`, `src/lib/` | Hooks and framework-agnostic helpers. |
 | `src/labels.ts` | Default Spanish strings for kit-internal text. |
 | `dist/` | Committed build output. **Never edited by hand.** |
+| `scripts/measure-ui.mjs` | Measures the six apps at phone width over CDP. Not shipped to the apps' bundles. |
 
 Apps import it *before* their own `index.css`; every rule in `styles.css` is
 class-scoped so it still beats Tailwind's preflight, which is injected
@@ -205,7 +210,8 @@ Things that fail **silently** or in a confusing way:
 - **Measure, do not read, when a style is supposed to apply.** Two of the bugs
   above (the dead 16px rule, the placeholder that ignored `inputSize`) were
   invisible in the source and obvious in `getComputedStyle`. Headless Chrome
-  over CDP at a 390px viewport is a two-minute check.
+  over CDP at a 390px viewport is a two-minute check, and
+  `scripts/measure-ui.mjs` runs it over every app.
 
 ## Docs
 

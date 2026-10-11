@@ -43,8 +43,8 @@ $D npm run dev          # tsup --watch
 
 ## Verificación
 
-`npm run typecheck` y `npm run build` en verde alcanzan como gate del repo. No
-hay suite de tests automatizados.
+`npm run typecheck` y `npm test` en verde son el gate del repo. `npm test`
+compila y corre `tests/*.test.mjs` (autoguardado y cliente HTTP) contra `dist/`.
 
 Pero el build verde **no** garantiza que los estilos lleguen: si agregás un
 componente que usa una clase que ninguna app escribe por su cuenta, verificá que
@@ -64,6 +64,32 @@ Ojo con el escapado al buscar variantes: Tailwind escribe
 `data-[state=checked]:` como `data-\[state\=checked\]\:` en el CSS. Conviene
 usar `grep -F` con la forma literal.
 
+### Medir las apps en un teléfono
+
+Un estilo no aplica porque el archivo lo diga. `scripts/measure-ui.mjs` abre
+cada pantalla de lista de las seis apps —y la primera de detalle a la que
+enlaza— a 390px, en tema claro y oscuro, y falla si la página **desborda en
+horizontal** (nombrando los elementos más profundos que se salen) o si hay un
+**campo de menos de 16px**, que iOS agranda y no vuelve a achicar. Deja una
+captura de página completa de cada una en `shots/`.
+
+No tiene dependencias: Node 22 trae `fetch` y `WebSocket`, y Chrome corre en
+otro contenedor. Con las apps levantadas:
+
+```bash
+docker run -d --name cdp --network host --shm-size=1g \
+  --entrypoint /headless-shell/headless-shell chromedp/headless-shell \
+  --no-sandbox --disable-gpu --hide-scrollbars \
+  --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222
+docker run --rm --network host -v "$PWD":/w -w /w --user "$(id -u):$(id -g)" \
+  node:22-alpine node scripts/measure-ui.mjs            # o: ... groceries health
+docker rm -f cdp
+```
+
+Sale con 1 si alguna pantalla falla. En una captura de página completa, un pie
+`sticky` (`FormActions`) aparece pintado a mitad de página: es cómo
+`captureBeyondViewport` dibuja lo fijo, no un bug de la app.
+
 ## Publicar una versión
 
 1. Cambiar el código en `src/`.
@@ -79,7 +105,7 @@ usar `grep -F` con la forma literal.
    ```
 
 5. En **las seis** apps, apuntar la dependencia al tag nuevo, regenerar el
-   lock y reconstruir:
+   lock y reconstruir (de a una: el host tiene 3.9 GB y ningún swap):
 
    ```bash
    # frontend/package.json
@@ -93,6 +119,10 @@ usar `grep -F` con la forma literal.
 
    El lock no es opcional: el build corre `npm ci`, que instala exactamente lo
    que dice `package-lock.json` y falla si el pin y el lock no coinciden.
+
+6. Levantar los frontends nuevos y correr `scripts/measure-ui.mjs` (ver
+   [arriba](#medir-las-apps-en-un-teléfono)). Un release que cambia layout no
+   está terminado hasta que pasa a 390px.
 
 Las apps apuntan a un **tag**, nunca a `main`, para que un `npm install` no
 cambie la UI sin querer.

@@ -12,3 +12,6 @@ node_modules/
 
 # Claude Code (la config local es personal; settings.json sí se versiona)
 .claude/settings.local.json
+
+# Capturas de scripts/measure-ui.mjs
+shots/
