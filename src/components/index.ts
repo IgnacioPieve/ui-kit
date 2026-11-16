@@ -12,6 +12,7 @@ export { PageHeader, type PageHeaderProps } from "./PageHeader";
 export { SkeletonList, type SkeletonListProps } from "./SkeletonList";
 export { Field, type FieldProps } from "./Field";
 export { FormActions, type FormActionsProps } from "./FormActions";
+export { SelectionBar, type SelectionBarProps } from "./SelectionBar";
 export {
   FilterToolbar,
   FilterChip,

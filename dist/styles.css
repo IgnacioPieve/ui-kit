@@ -251,6 +251,24 @@ input[type="date"]::-webkit-date-and-time-value {
   text-align: left;
 }
 
+/* El `Input` del kit es `display: flex`, y en Chrome eso le saca el ancho al
+   contenedor interno de un campo de fecha: el ícono del calendario queda
+   pegado al texto, flotando en el medio del campo, en vez de contra el borde
+   derecho. En `block` vuelve a su lugar (medido en headless Chrome, con y sin
+   esta regla).
+
+   Solo con puntero fino, que es donde ese ícono existe. En el teléfono no hay
+   ícono que acomodar, y cambiarle el `display` a un campo de fecha de iOS sin
+   poder medirlo es exactamente como se rompió esto la vez anterior.
+
+   El `html` de adelante está por especificidad y nada más: tiene que ganarle
+   a la utilidad `flex` del componente, que se inyecta después. */
+@media (hover: hover) and (pointer: fine) {
+  html input[type="date"] {
+    display: block;
+  }
+}
+
 /* Honor reduced motion across shared components and app transitions. */
 @media (prefers-reduced-motion: reduce) {
   *,

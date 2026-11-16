@@ -383,6 +383,7 @@ var labels = {
   cancel: "Cancelar",
   clear: "Limpiar",
   clearFilters: "Limpiar filtros",
+  clearSelection: "Limpiar selecci\xF3n",
   close: "Cerrar",
   confirm: "Confirmar",
   copied: "Copiado",
@@ -1048,6 +1049,49 @@ function FormActions({ children, className }) {
       children
     }
   );
+}
+function SelectionBar({
+  count,
+  label,
+  total,
+  children,
+  onClear,
+  clearLabel = labels.clearSelection,
+  className
+}) {
+  if (count === 0) return null;
+  return /* @__PURE__ */ jsxRuntime.jsxs(jsxRuntime.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntime.jsx("div", { "aria-hidden": true, className: "h-20" }),
+    /* @__PURE__ */ jsxRuntime.jsx("div", { className: "pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4", children: /* @__PURE__ */ jsxRuntime.jsxs(
+      Card,
+      {
+        role: "status",
+        className: cn(
+          "pointer-events-auto flex max-w-full items-center gap-3 p-2 pl-3 shadow-lg",
+          className
+        ),
+        children: [
+          /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "flex min-w-0 flex-col leading-tight", children: [
+            /* @__PURE__ */ jsxRuntime.jsx("span", { className: "truncate text-xs text-muted-foreground", children: label }),
+            total != null && /* @__PURE__ */ jsxRuntime.jsx("span", { className: "truncate font-bold tabular-nums", children: total })
+          ] }),
+          children,
+          /* @__PURE__ */ jsxRuntime.jsx(
+            Button,
+            {
+              variant: "ghost",
+              size: "icon-sm",
+              onClick: onClear,
+              "aria-label": clearLabel,
+              title: clearLabel,
+              className: "shrink-0",
+              children: /* @__PURE__ */ jsxRuntime.jsx(lucideReact.X, {})
+            }
+          )
+        ]
+      }
+    ) })
+  ] });
 }
 function FilterToolbar({
   search,
@@ -2257,6 +2301,7 @@ exports.Progress = Progress;
 exports.SearchInput = SearchInput;
 exports.SectionHeading = SectionHeading;
 exports.Select = Select;
+exports.SelectionBar = SelectionBar;
 exports.Sheet = Sheet;
 exports.SheetBody = SheetBody;
 exports.SheetClose = SheetClose;

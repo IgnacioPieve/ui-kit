@@ -15,6 +15,7 @@ export const labels = {
   cancel: "Cancelar",
   clear: "Limpiar",
   clearFilters: "Limpiar filtros",
+  clearSelection: "Limpiar selección",
   close: "Cerrar",
   confirm: "Confirmar",
   copied: "Copiado",

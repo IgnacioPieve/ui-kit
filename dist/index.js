@@ -355,6 +355,7 @@ var labels = {
   cancel: "Cancelar",
   clear: "Limpiar",
   clearFilters: "Limpiar filtros",
+  clearSelection: "Limpiar selecci\xF3n",
   close: "Cerrar",
   confirm: "Confirmar",
   copied: "Copiado",
@@ -1020,6 +1021,49 @@ function FormActions({ children, className }) {
       children
     }
   );
+}
+function SelectionBar({
+  count,
+  label,
+  total,
+  children,
+  onClear,
+  clearLabel = labels.clearSelection,
+  className
+}) {
+  if (count === 0) return null;
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx("div", { "aria-hidden": true, className: "h-20" }),
+    /* @__PURE__ */ jsx("div", { className: "pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4", children: /* @__PURE__ */ jsxs(
+      Card,
+      {
+        role: "status",
+        className: cn(
+          "pointer-events-auto flex max-w-full items-center gap-3 p-2 pl-3 shadow-lg",
+          className
+        ),
+        children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 flex-col leading-tight", children: [
+            /* @__PURE__ */ jsx("span", { className: "truncate text-xs text-muted-foreground", children: label }),
+            total != null && /* @__PURE__ */ jsx("span", { className: "truncate font-bold tabular-nums", children: total })
+          ] }),
+          children,
+          /* @__PURE__ */ jsx(
+            Button,
+            {
+              variant: "ghost",
+              size: "icon-sm",
+              onClick: onClear,
+              "aria-label": clearLabel,
+              title: clearLabel,
+              className: "shrink-0",
+              children: /* @__PURE__ */ jsx(X, {})
+            }
+          )
+        ]
+      }
+    ) })
+  ] });
 }
 function FilterToolbar({
   search,
@@ -2164,6 +2208,6 @@ function createHttpClient(baseUrl = "", { trace = false } = {}) {
   };
 }
 
-export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, EmptyState, ErrorBoundary, Field, FileDropzone, FilePreview, FilterChip, FilterChipGroup, FilterToolbar, FormActions, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, LoadError, MONEY_LOCALE, Markdown, MonthHeading, PageHeader, Progress, SearchInput, SectionHeading, Select, Sheet, SheetBody, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger, Skeleton, SkeletonList, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, AppShell, Autocomplete, AutosaveIndicator, Badge, Button, CameraButton, Card, CardContent, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible, ConfirmDialog, CopyButton, DateInput, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, EmptyState, ErrorBoundary, Field, FileDropzone, FilePreview, FilterChip, FilterChipGroup, FilterToolbar, FormActions, HttpError, InfiniteScrollTrigger, Input, LOCALE, Label, LinkPreview, LoadError, MONEY_LOCALE, Markdown, MonthHeading, PageHeader, Progress, SearchInput, SectionHeading, Select, SelectionBar, Sheet, SheetBody, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger, Skeleton, SkeletonList, Spinner, Switch, Textarea, ThemeToggle, Toaster, ToggleGroup, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

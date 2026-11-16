@@ -479,6 +479,34 @@ interface FormActionsProps {
  */
 declare function FormActions({ children, className }: FormActionsProps): React.JSX.Element;
 
+interface SelectionBarProps {
+    /** Cuántas filas hay tildadas. En 0 la barra no existe. */
+    count: number;
+    /** El renglón chico: "3 facturas seleccionadas". Lo escribe la app. */
+    label: ReactNode;
+    /** El renglón grande: lo que suman. Ya formateado — el kit no sabe de plata. */
+    total?: ReactNode;
+    /** Acciones sobre lo tildado (normalmente un `<Button size="sm" />`). */
+    children?: ReactNode;
+    onClear: () => void;
+    clearLabel?: string;
+    className?: string;
+}
+/**
+ * La barra flotante de lo seleccionado: cuántas filas, cuánto suman, qué se
+ * puede hacer con ellas y una X para soltarlas.
+ *
+ * **Una sola tarjeta y no piezas sueltas flotando**: el total, el botón y la X
+ * con su sombra cada uno envolvían en dos filas desparejas en el teléfono.
+ *
+ * **El aire de abajo también es de acá.** Una barra fija tapa la última fila
+ * de la lista, y la forma de que no la tape es un espaciador de su mismo alto
+ * al final de la página. Estaba escrita en dos apps y solo una se había
+ * acordado del espaciador: en la otra, la última factura no se podía tildar
+ * con la barra abierta.
+ */
+declare function SelectionBar({ count, label, total, children, onClear, clearLabel, className, }: SelectionBarProps): React.JSX.Element | null;
+
 interface FilterToolbarProps {
     /** El buscador. Va solo en su fila y crece: pasale `className="flex-1"`. */
     search?: ReactNode;
@@ -959,6 +987,7 @@ declare const labels: {
     readonly cancel: "Cancelar";
     readonly clear: "Limpiar";
     readonly clearFilters: "Limpiar filtros";
+    readonly clearSelection: "Limpiar selección";
     readonly close: "Cerrar";
     readonly confirm: "Confirmar";
     readonly copied: "Copiado";
@@ -982,4 +1011,4 @@ declare const labels: {
 };
 type Labels = typeof labels;
 
-export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, type CardProps, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, EmptyState, type EmptyStateProps, ErrorBoundary, Field, type FieldProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, FilterChip, FilterChipGroup, type FilterChipGroupProps, type FilterChipOption, type FilterChipProps, FilterToolbar, type FilterToolbarProps, FormActions, type FormActionsProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, LoadError, type LoadErrorProps, MONEY_LOCALE, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, PageHeader, type PageHeaderProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, Sheet, SheetBody, SheetClose, SheetContent, type SheetContentProps, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger, Skeleton, SkeletonList, type SkeletonListProps, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
+export { AppBrand, type AppBrandProps, AppShell, type AppShellProps, Autocomplete, type AutocompleteProps, type Autosave, AutosaveIndicator, type AutosaveIndicatorProps, type AutosaveStatus, Badge, type BadgeProps, Button, type ButtonProps, CameraButton, type CameraButtonProps, Card, CardContent, CardFooter, CardHeader, type CardProps, CardTitle, Checkbox, Collapsible, type CollapsibleProps, ConfirmDialog, type ConfirmDialogProps, CopyButton, type CopyButtonProps, DateInput, type DateInputProps, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, EmptyState, type EmptyStateProps, ErrorBoundary, Field, type FieldProps, FileDropzone, type FileDropzoneProps, type FileKind, FilePreview, type FilePreviewProps, FilterChip, FilterChipGroup, type FilterChipGroupProps, type FilterChipOption, type FilterChipProps, FilterToolbar, type FilterToolbarProps, FormActions, type FormActionsProps, type HttpClient, type HttpClientOptions, HttpError, InfiniteScrollTrigger, type InfiniteScrollTriggerProps, Input, type InputProps, LOCALE, Label, type Labels, type LinkKind, LinkPreview, type LinkPreviewProps, LoadError, type LoadErrorProps, MONEY_LOCALE, Markdown, type MarkdownProps, type MonthGroup, MonthHeading, type MonthHeadingProps, PageHeader, type PageHeaderProps, Progress, type ProgressProps, type QueryParams, SearchInput, type SearchInputProps, SectionHeading, type SectionHeadingProps, Select, SelectionBar, type SelectionBarProps, Sheet, SheetBody, SheetClose, SheetContent, type SheetContentProps, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger, Skeleton, SkeletonList, type SkeletonListProps, Spinner, type SpinnerProps, Switch, Textarea, type Theme, ThemeToggle, type ThemeToggleProps, Toaster, ToggleGroup, type ToggleGroupOption, type ToggleGroupProps, badgeVariants, buildQuery, buttonVariants, capitalize, cn, copyToClipboard, createHttpClient, downloadBlob, downloadJson, fileKind, filenameFromDisposition, formatAmount, formatCurrency, formatDate, formatDayMonth, formatFileSize, formatMonthYear, formatShortDate, genId, groupByMonth, inputVariants, labels, linkHost, linkKind, log, parseLocalDate, safeUrl, todayISO, useAutosave, useClickOutside, useDebounce, useTheme, youtubeEmbedUrl };
