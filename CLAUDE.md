@@ -192,6 +192,15 @@ Things that fail **silently** or in a confusing way:
   for specificity and nothing else. Putting it in each component's cva instead
   looks tidier and is worse: an app passing `className="text-sm"` silently wins
   on mobile, and every call site has to remember the responsive pair.
+- **`display: flex` on an `input[type=date]` detaches Chrome's calendar icon.**
+  The field's inner container loses its width, so the icon sits right after
+  the text, in the middle of the field — on every date field of every app,
+  and it looks deliberate enough that nobody reported it. `styles.css` sets
+  the date field back to `block`, everywhere except iOS (`@supports not
+  (-webkit-touch-callout: none)`), which has no icon and cannot be measured
+  from here. It was first written behind `@media (pointer: fine)` and shipped
+  as v0.26.0 **unverified**: headless Chrome reports no pointer, so the rule
+  never matched where it was being measured. v0.26.1 is the measurable one.
 - **A grid cell is `min-width: auto`.** It sizes to its content, so a child that
   knows how to scroll inside itself — `FilterChipGroup` — widened the cell
   instead of scrolling, and the whole page went sideways on a phone. Anything

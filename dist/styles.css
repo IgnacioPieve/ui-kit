@@ -254,16 +254,19 @@ input[type="date"]::-webkit-date-and-time-value {
 /* El `Input` del kit es `display: flex`, y en Chrome eso le saca el ancho al
    contenedor interno de un campo de fecha: el ícono del calendario queda
    pegado al texto, flotando en el medio del campo, en vez de contra el borde
-   derecho. En `block` vuelve a su lugar (medido en headless Chrome, con y sin
-   esta regla).
+   derecho. En `block` vuelve a su lugar y el campo mide lo mismo (medido en
+   headless Chrome sobre una app real, con y sin esta regla).
 
-   Solo con puntero fino, que es donde ese ícono existe. En el teléfono no hay
-   ícono que acomodar, y cambiarle el `display` a un campo de fecha de iOS sin
-   poder medirlo es exactamente como se rompió esto la vez anterior.
+   **iOS queda afuera**, con la única consulta que lo distingue: la propiedad
+   del `@supports` existe solo en WebKit de iOS. Ahí no hay ícono que
+   acomodar, y cambiarle el `display` a un campo de fecha que no se puede
+   medir desde acá es como se rompió esto la vez anterior. Un
+   `@media (pointer: fine)` diría lo mismo con más elegancia, pero Chrome
+   headless no reporta puntero: la regla habría quedado sin verificar.
 
    El `html` de adelante está por especificidad y nada más: tiene que ganarle
-   a la utilidad `flex` del componente, que se inyecta después. */
-@media (hover: hover) and (pointer: fine) {
+   a la utilidad del componente, que se inyecta después. */
+@supports not (-webkit-touch-callout: none) {
   html input[type="date"] {
     display: block;
   }
