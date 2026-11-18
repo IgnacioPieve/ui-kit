@@ -38,6 +38,7 @@ const APPS = {
     routes: ["/", "/products", "/categories", "/stores"],
     follow: ["/receipts/", "/products/"],
   },
+  visa: { port: 30600, routes: ["/", "/movimientos", "/sincronizaciones"], follow: [] },
   finance: { port: 30500, routes: ["/", "/plantillas", "/history"], follow: [] },
   expenses: {
     port: 30700,
