@@ -1,5 +1,5 @@
-import { useCallback } from "react";
-import { useDropzone, type Accept } from "react-dropzone";
+import { useCallback, useState } from "react";
+import { useDropzone, type Accept, type FileRejection } from "react-dropzone";
 import { Upload } from "lucide-react";
 import { cn } from "../lib/cn";
 import { labels } from "../labels";
@@ -36,8 +36,15 @@ export function FileDropzone({
   hint,
   className,
 }: FileDropzoneProps) {
+  const [feedback, setFeedback] = useState("");
   const onDrop = useCallback(
-    (accepted: File[]) => {
+    (accepted: File[], rejected: FileRejection[]) => {
+      setFeedback(rejected.map(({ file, errors }) => {
+        const reason = errors.some(error => error.code === "too-many-files")
+          ? "elegí un solo archivo"
+          : "formato no admitido";
+        return `${file.name}: ${reason}`;
+      }).join(" · "));
       if (accepted.length) onFiles(accepted);
     },
     [onFiles]
@@ -81,6 +88,7 @@ export function FileDropzone({
           {hint && <p className="mt-0.5 text-xs">{hint}</p>}
         </div>
       )}
+      <span role="status" className="text-destructive break-all">{feedback}</span>
     </div>
   );
 }

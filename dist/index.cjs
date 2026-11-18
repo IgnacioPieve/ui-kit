@@ -1533,8 +1533,13 @@ function FileDropzone({
   hint,
   className
 }) {
+  const [feedback, setFeedback] = React12.useState("");
   const onDrop = React12.useCallback(
-    (accepted) => {
+    (accepted, rejected) => {
+      setFeedback(rejected.map(({ file, errors }) => {
+        const reason = errors.some((error) => error.code === "too-many-files") ? "eleg\xED un solo archivo" : "formato no admitido";
+        return `${file.name}: ${reason}`;
+      }).join(" \xB7 "));
       if (accepted.length) onFiles(accepted);
     },
     [onFiles]
@@ -1567,7 +1572,8 @@ function FileDropzone({
         isDragActive ? /* @__PURE__ */ jsxRuntime.jsx("p", { className: cn(!small && "font-medium text-primary"), children: activeLabel }) : small ? label : /* @__PURE__ */ jsxRuntime.jsxs("div", { children: [
           /* @__PURE__ */ jsxRuntime.jsx("p", { className: "font-medium text-foreground", children: label }),
           hint && /* @__PURE__ */ jsxRuntime.jsx("p", { className: "mt-0.5 text-xs", children: hint })
-        ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntime.jsx("span", { role: "status", className: "text-destructive break-all", children: feedback })
       ]
     }
   );
